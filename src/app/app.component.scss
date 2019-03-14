@@ -1,0 +1,36 @@
+app-root {
+
+  .mat-tab-group {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    .mat-tab-body-wrapper {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .terminal {
+    white-space: pre;
+    background: #1e1e1e;
+    position: absolute;
+    bottom: 0;
+    top: 200px;
+    left: 0;
+    right: 0;
+    color: white;
+  }
+
+  [align-center] {
+    text-align: center;
+  }
+
+}
+

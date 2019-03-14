@@ -1,1 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~src/app/app.component";
+@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+@import "~xterm/dist/xterm.css";
+
+@font-face {
+  font-family: 'Dosis';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Dosis Regular'), local('Dosis-Regular'), url(/assets/fonts/Dosis-Regular.woff) format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body, html {
+  font-family: 'Dosis', sans-serif;
+  background-color: #EDEEF3;
+  padding: 0;
+  margin: 0;
+}
+
+mat-list[right-side] {
+  mat-list-item.mat-list-item > div {
+    float: right;
+  }
+}
+
+mat-list-item {
+  height: 30px;
+}
+
+button.mat-stroked-button {
+  margin-left: 15px;
+}
+
+
+.terminal.mat-list-base .mat-list-item {
+  color: white;
+  font-family: 'Roboto Mono', sans-serif;
+  font-size: 14px;
+  overflow: visible;
+  height: auto;
+  padding: 10px 0;
+ }
+
+
+
+
+.mat-checkbox {
+  margin: 10px;
+  height: auto;
+  padding: 5px 10px;
+  text-align: center;
+  display: inline-block;
+  background: rgba(102, 51, 153, 0.1);
+  .mat-checkbox-frame, .mat-checkbox-background {
+    border-radius: 50% !important;
+  }
+}

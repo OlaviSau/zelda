@@ -1,0 +1,19 @@
+<mat-checkbox
+  [disabled]="isPackageLinked(link) || linkRefs[link.name]"
+  [checked]="isPackageLinked(link)"
+  (click)="onPackageChange(link)"
+  *ngFor="let link of project.links"
+>{{link.name}}</mat-checkbox>
+
+<div align-center>
+  <button [disabled]="installRef" *ngIf="!applicationRef" mat-stroked-button color="primary" (click)="start(project.defaultApplication)">START</button>
+  <button *ngIf="applicationRef" mat-stroked-button color="primary" (click)="stop()">STOP</button>
+  <button [disabled]="installRef || applicationRef" mat-stroked-button color="primary" (click)="install()">INSTALL</button>
+</div>
+
+
+
+<mat-list class="terminal" perfectScrollbar>
+  <mat-list-item>Terminal</mat-list-item>
+  <mat-list-item *ngFor="let chunk of output"><span [innerHTML]="sanitizer.bypassSecurityTrustHtml(chunk)"></span></mat-list-item>
+</mat-list>
