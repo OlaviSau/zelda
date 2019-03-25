@@ -14,17 +14,20 @@ import {
 } from "@angular/material";
 import {CommonModule} from "@angular/common";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import {ProjectComponent} from "./project/project.component";
+import {TerminalComponent} from "./terminal/terminal.component";
+import {InViewportModule} from "ng-in-viewport";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ProjectComponent
+    ProjectComponent,
+    TerminalComponent
   ],
   imports: [
     BrowserModule,
     CommonModule,
+    InViewportModule,
     MatCheckboxModule,
     MatCardModule,
     MatTabsModule,
@@ -33,8 +36,7 @@ import {ProjectComponent} from "./project/project.component";
     MatSelectModule,
     MatOptionModule,
     BrowserAnimationsModule,
-    MatInputModule,
-    PerfectScrollbarModule
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]

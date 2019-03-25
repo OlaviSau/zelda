@@ -1,5 +1,5 @@
-import { Component, OnInit} from "@angular/core";
-import * as fs from "fs";
+import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
+import { readFileSync, watchFile } from "fs";
 import {Project} from "./app.model";
 
 @Component({
@@ -9,11 +9,17 @@ import {Project} from "./app.model";
 })
 export class AppComponent implements OnInit {
 
+  constructor(private changeDetector: ChangeDetectorRef) {}
+
   config: {
     projects: Project[]
   } = null;
 
   ngOnInit() {
-    this.config = JSON.parse(fs.readFileSync("config.json", {encoding: "utf8"}));
+    this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
+    watchFile("config.json", () => {
+      this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
+      this.changeDetector.markForCheck();
+    });
   }
 }

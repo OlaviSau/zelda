@@ -13,38 +13,26 @@
 }
 
 body, html {
-  font-family: 'Dosis', sans-serif;
+  font-family: "Roboto Mono", sans-serif;
   background-color: #EDEEF3;
   padding: 0;
   margin: 0;
 }
 
-mat-list[right-side] {
-  mat-list-item.mat-list-item > div {
-    float: right;
-  }
+.mat-option-text {
+  font-family: "Roboto Mono", sans-serif;
+  font-size: 12px;
 }
 
 mat-list-item {
   height: 30px;
+  font-family: 'Roboto Mono', sans-serif;
 }
 
 button.mat-stroked-button {
-  margin-left: 15px;
-}
-
-
-.terminal.mat-list-base .mat-list-item {
-  color: white;
   font-family: 'Roboto Mono', sans-serif;
-  font-size: 14px;
-  overflow: visible;
-  height: auto;
-  padding: 10px 0;
- }
-
-
-
+  margin-left: 20px;
+}
 
 .mat-checkbox {
   margin: 10px;
