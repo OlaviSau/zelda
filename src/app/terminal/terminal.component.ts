@@ -2,33 +2,38 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild} from "@angular/
 
 import { IPty} from "node-pty";
 import { Terminal } from "xterm";
+import {buffer} from "rxjs/operators";
 
 @Component({
   selector: "app-terminal",
   templateUrl: "./terminal.component.html"
 })
 export class TerminalComponent implements AfterViewInit {
+  @ViewChild("container", {read: ElementRef}) container;
 
-  @Input() process: IPty;
-  @ViewChild("terminal", {read: ElementRef}) container;
+  terminal = new Terminal({
+    cols: 260,
+    rows: 56,
+    fontSize: 12,
+    theme: {
+      background: "#1e1e1e"
+    }
+  });
 
-  private terminal;
-
-  ngAfterViewInit() {
-    this.terminal = new Terminal({
-      cols: 260,
-      rows: 60,
-      fontSize: 12,
-      theme: {
-        background: "#1e1e1e"
-      }
-    });
-    this.process.on("data", data => this.terminal.write(data));
-    this.process.on("exit", code => this.terminal.write(`Process exited with code: ${code}`));
+  isTerminalOpen() {
+    return !!this.container.nativeElement.hasChildNodes();
   }
 
-  open() {
-    if (!this.container.nativeElement.hasChildNodes()) {
+  write(chunk) {
+    this.terminal.write(chunk);
+  }
+
+  reset() {
+    this.terminal.reset();
+  }
+
+  ngAfterViewInit() {
+    if (!this.isTerminalOpen()) {
       this.terminal.open(this.container.nativeElement);
     }
   }

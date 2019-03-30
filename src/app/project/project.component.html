@@ -10,16 +10,9 @@
     <mat-select [placeholder]="project.defaultApplication">
       <mat-option>betsson</mat-option>
     </mat-select>
-    <button mat-stroked-button color="primary" (click)="start(project.defaultApplication)">Start</button>
-    <button mat-stroked-button color="primary" (click)="install()">Clean</button>
+    <button *ngIf="!serveProcess" mat-stroked-button color="primary" (click)="start(project.defaultApplication)">Start</button>
+    <button *ngIf="serveProcess" mat-stroked-button color="primary" (click)="stop()">Stop</button>
+    <button mat-stroked-button color="primary" (click)="clean()">Clean</button>
     <button mat-stroked-button color="primary" (click)="install()">Install</button>
   </div>
 </div>
-
-
-
-<mat-tab-group>
-  <mat-tab [label]="process.process" *ngFor="let process of processes">
-    <app-terminal [process]="process"></app-terminal>
-  </mat-tab>
-</mat-tab-group>

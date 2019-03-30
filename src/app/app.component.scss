@@ -1,57 +1,50 @@
 app-root {
-  .mat-tab-body.mat-tab-body-active {
-    overflow: hidden;
-  }
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
   > .mat-tab-group {
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
-    > .mat-tab-body-wrapper {
-      position: absolute;
-      top: 48px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
+    flex: 0 1 auto;
   }
 
   .mat-select {
     width: 100px;
   }
 
-  app-project {
-    display: flex;
-    flex-direction: column;
+  .mat-tab-label-content {
+    padding: 0 20px;
+  }
+
+  .fa-pause, .fa-play {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
+    left: 20px;
+  }
+
+  .fa-trash-alt {
+    position: absolute;
+    right: 20px;
+  }
+
+
+
+  app-project {
+    flex: 0 1 auto;
 
     .mat-checkbox-label {
       font-family: "Roboto Mono", sans-serif;
       font-size: 12px;
     }
     .interface-container {
-      flex: 0 1 auto;
       margin-bottom: 20px;
     }
+  }
 
-    .mat-tab-group {
-      flex:auto;
-      position: relative;
-      > .mat-tab-body-wrapper {
-        position: absolute;
-        top: 48px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-    }
-
+  app-terminal {
+    flex:auto;
+    position: relative;
     .terminal-container {
       position: absolute;
       background-color: #1e1e1e;
