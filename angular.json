@@ -15,7 +15,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-guru/electron-builder:build",
+          "builder": "./builder:build",
           "options": {
             "outputPath": "dist/zelda",
             "index": "src/index.html",
@@ -59,7 +59,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-guru/electron-builder:dev-server",
+          "builder": "./builder:dev-server",
           "options": {
             "port": 5200,
             "browserTarget": "zelda:build"

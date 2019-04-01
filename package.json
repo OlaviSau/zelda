@@ -2,19 +2,14 @@
   "name": "zelda",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "electron": "concurrently \"ng serve\" \"electron .\"",
-    "rebuild": "electron-rebuild -f -w node-pty"
+    "start": "concurrently \"npm run angular:serve\" \"npm run electron:serve\"",
+    "angular:serve": "ng serve",
+    "electron:serve": "wait-on http-get://localhost:5200 && electron .",
+    "postinstall": "tsc -p ./builder/tsconfig.json"
   },
   "main": "main.js",
   "private": true,
   "dependencies": {
-    "@angular-guru/electron-builder": "^6.1.7",
     "@angular/animations": "~7.1.0",
     "@angular/cdk": "^7.3.5",
     "@angular/common": "~7.1.0",
@@ -31,6 +26,7 @@
     "rxjs": "~6.3.3",
     "tree-kill": "^1.2.1",
     "tslib": "^1.9.0",
+    "wait-on": "^3.2.0",
     "xterm": "^3.12.0",
     "zone.js": "~0.8.26"
   },
@@ -42,6 +38,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "@types/webpack": "^4.4.26",
     "codelyzer": "~4.5.0",
     "concurrently": "^3.6.1",
     "electron": "4.0.5",
