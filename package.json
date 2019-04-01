@@ -5,6 +5,7 @@
     "start": "concurrently \"npm run angular:serve\" \"npm run electron:serve\"",
     "angular:serve": "ng serve",
     "electron:serve": "wait-on http-get://localhost:5200 && electron .",
+    "rebuild": "electron-rebuild -f -w node-pty",
     "postinstall": "tsc -p ./builder/tsconfig.json"
   },
   "main": "main.js",
