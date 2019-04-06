@@ -1,29 +1,45 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import { readFileSync } from "fs";
-import {Process, ProcessStatus, Project} from "./app.model";
-import { exec } from "child_process";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {existsSync, readFileSync} from "fs";
+import {Config, DependencyType, LernaConfig, Process, ProcessStatus, Project} from "./app.model";
+import {exec} from "child_process";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
+import {LernaService} from "./lerna/lerna.service";
 
 @Component({
-    selector: "app-root",
-    templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.scss"]
-  })
-  export class AppComponent implements OnInit, OnDestroy {
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class AppComponent implements OnInit, OnDestroy {
 
   @ViewChild("terminal") terminal: TerminalComponent;
 
   private activePID = null;
   processes: Process[] = [];
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  constructor(
+    private changeDetector: ChangeDetectorRef,
+    private lernaService: LernaService
+  ) {}
 
-  config: {
-    projects: Project[],
-    suspendPath: "C:\\bin\\pssuspend.exe",
-    cmdPath: "C:\\WINDOWS\\system32\\cmd.exe"
-  } = null;
+  config: Config;
+
+  exampleConfig = `
+    {
+      "projects": [
+        {
+          "name": "Mobile",
+          "dependencies": [
+            {
+              "directory": "C:/directory/",
+              "name": "@scope/example"
+            }
+          ]
+        }
+    }
+  `;
 
   listen(pty: IPty) {
     const process = {
@@ -90,7 +106,11 @@ import {TerminalComponent} from "./terminal/terminal.component";
 
   kill(process) {
     this.processes = this.processes.filter(p => p !== process);
-    process.pty.kill();
+    try {
+      process.pty.kill();
+    } catch (e) {
+      console.log(e);
+    }
     process.status = ProcessStatus.Killed;
   }
 
@@ -101,7 +121,11 @@ import {TerminalComponent} from "./terminal/terminal.component";
   }
 
   ngOnInit() {
-    this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
+    if (existsSync("config.json")) {
+      this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
+      console.log(this.lernaService);
+      this.lernaService.addConfig(this.config);
+    }
   }
 
   private update(process: Process, chunk: string) {

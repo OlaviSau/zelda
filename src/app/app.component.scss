@@ -28,8 +28,6 @@ app-root {
     right: 20px;
   }
 
-
-
   app-project {
     flex: 0 1 auto;
 
@@ -55,6 +53,24 @@ app-root {
       .xterm-viewport {
         overflow: auto;
       }
+    }
+  }
+
+  .lerna-dependency {
+    padding: 10px;
+    margin: 20px;
+    font-family: "Roboto Mono", sans-serif;
+    background: rgba(102, 51, 153, 0.05);
+    h4 {
+      margin: 10px;
+    }
+  }
+
+  .config-creator {
+    padding: 50px;
+
+    .example-config {
+      white-space: pre;
     }
   }
 

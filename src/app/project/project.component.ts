@@ -1,7 +1,8 @@
 import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from "@angular/core";
 import { existsSync, lstatSync } from "fs";
-import { Project} from "../app.model";
+import {DependencyType, Project} from "../app.model";
 import { IPty, spawn } from "node-pty";
+import {LernaService} from "../lerna/lerna.service";
 
 @Component({
   selector: "app-project",
@@ -9,19 +10,22 @@ import { IPty, spawn } from "node-pty";
 })
 export class ProjectComponent {
 
-  constructor(private changeDetection: ChangeDetectorRef) {}
+  constructor(
+    private changeDetection: ChangeDetectorRef,
+    public lernaService: LernaService
+  ) {}
 
   private npmPath = "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js";
   private nodePath = "C:\\Program Files\\nodejs\\node.exe";
   @Output() process = new EventEmitter();
 
   serveProcess: IPty | undefined = undefined;
-  serveProcessNodePID = null;
+  DependencyType = DependencyType;
 
   @Input() project: Project;
 
   isPackageLinked(link) {
-    const path = `${this.project.directory}\\node_modules\\@${link.scope}\\${link.name}`;
+    const path = `${this.project.directory}/node_modules/${link.name}`;
     return existsSync(path) && lstatSync(path).isSymbolicLink();
   }
 
@@ -29,16 +33,13 @@ export class ProjectComponent {
     this.npmCommand(link.directory, "link").on("exit",
       () => {
         this.pause().on("exit",
-          () => this.npmCommand(this.project.directory, "link", `@${link.scope}/${link.name}`).on("exit", () => this.resume())
+          () => this.npmCommand(this.project.directory, "link", `${link.name}`).on("exit", () => this.resume())
         );
       }
     );
   }
 
   pause() {
-    // if (this.serveProcess) {
-    //   return spawn(this.suspendPath, [String(this.serveProcessNodePID)], {});
-    // }
     return {
       on(event: "exit", cb) {
         cb();
@@ -47,9 +48,6 @@ export class ProjectComponent {
   }
 
   resume() {
-    // if (this.serveProcess) {
-    //   spawn(this.suspendPath, ["-r", String(this.serveProcessNodePID)], {});
-    // }
   }
 
   install() {
@@ -67,25 +65,6 @@ export class ProjectComponent {
 
   start(application) {
     this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application);
-    // console.log(this.serveProcess.pid);
-    // spawn(this.wmicPath, ["process", "where", `(ParentProcessId=${this.serveProcess.pid})`, "get", "ProcessId"], {})
-    //   .on("data",
-    //     cmdPID => {
-    //       if (cmdPID === "nl") {
-    //         spawn(
-    //           this.wmicPath,
-    //           ["process", "where", `(ParentProcessId=${"nl"})`, "get", "ProcessId"],
-    //           {}
-    //         ).on("data", pid => {
-    //           const nodeParse = pid.match(/\d+/g);
-    //           if (nodeParse[0] === "0" && nodeParse[1] === "25") {
-    //             this.serveProcessNodePID = nodeParse[2];
-    //             console.log(this.serveProcessNodePID);
-    //           }
-    //         });
-    //       }
-    //     }
-    //   );
   }
 
   stop() {

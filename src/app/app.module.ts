@@ -17,6 +17,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ProjectComponent} from "./project/project.component";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {InViewportModule} from "ng-in-viewport";
+import {LernaService} from "./lerna/lerna.service";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,9 @@ import {InViewportModule} from "ng-in-viewport";
     BrowserAnimationsModule,
     MatInputModule
   ],
-  providers: [],
+  providers: [
+    LernaService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

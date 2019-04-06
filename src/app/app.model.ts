@@ -1,14 +1,30 @@
 import {IPty} from "node-pty";
 
+export interface Config {
+  projects: Project[];
+  suspendPath: string;
+  cmdPath: string;
+}
+
 export interface Project {
   defaultApplication: string;
   name: string;
   directory: string;
-  dependencies: {
-    scope: string,
-    directory: string,
-    name: string
-  }[];
+  dependencies: Dependency[];
+}
+
+export interface LernaConfig {
+  packages: string[];
+}
+
+export interface Dependency {
+  directory: string;
+  name: string;
+  type: DependencyType;
+}
+
+export interface PackageConfig {
+  name: string;
 }
 
 export interface Process {
@@ -16,6 +32,11 @@ export interface Process {
   buffer: string[];
   name: string;
   status: ProcessStatus;
+}
+
+export enum DependencyType {
+  Package = "Package",
+  Lerna = "Lerna"
 }
 
 export enum ProcessStatus {
