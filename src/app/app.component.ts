@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {existsSync, readFileSync} from "fs";
-import {Config, DependencyType, LernaConfig, Process, ProcessStatus, Project} from "./app.model";
+import {Config, Process, ProcessStatus} from "./app.model";
 import {exec} from "child_process";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
@@ -104,14 +104,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  kill(process) {
-    this.processes = this.processes.filter(p => p !== process);
-    try {
-      process.pty.kill();
-    } catch (e) {
-      console.log(e);
-    }
-    process.status = ProcessStatus.Killed;
+  kill(pty) {
+    this.processes = this.processes.filter(p => p.pty.pid !== pty.pid);
+    pty.kill();
   }
 
   ngOnDestroy() {
@@ -123,7 +118,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (existsSync("config.json")) {
       this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
-      console.log(this.lernaService);
       this.lernaService.addConfig(this.config);
     }
   }

@@ -1,14 +1,15 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from "@angular/core";
-import { existsSync, lstatSync } from "fs";
-import {DependencyType, Project} from "../app.model";
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {existsSync, lstatSync, readFileSync} from "fs";
+import {DependencyType, Project, ProjectConfig} from "../app.model";
 import { IPty, spawn } from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
+import {stripComments} from "tslint/lib/utils";
 
 @Component({
   selector: "app-project",
   templateUrl: "./project.component.html"
 })
-export class ProjectComponent {
+export class ProjectComponent implements OnInit{
 
   constructor(
     private changeDetection: ChangeDetectorRef,
@@ -17,12 +18,30 @@ export class ProjectComponent {
 
   private npmPath = "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js";
   private nodePath = "C:\\Program Files\\nodejs\\node.exe";
-  @Output() process = new EventEmitter();
+  @Output() processCreated = new EventEmitter();
+  @Output() killProcess = new EventEmitter();
 
   serveProcess: IPty | undefined = undefined;
   DependencyType = DependencyType;
 
   @Input() project: Project;
+  applications: string[] = [];
+  selectedApplication: string;
+
+  ngOnInit() {
+    const projectConfig: ProjectConfig = JSON.parse(stripComments(
+      readFileSync(`${this.project.directory}/angular.json`, {encoding: "utf8"})
+    ));
+
+    if (projectConfig.defaultProject) {
+      this.selectedApplication = projectConfig.defaultProject;
+    }
+
+    for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
+      console.log(projectName);
+      this.applications.push(projectName);
+    }
+  }
 
   isPackageLinked(link) {
     const path = `${this.project.directory}/node_modules/${link.name}`;
@@ -55,7 +74,7 @@ export class ProjectComponent {
   }
 
   clean() {
-    this.process.emit(spawn("C:\\Program Files\\Git\\usr\\bin\\rm.exe", ["-rf", "node_modules"], {
+    this.processCreated.emit(spawn("C:\\Program Files\\Git\\usr\\bin\\rm.exe", ["-rf", "node_modules"], {
         cwd: this.project.directory,
         cols: 260,
         name: `rm -rf node_modules`
@@ -64,17 +83,18 @@ export class ProjectComponent {
   }
 
   start(application) {
+    console.log(application);
     this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application);
   }
 
   stop() {
-    this.serveProcess.kill();
+    this.killProcess.emit(this.serveProcess);
     this.serveProcess = undefined;
   }
 
   private npmCommand(cwd, ...args) {
     const process = spawn(this.nodePath, [this.npmPath, ...args], { cwd, cols: 260, name: `npm ${args.join(" ")}` });
-    this.process.emit(process);
+    this.processCreated.emit(process);
     this.changeDetection.detectChanges();
     return process;
   }

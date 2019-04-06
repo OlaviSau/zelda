@@ -17,10 +17,10 @@
 
 
   <div align-center>
-    <mat-select [placeholder]="project.defaultApplication">
-      <mat-option>betsson</mat-option>
+    <mat-select [(value)]="selectedApplication">
+      <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
     </mat-select>
-    <button *ngIf="!serveProcess" mat-stroked-button color="primary" (click)="start(project.defaultApplication)">Start</button>
+    <button *ngIf="!serveProcess" mat-stroked-button color="primary" (click)="start(selectedApplication)">Start</button>
     <button *ngIf="serveProcess" mat-stroked-button color="primary" (click)="stop()">Stop</button>
     <button mat-stroked-button color="primary" (click)="clean()">Clean</button>
     <button mat-stroked-button color="primary" (click)="install()">Install</button>

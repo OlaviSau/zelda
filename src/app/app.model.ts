@@ -17,6 +17,13 @@ export interface LernaConfig {
   packages: string[];
 }
 
+export interface ProjectConfig {
+  projects: {
+    [key: string]: any
+  };
+  defaultProject?: string;
+}
+
 export interface Dependency {
   directory: string;
   name: string;
