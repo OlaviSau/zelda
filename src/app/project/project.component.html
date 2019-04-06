@@ -1,12 +1,12 @@
 <div class="interface-container">
   <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
     <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency">
-      <h4>{{dependency.name}}</h4>
+      <h4>{{dependency.name + (dependency.scope ? ' - ' + dependency.scope : '')}}</h4>
       <mat-checkbox *ngFor="let p of lernaService.packages[dependency.name]"
         [disabled]="isPackageLinked(p)"
         [checked]="isPackageLinked(p)"
         (click)="link(p)"
-      >{{p.name}}</mat-checkbox>
+      >{{dependency.scope ? p.name.replace(dependency.scope + '/', '') : p.name}}</mat-checkbox>
     </div>
     <mat-checkbox *ngSwitchDefault
       [disabled]="isPackageLinked(dependency)"

@@ -21,6 +21,7 @@ export interface Dependency {
   directory: string;
   name: string;
   type: DependencyType;
+  scope?: string;
 }
 
 export interface PackageConfig {
