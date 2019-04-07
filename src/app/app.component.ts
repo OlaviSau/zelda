@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild} from "@angular/core";
 import {Process, ProcessStatus} from "./app.model";
-import {exec} from "child_process";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {ConfigService} from "./config/config.service";
+import {execRecursive} from "./util/exec-recursive";
 
 @Component({
   selector: "app-root",
@@ -47,43 +47,13 @@ export class AppComponent implements OnDestroy {
   }
 
   suspend(process) {
-    this.getChildrenProcesses(process.pty.pid, lines => {
-      for (const [executable, pid] of lines.map(line => line.split(/\s+/))) {
-        if (executable === this.configService.config.paths.cmd) {
-         this.getChildrenProcesses(pid, child => {
-           for (const line of child) {
-             exec(`pssuspend ${line.match(/\d+/)[0]}`, err => {
-               if (!err) {
-                 process.status = ProcessStatus.Suspended;
-                 this.changeDetector.detectChanges();
-               }
-             });
-           }
-         });
-        }
-      }
-    });
+    execRecursive(process.pty.pid, "pssuspend");
+    process.status = ProcessStatus.Suspended;
   }
 
   resume(process) {
-    if (process.status !== ProcessStatus.Killed) {
-      this.getChildrenProcesses(process.pty.pid, lines => {
-        for (const [executable, pid] of lines.map(line => line.split(/\s+/))) {
-          if (executable === this.configService.config.paths.cmd) {
-            this.getChildrenProcesses(pid, child => {
-              for (const line of child) {
-                exec(`pssuspend -r ${line.match(/\d+/)[0]}`, err => {
-                  if (!err) {
-                    process.status = ProcessStatus.Active;
-                    this.changeDetector.detectChanges();
-                  }
-                });
-              }
-            });
-          }
-        }
-      });
-    }
+    execRecursive(process.pty.pid, "pssuspend -r");
+    process.status = ProcessStatus.Active;
   }
 
   kill(pty) {
@@ -102,13 +72,6 @@ export class AppComponent implements OnDestroy {
     if (this.activePID === process.pty.pid) {
       this.terminal.write(chunk);
     }
-  }
-
-  private getChildrenProcesses(pid, fn) {
-    exec(`wmic process where (ParentProcessId=${pid}) get ExecutablePath, ProcessId`, (err, data) => fn(this.parseWMIC(data)));
-  }
-
-  private parseWMIC(data) {
-    return data.match(/[^\r\n]+/g).splice(1);
+    this.changeDetector.markForCheck();
   }
 }
