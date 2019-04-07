@@ -62,7 +62,10 @@ app-root {
     font-family: "Roboto Mono", sans-serif;
     background: rgba(102, 51, 153, 0.05);
     position: relative;
+    user-select: none;
+
     h4 {
+      cursor: pointer;
       margin: 10px;
     }
     &.closed {

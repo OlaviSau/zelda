@@ -18,10 +18,7 @@ export class AppComponent implements OnDestroy {
   private activePID = null;
   processes: Process[] = [];
 
-  constructor(
-    private changeDetector: ChangeDetectorRef,
-    public configService: ConfigService
-  ) {}
+  constructor(public configService: ConfigService) {}
 
   listen(pty: IPty) {
     const process = {
@@ -33,7 +30,7 @@ export class AppComponent implements OnDestroy {
     pty.on("data", data => this.update(process, data));
     pty.on("exit", code => this.update(process, `Process exited with code: ${code}`));
 
-    this.processes.push(process);
+    this.processes = [...this.processes, process];
   }
 
   renderTerminal(process) {
@@ -72,6 +69,5 @@ export class AppComponent implements OnDestroy {
     if (this.activePID === process.pty.pid) {
       this.terminal.write(chunk);
     }
-    this.changeDetector.markForCheck();
   }
 }

@@ -1,11 +1,10 @@
 <div class="interface-container">
   <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
     <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency closed" #accordion>
-      <h4>
+      <h4 (click)="accordion.classList.toggle('closed')">
         <span class="fa"
               [class.fa-plus]="accordion.classList.contains('closed')"
               [class.fa-minus]="!accordion.classList.contains('closed')"
-              (click)="accordion.classList.toggle('closed')"
         ></span>
         {{dependency.name + (dependency.scope ? ' - ' + dependency.scope : '')}}
       </h4>

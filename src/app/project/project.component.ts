@@ -10,7 +10,7 @@ import {ConfigService} from "../config/config.service";
   selector: "app-project",
   templateUrl: "./project.component.html"
 })
-export class ProjectComponent implements OnInit{
+export class ProjectComponent implements OnInit {
 
   constructor(
     private changeDetection: ChangeDetectorRef,
@@ -49,23 +49,8 @@ export class ProjectComponent implements OnInit{
 
   link(link) {
     this.npmCommand(link.directory, "link").on("exit",
-      () => {
-        this.pause().on("exit",
-          () => this.npmCommand(this.project.directory, "link", `${link.name}`).on("exit", () => this.resume())
-        );
-      }
+      () => this.npmCommand(this.project.directory, "link", `${link.name}`)
     );
-  }
-
-  pause() {
-    return {
-      on(event: "exit", cb) {
-        cb();
-      }
-    } as any;
-  }
-
-  resume() {
   }
 
   install() {
@@ -75,7 +60,7 @@ export class ProjectComponent implements OnInit{
   clean() {
     this.processCreated.emit(spawn("C:\\Program Files\\Git\\usr\\bin\\rm.exe", ["-rf", "node_modules"], {
         cwd: this.project.directory,
-        cols: 260,
+        cols: 258,
         name: `rm -rf node_modules`
     }));
     this.changeDetection.detectChanges();
@@ -93,7 +78,7 @@ export class ProjectComponent implements OnInit{
   private npmCommand(cwd, ...args) {
     const process = spawn(this.configService.config.paths.node, [
       this.configService.config.paths.npm, ...args
-    ], { cwd, cols: 260, name: `npm ${args.join(" ")}` });
+    ], { cwd, cols: 258, name: `npm ${args.join(" ")}` });
     this.processCreated.emit(process);
     this.changeDetection.detectChanges();
     return process;
