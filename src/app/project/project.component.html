@@ -1,11 +1,19 @@
 <div class="interface-container">
   <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
-    <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency">
-      <h4>{{dependency.name + (dependency.scope ? ' - ' + dependency.scope : '')}}</h4>
+    <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency closed" #accordion>
+      <h4>
+        <span class="fa"
+              [class.fa-plus]="accordion.classList.contains('closed')"
+              [class.fa-minus]="!accordion.classList.contains('closed')"
+              (click)="accordion.classList.toggle('closed')"
+        ></span>
+        {{dependency.name + (dependency.scope ? ' - ' + dependency.scope : '')}}
+      </h4>
+
       <mat-checkbox *ngFor="let p of lernaService.packages[dependency.name]"
-        [disabled]="isPackageLinked(p)"
-        [checked]="isPackageLinked(p)"
-        (click)="link(p)"
+                    [disabled]="isPackageLinked(p)"
+                    [checked]="isPackageLinked(p)"
+                    (click)="link(p)"
       >{{dependency.scope ? p.name.replace(dependency.scope + '/', '') : p.name}}</mat-checkbox>
     </div>
     <mat-checkbox *ngSwitchDefault

@@ -7,6 +7,21 @@ import {LernaService} from "../lerna/lerna.service";
 export class ConfigService {
   public config: Config;
 
+  public exampleConfig = `
+    {
+      "projects": [
+        {
+          "name": "Mobile",
+          "dependencies": [
+            {
+              "directory": "C:/directory/",
+              "name": "@scope/example"
+            }
+          ]
+        }
+    }
+  `;
+
   constructor(
     private lernaService: LernaService
   ) {

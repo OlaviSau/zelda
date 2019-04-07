@@ -23,21 +23,6 @@ export class AppComponent implements OnDestroy {
     public configService: ConfigService
   ) {}
 
-  exampleConfig = `
-    {
-      "projects": [
-        {
-          "name": "Mobile",
-          "dependencies": [
-            {
-              "directory": "C:/directory/",
-              "name": "@scope/example"
-            }
-          ]
-        }
-    }
-  `;
-
   listen(pty: IPty) {
     const process = {
       pty,

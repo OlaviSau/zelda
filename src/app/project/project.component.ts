@@ -38,7 +38,6 @@ export class ProjectComponent implements OnInit{
     }
 
     for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
-      console.log(projectName);
       this.applications.push(projectName);
     }
   }

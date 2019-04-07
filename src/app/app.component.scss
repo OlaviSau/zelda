@@ -61,8 +61,14 @@ app-root {
     margin: 20px;
     font-family: "Roboto Mono", sans-serif;
     background: rgba(102, 51, 153, 0.05);
+    position: relative;
     h4 {
       margin: 10px;
+    }
+    &.closed {
+      .mat-checkbox {
+        display: none;
+      }
     }
   }
 
