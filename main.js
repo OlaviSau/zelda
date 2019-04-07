@@ -1,20 +1,41 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
+const { format } = require('url');
+const { join } = require('path');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+const args = process.argv.slice(1);
 
 function createWindow () {
+
+  const { screen }= require('electron');
+  const size = screen.getPrimaryDisplay().workAreaSize;
+
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1000, height: 1000, minHeight: 800, minWidth: 1000});
+  mainWindow = new BrowserWindow({
+    width: size.width,
+    height: size.height,
+    webPreferences: {
+      nodeIntegration: true,
+    }
+  });
 
   mainWindow.setMenu(null);
-  // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:5200');
+  if (args.some(arg => arg === '--serve')) {
+    mainWindow.loadURL("http://localhost:5200");
+  } else {
+    // and load the index.html of the app.
+    mainWindow.loadURL(format({
+      pathname: join(__dirname, 'dist/zelda/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }));
+  }
 
-  // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
