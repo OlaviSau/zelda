@@ -4,6 +4,7 @@ import {DependencyType, Project, ProjectConfig} from "../app.model";
 import { IPty, spawn } from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
+import {ConfigService} from "../config/config.service";
 
 @Component({
   selector: "app-project",
@@ -13,18 +14,17 @@ export class ProjectComponent implements OnInit{
 
   constructor(
     private changeDetection: ChangeDetectorRef,
-    public lernaService: LernaService
+    public lernaService: LernaService,
+    private configService: ConfigService
   ) {}
 
-  private npmPath = "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js";
-  private nodePath = "C:\\Program Files\\nodejs\\node.exe";
+  @Input() project: Project;
   @Output() processCreated = new EventEmitter();
   @Output() killProcess = new EventEmitter();
 
-  serveProcess: IPty | undefined = undefined;
   DependencyType = DependencyType;
 
-  @Input() project: Project;
+  serveProcess: IPty | undefined = undefined;
   applications: string[] = [];
   selectedApplication: string;
 
@@ -83,7 +83,6 @@ export class ProjectComponent implements OnInit{
   }
 
   start(application) {
-    console.log(application);
     this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application);
   }
 
@@ -93,7 +92,9 @@ export class ProjectComponent implements OnInit{
   }
 
   private npmCommand(cwd, ...args) {
-    const process = spawn(this.nodePath, [this.npmPath, ...args], { cwd, cols: 260, name: `npm ${args.join(" ")}` });
+    const process = spawn(this.configService.config.paths.node, [
+      this.configService.config.paths.npm, ...args
+    ], { cwd, cols: 260, name: `npm ${args.join(" ")}` });
     this.processCreated.emit(process);
     this.changeDetection.detectChanges();
     return process;

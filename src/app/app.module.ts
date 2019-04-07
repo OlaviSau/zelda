@@ -18,6 +18,7 @@ import {ProjectComponent} from "./project/project.component";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {InViewportModule} from "ng-in-viewport";
 import {LernaService} from "./lerna/lerna.service";
+import {ConfigService} from "./config/config.service";
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import {LernaService} from "./lerna/lerna.service";
     MatInputModule
   ],
   providers: [
-    LernaService
+    LernaService,
+    ConfigService
   ],
   bootstrap: [AppComponent]
 })

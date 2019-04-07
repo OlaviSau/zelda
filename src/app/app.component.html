@@ -1,5 +1,5 @@
-<mat-tab-group *ngIf="config else noConfig">
-  <mat-tab [label]="project.name" *ngFor="let project of config.projects">
+<mat-tab-group *ngIf="configService.config else noConfig">
+  <mat-tab [label]="project.name" *ngFor="let project of configService.config.projects">
     <app-project [project]="project" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
   </mat-tab>
 </mat-tab-group>

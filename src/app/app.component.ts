@@ -1,10 +1,9 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {existsSync, readFileSync} from "fs";
-import {Config, Process, ProcessStatus} from "./app.model";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild} from "@angular/core";
+import {Process, ProcessStatus} from "./app.model";
 import {exec} from "child_process";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
-import {LernaService} from "./lerna/lerna.service";
+import {ConfigService} from "./config/config.service";
 
 @Component({
   selector: "app-root",
@@ -12,7 +11,7 @@ import {LernaService} from "./lerna/lerna.service";
   styleUrls: ["./app.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnDestroy {
 
   @ViewChild("terminal") terminal: TerminalComponent;
 
@@ -21,10 +20,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private lernaService: LernaService
+    public configService: ConfigService
   ) {}
-
-  config: Config;
 
   exampleConfig = `
     {
@@ -67,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
   suspend(process) {
     this.getChildrenProcesses(process.pty.pid, lines => {
       for (const [executable, pid] of lines.map(line => line.split(/\s+/))) {
-        if (executable === this.config.cmdPath) {
+        if (executable === this.configService.config.paths.cmd) {
          this.getChildrenProcesses(pid, child => {
            for (const line of child) {
              exec(`pssuspend ${line.match(/\d+/)[0]}`, err => {
@@ -87,7 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (process.status !== ProcessStatus.Killed) {
       this.getChildrenProcesses(process.pty.pid, lines => {
         for (const [executable, pid] of lines.map(line => line.split(/\s+/))) {
-          if (executable === this.config.cmdPath) {
+          if (executable === this.configService.config.paths.cmd) {
             this.getChildrenProcesses(pid, child => {
               for (const line of child) {
                 exec(`pssuspend -r ${line.match(/\d+/)[0]}`, err => {
@@ -112,13 +109,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     for (const process of this.processes) {
       process.pty.kill();
-    }
-  }
-
-  ngOnInit() {
-    if (existsSync("config.json")) {
-      this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
-      this.lernaService.addConfig(this.config);
     }
   }
 

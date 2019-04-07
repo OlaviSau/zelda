@@ -2,8 +2,12 @@ import {IPty} from "node-pty";
 
 export interface Config {
   projects: Project[];
-  suspendPath: string;
-  cmdPath: string;
+  paths: {
+    "cmd": string,
+    "suspend": string,
+    "node": string,
+    "npm": string
+  };
 }
 
 export interface Project {
