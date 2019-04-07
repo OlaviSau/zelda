@@ -16,7 +16,6 @@ import {CommonModule} from "@angular/common";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ProjectComponent} from "./project/project.component";
 import {TerminalComponent} from "./terminal/terminal.component";
-import {InViewportModule} from "ng-in-viewport";
 import {LernaService} from "./lerna/lerna.service";
 import {ConfigService} from "./config/config.service";
 
@@ -29,7 +28,6 @@ import {ConfigService} from "./config/config.service";
   imports: [
     BrowserModule,
     CommonModule,
-    InViewportModule,
     MatCheckboxModule,
     MatCardModule,
     MatTabsModule,
