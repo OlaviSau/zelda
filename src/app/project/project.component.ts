@@ -60,7 +60,7 @@ export class ProjectComponent implements OnInit {
   clean() {
     this.processCreated.emit(spawn("C:\\Program Files\\Git\\usr\\bin\\rm.exe", ["-rf", "node_modules"], {
         cwd: this.project.directory,
-        cols: 258,
+        cols: 114,
         name: `rm -rf node_modules`
     }));
     this.changeDetection.detectChanges();
@@ -78,7 +78,7 @@ export class ProjectComponent implements OnInit {
   private npmCommand(cwd, ...args) {
     const process = spawn(this.configService.config.paths.node, [
       this.configService.config.paths.npm, ...args
-    ], { cwd, cols: 258, name: `npm ${args.join(" ")}` });
+    ], { cwd, cols: 114, name: `npm ${args.join(" ")}` });
     this.processCreated.emit(process);
     this.changeDetection.detectChanges();
     return process;

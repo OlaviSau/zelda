@@ -12,8 +12,8 @@ export class TerminalComponent implements AfterViewInit {
   @ViewChild("container", {read: ElementRef}) container;
 
   terminal = new Terminal({
-    cols: 260,
-    rows: 56,
+    cols: 114,
+    rows: 32,
     fontSize: 12,
     theme: {
       background: "#1e1e1e"

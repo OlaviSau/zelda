@@ -7,11 +7,17 @@ app-root {
   right: 0;
   top: 0;
   > .mat-tab-group {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
   }
 
   .mat-select {
-    width: 100px;
+    width: 144px;
+    padding: 9px;
+    background: rgba(102, 51, 153, 0.05);
+    font-family: 'Roboto Mono', sans-serif;
+    .mat-select-value {
+      color: #673ab7;
+    }
   }
 
   .mat-tab-label-content {
@@ -41,18 +47,31 @@ app-root {
   }
 
   app-terminal {
-    flex:auto;
+    flex: auto;
     position: relative;
-    .terminal-container {
-      position: absolute;
+    display: block;
+    .terminal-window {
+      position: relative;
       background-color: #1e1e1e;
-      bottom: 0;
-      top: 0;
-      left: 0;
-      right: 0;
+      margin: 40px auto;
+      width: 800px;
+      height: 450px;
+      outline: 20px solid rgba(102, 51, 153, 0.05);
+      text-align: center;
       .xterm-viewport {
         overflow: auto;
       }
+      .xterm-screen {
+        margin: 2px auto;
+      }
+    }
+    .fa.fa-expand {
+      color: white;
+      position: absolute;
+      top: 9px;
+      right: 10px;
+      z-index: 10;
+      cursor: pointer;
     }
   }
 
