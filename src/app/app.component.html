@@ -6,8 +6,6 @@
 <mat-tab-group (selectedIndexChange)="renderTerminal(processes[$event])">
   <mat-tab *ngFor="let process of processes">
     <ng-template mat-tab-label>
-      <i *ngIf="process.status === 'Active'" class="fa fa-pause" (click)="suspend(process)"></i>
-      <i *ngIf="process.status === 'Suspended'" class="fa fa-play" (click)="resume(process)"></i>
       {{process.name}}
       <i class="fa fa-trash-alt" (click)="kill(process.pty)"></i>
     </ng-template>

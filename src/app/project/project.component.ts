@@ -5,6 +5,8 @@ import { IPty, spawn } from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
 import {ConfigService} from "../config/config.service";
+import {execSequential} from "../util/exec-sequential";
+import {exec} from "child_process";
 
 @Component({
   selector: "app-project",
@@ -48,7 +50,9 @@ export class ProjectComponent implements OnInit {
   }
 
   link(link) {
-    this.npmCommand(link.directory, "link").on("exit",
+    execSequential(
+      () => this.npmCommand(link.directory, "link"),
+      () => exec(`rm -rf ${this.project.directory}/node_modules/${link.name}`),
       () => this.npmCommand(this.project.directory, "link", `${link.name}`)
     );
   }
