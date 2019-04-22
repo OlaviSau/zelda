@@ -1,7 +1,7 @@
-<div class="interface-container">
+<ng-scrollbar class="interface-container" [compact]="true" #scrollbar>
   <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
     <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency closed" #accordion>
-      <h4 (click)="accordion.classList.toggle('closed')">
+      <h4 (click)="accordion.classList.toggle('closed'); scrollbar.update()">
         <span class="fa"
               [class.fa-plus]="accordion.classList.contains('closed')"
               [class.fa-minus]="!accordion.classList.contains('closed')"
@@ -23,7 +23,7 @@
   </ng-container>
 
 
-  <div align-center>
+  <div align-center class="command-container">
     <mat-select [(value)]="selectedApplication">
       <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
     </mat-select>
@@ -31,4 +31,4 @@
     <button *ngIf="serveProcess" mat-stroked-button color="primary" (click)="stop()">Stop</button>
     <button mat-stroked-button color="primary" (click)="install()">Install</button>
   </div>
-</div>
+</ng-scrollbar>

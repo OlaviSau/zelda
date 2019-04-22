@@ -42,16 +42,18 @@ app-root {
     }
   }
 
-  app-project {
+  .interface-container {
     flex: 0 1 auto;
 
     .mat-checkbox-label {
       font-family: "Roboto Mono", sans-serif;
       font-size: 12px;
     }
-    .interface-container {
+
+    .command-container {
       margin-bottom: 20px;
     }
+
   }
 
   app-terminal {
