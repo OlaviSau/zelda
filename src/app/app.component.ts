@@ -1,9 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild} from "@angular/core";
-import {Process, ProcessStatus} from "./app.model";
+import {Process} from "./app.model";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {ConfigService} from "./config/config.service";
-import {execRecursive} from "./util/exec-recursive";
 
 @Component({
   selector: "app-root",
@@ -18,14 +17,13 @@ export class AppComponent implements OnDestroy {
   private activePID = null;
   processes: Process[] = [];
 
-  constructor(public configService: ConfigService) {}
+  constructor(public config: ConfigService) {}
 
   listen(pty: IPty) {
     const process = {
       pty,
       buffer: [],
-      name: pty.process,
-      status: ProcessStatus.Active
+      name: pty.process
     };
     pty.on("data", data => this.update(process, data));
     pty.on("exit", code => this.update(process, `Process exited with code: ${code}`));
@@ -33,7 +31,7 @@ export class AppComponent implements OnDestroy {
     this.processes = [...this.processes, process];
   }
 
-  renderTerminal(process) {
+  renderTerminal(process: Process | undefined) {
     this.terminal.reset();
     if (process) {
       this.activePID = process.pty.pid;
@@ -43,18 +41,10 @@ export class AppComponent implements OnDestroy {
     }
   }
 
-  suspend(process) {
-    execRecursive(process.pty.pid, "pssuspend");
-    process.status = ProcessStatus.Suspended;
-  }
-
-  resume(process) {
-    execRecursive(process.pty.pid, "pssuspend -r");
-    process.status = ProcessStatus.Active;
-  }
-
   kill(pty) {
-    this.processes = this.processes.filter(p => p.pty.pid !== pty.pid);
+    const nextProcessIndex = this.processes.findIndex(process => process.pty.pid === pty.pid) + 1;
+    this.renderTerminal(this.processes[nextProcessIndex]);
+    this.processes = this.processes.filter(process => process.pty.pid !== pty.pid);
     pty.kill();
   }
 

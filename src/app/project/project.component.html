@@ -29,7 +29,6 @@
     </mat-select>
     <button *ngIf="!serveProcess" mat-stroked-button color="primary" (click)="start(selectedApplication)">Start</button>
     <button *ngIf="serveProcess" mat-stroked-button color="primary" (click)="stop()">Stop</button>
-    <button mat-stroked-button color="primary" (click)="clean()">Clean</button>
     <button mat-stroked-button color="primary" (click)="install()">Install</button>
   </div>
 </div>

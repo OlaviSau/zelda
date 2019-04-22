@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {existsSync, lstatSync, readFileSync} from "fs";
 import {DependencyType, Project, ProjectConfig} from "../app.model";
-import { IPty, spawn } from "node-pty";
+import {IPty, spawn} from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
 import {ConfigService} from "../config/config.service";
@@ -10,14 +10,15 @@ import {exec} from "child_process";
 
 @Component({
   selector: "app-project",
-  templateUrl: "./project.component.html"
+  templateUrl: "./project.component.html",
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectComponent implements OnInit {
 
   constructor(
-    private changeDetection: ChangeDetectorRef,
+    private changeDetector: ChangeDetectorRef,
     public lernaService: LernaService,
-    private configService: ConfigService
+    private config: ConfigService
   ) {}
 
   @Input() project: Project;
@@ -58,20 +59,17 @@ export class ProjectComponent implements OnInit {
   }
 
   install() {
-    this.npmCommand(this.project.directory, "install");
-  }
-
-  clean() {
-    this.processCreated.emit(spawn("C:\\Program Files\\Git\\usr\\bin\\rm.exe", ["-rf", "node_modules"], {
-        cwd: this.project.directory,
-        cols: 114,
-        name: `rm -rf node_modules`
-    }));
-    this.changeDetection.detectChanges();
+    execSequential(
+      () => this.emitProcess(exec(`rm -rf ${this.project.directory}/node_modules`)),
+      () => this.npmCommand(this.project.directory, "install")
+    );
   }
 
   start(application) {
-    this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application);
+    execSequential(
+      () => this.npmCommand(this.project.directory, "run", "build:server", "--project", application),
+      () => this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application)
+    );
   }
 
   stop() {
@@ -80,11 +78,19 @@ export class ProjectComponent implements OnInit {
   }
 
   private npmCommand(cwd, ...args) {
-    const process = spawn(this.configService.config.paths.node, [
-      this.configService.config.paths.npm, ...args
-    ], { cwd, cols: 114, name: `npm ${args.join(" ")}` });
+   return this.emitProcess(spawn(this.node, [this.npm, ...args], { cwd, cols: 114, name: `npm ${args.join(" ")}` }));
+  }
+
+  get node() {
+    return this.config.paths.node;
+  }
+
+  get npm() {
+    return this.config.paths.npm;
+  }
+
+  private emitProcess(process: any) {
     this.processCreated.emit(process);
-    this.changeDetection.detectChanges();
     return process;
   }
 }

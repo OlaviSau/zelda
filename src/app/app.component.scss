@@ -20,6 +20,12 @@ app-root {
     }
   }
 
+  .ng-scrollbar-visible {
+    --scrollbar-padding: 6px;
+    --scrollbar-thumb-color: rgba(102, 51, 153, 0.1);
+    --scrollbar-thumb-hover-color: rgba(102, 51, 153, 0.2);
+  }
+
   .mat-tab-label-content {
     padding-right: 20px;
   }

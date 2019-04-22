@@ -1,6 +1,8 @@
-<mat-tab-group *ngIf="configService.config else noConfig">
-  <mat-tab [label]="project.name" *ngFor="let project of configService.config.projects">
-    <app-project [project]="project" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+<mat-tab-group *ngIf="config.exists else noConfig">
+  <mat-tab [label]="project.name" *ngFor="let project of config.projects">
+    <ng-scrollbar [compact]="true">
+      <app-project [project]="project" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+    </ng-scrollbar>
   </mat-tab>
 </mat-tab-group>
 <mat-tab-group (selectedIndexChange)="renderTerminal(processes[$event])">
@@ -18,7 +20,7 @@
     <div>Config Creator --TODO--</div>
     <div>Create your own config.json in the root directory</div>
     <div class="example-config">
-      {{configService.exampleConfig}}
+      {{config.example}}
     </div>
   </div>
 </ng-template>

@@ -1,13 +1,15 @@
 import {Injectable} from "@angular/core";
-import {Config} from "../app.model";
+import {Config, Paths, Project} from "../app.model";
 import {existsSync, readFileSync} from "fs";
 import {LernaService} from "../lerna/lerna.service";
 
 @Injectable()
 export class ConfigService {
-  public config: Config;
+  public paths: Paths;
+  public projects: Project[];
+  public exists = false;
 
-  public exampleConfig = `
+  public example = `
     {
       "projects": [
         {
@@ -26,8 +28,11 @@ export class ConfigService {
     private lernaService: LernaService
   ) {
     if (existsSync("config.json")) {
-      this.config = JSON.parse(readFileSync("config.json", {encoding: "utf8"}));
-      this.lernaService.addConfig(this.config);
+      const config = JSON.parse(readFileSync("config.json", {encoding: "utf8"})) as Config;
+      this.paths = config.paths;
+      this.projects = config.projects;
+      this.lernaService.addProjects(config.projects);
+      this.exists = true;
     }
   }
 }

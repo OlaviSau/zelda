@@ -18,6 +18,7 @@ import {ProjectComponent} from "./project/project.component";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {LernaService} from "./lerna/lerna.service";
 import {ConfigService} from "./config/config.service";
+import { NgScrollbarModule } from "ngx-scrollbar";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {ConfigService} from "./config/config.service";
     MatSelectModule,
     MatOptionModule,
     BrowserAnimationsModule,
-    MatInputModule
+    MatInputModule,
+    NgScrollbarModule
   ],
   providers: [
     LernaService,

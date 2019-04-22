@@ -2,13 +2,15 @@ import {IPty} from "node-pty";
 
 export interface Config {
   projects: Project[];
-  paths: {
-    "cmd": string,
-    "suspend": string,
-    "node": string,
-    "npm": string
-  };
+  paths: Paths;
 }
+
+export interface Paths {
+  cmd: string;
+  node: string;
+  npm: string;
+}
+
 
 export interface Project {
   defaultApplication: string;
@@ -43,16 +45,9 @@ export interface Process {
   pty: IPty;
   buffer: string[];
   name: string;
-  status: ProcessStatus;
 }
 
 export enum DependencyType {
   Package = "Package",
   Lerna = "Lerna"
-}
-
-export enum ProcessStatus {
-  Active = "Active",
-  Suspended = "Suspended",
-  Killed = "Killed"
 }
