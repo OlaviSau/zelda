@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild, ViewEncapsulation} from "@angular/core";
 import {Process, Project} from "./app.model";
-import {IPty, spawn} from "node-pty";
+import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {ConfigService} from "./config/config.service";
 
