@@ -1,4 +1,4 @@
-// Modules to control application life and create native browser window
+// Modules to control selectedApplication life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const { format } = require('url');
 const { join } = require('path');
@@ -28,9 +28,9 @@ function createWindow () {
   if (args.some(arg => arg === '--serve')) {
     mainWindow.loadURL("http://localhost:5200");
   } else {
-    // and load the index.html of the app.
+    // and load the projectIndex.html of the app.
     mainWindow.loadURL(format({
-      pathname: join(__dirname, 'dist/zelda/index.html'),
+      pathname: join(__dirname, 'dist/zelda/projectIndex.html'),
       protocol: 'file:',
       slashes: true
     }));

@@ -1,4 +1,36 @@
 <ng-scrollbar class="interface-container" [compact]="true" #scrollbar>
+  <form *ngIf="config.configuringProjectIndex === projectIndex" [formGroup]="config.projectForm">
+    <mat-form-field>
+      <input formControlName="name" matInput placeholder="Project Name" type="text">
+    </mat-form-field>
+    <mat-select formControlName="type" class="type" placeholder="Project Type">
+      <ng-scrollbar [compact]="true">
+        <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
+      </ng-scrollbar>
+    </mat-select>
+    <mat-form-field class="directory">
+      <input formControlName="directory" matInput placeholder="Project Directory" type="text">
+    </mat-form-field>
+    <div class="dependencies" formArrayName="dependencies">
+      <div class="dependency" [formGroupName]="dependencyIndex" *ngFor="let d of config.projectForm.get('dependencies').controls; let dependencyIndex=index">
+        <mat-form-field>
+          <input formControlName="name" matInput placeholder="Dependency Name" type="text">
+        </mat-form-field>
+        <mat-select formControlName="type" class="type" placeholder="Dependency Type">
+          <ng-scrollbar [compact]="true">
+            <mat-option *ngFor="let type of DependencyType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+          </ng-scrollbar>
+        </mat-select>
+        <mat-form-field class="directory">
+          <input formControlName="directory" matInput placeholder="Dependency Directory" type="text">
+        </mat-form-field>
+        <button class="remove" mat-button (click)="config.removeDependency(dependencyIndex)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+      </div>
+      <button mat-button (click)="config.addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
+    </div>
+
+  </form>
+
   <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
     <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency closed" #accordion>
       <h4 (click)="accordion.classList.toggle('closed'); scrollbar.update()">
@@ -9,7 +41,7 @@
         {{dependency.name + (dependency.scope ? ' - ' + dependency.scope : '')}}
       </h4>
 
-      <mat-checkbox *ngFor="let p of lernaService.packages[dependency.name]"
+      <mat-checkbox *ngFor="let p of lernaService.packages[dependency.directory]"
                     [disabled]="isPackageLinked(p)"
                     [checked]="isPackageLinked(p)"
                     (click)="link(p)"
@@ -25,10 +57,16 @@
 
   <div align-center class="command-container">
     <mat-select [(value)]="selectedApplication">
-      <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
+      <ng-scrollbar [compact]="true">
+        <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
+      </ng-scrollbar>
     </mat-select>
-    <button *ngIf="!serveProcess" mat-stroked-button color="primary" (click)="start(selectedApplication)">Start</button>
-    <button *ngIf="serveProcess" mat-stroked-button color="primary" (click)="stop()">Stop</button>
-    <button mat-stroked-button color="primary" (click)="install()">Install</button>
+    <div class="commands">
+      <span *ngIf="config.configuringProjectIndex === undefined" class="fa fa-cog" (click)="config.configure(projectIndex)" matTooltip="Configure"></span>
+      <span *ngIf="config.configuringProjectIndex === projectIndex" class="fa fa-save" (click)="config.save()" matTooltip="Save"></span>
+      <span class="fa fa-download" (click)="install()" matTooltip="Pull & Install"></span>
+      <span class="fa fa-upload" (click)="push()" matTooltip="Push"></span>
+      <span class="fa fa-play" (click)="start()" matTooltip="Start"></span>
+    </div>
   </div>
 </ng-scrollbar>

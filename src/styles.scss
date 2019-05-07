@@ -44,3 +44,44 @@ button.mat-stroked-button {
     border-radius: 50% !important;
   }
 }
+
+html {
+  .mat-select {
+    width: 144px;
+    padding: 9px;
+    background: rgba(102, 51, 153, 0.05);
+    font-family: 'Roboto Mono', sans-serif;
+    .mat-select-value {
+      color: #673ab7;
+    }
+  }
+  .mat-select-panel {
+    border-radius: 0;
+    background-color: #EDEEF3;
+    position: relative;
+    height: 256px;
+    .ng-scrollbar-visible {
+      padding: 0;
+    }
+  }
+  .mat-option {
+    &.mat-active {
+      background: rgba(102, 51, 153, 0.1);
+    }
+    &.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled):not(:hover) {
+      background: rgba(102, 51, 153, 0.1);
+    }
+    &:hover:not(.mat-option-disabled) {
+      background: rgba(102, 51, 153, 0.05);
+    }
+  }
+
+  .ng-scrollbar-visible {
+    --scrollbar-padding: 6px;
+    --scrollbar-thumb-color: rgba(102, 51, 153, 0.2);
+    --scrollbar-thumb-hover-color: rgba(102, 51, 153, 0.3);
+    .ng-scrollbar {
+      border-radius: 0;
+    }
+  }
+}

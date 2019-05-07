@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewChild} from "@angular/core";
-import {Process} from "./app.model";
-import {IPty} from "node-pty";
+import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild, ViewEncapsulation} from "@angular/core";
+import {Process, Project} from "./app.model";
+import {IPty, spawn} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {ConfigService} from "./config/config.service";
 
@@ -8,13 +8,15 @@ import {ConfigService} from "./config/config.service";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnDestroy {
 
   @ViewChild("terminal") terminal: TerminalComponent;
 
-  private activePID = null;
+  private selectedProcessID = null;
+  private selectedProject = null;
   processes: Process[] = [];
 
   constructor(public config: ConfigService) {}
@@ -34,12 +36,17 @@ export class AppComponent implements OnDestroy {
   renderTerminal(process: Process | undefined) {
     this.terminal.reset();
     if (process) {
-      this.activePID = process.pty.pid;
+      this.selectedProcessID = process.pty.pid;
       for (const buffer of process.buffer) {
         this.terminal.write(buffer);
       }
     }
   }
+
+  selectProject(project: Project) {
+    this.selectedProject = project;
+  }
+
 
   kill(pty) {
     const nextProcessIndex = this.processes.findIndex(process => process.pty.pid === pty.pid) + 1;
@@ -56,7 +63,7 @@ export class AppComponent implements OnDestroy {
 
   private update(process: Process, chunk: string) {
     process.buffer.push(chunk);
-    if (this.activePID === process.pty.pid) {
+    if (this.selectedProcessID === process.pty.pid) {
       this.terminal.write(chunk);
     }
   }

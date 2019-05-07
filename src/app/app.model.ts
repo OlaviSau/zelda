@@ -14,9 +14,15 @@ export interface Paths {
 
 export interface Project {
   defaultApplication: string;
+  id: number;
   name: string;
+  type: ProjectType;
   directory: string;
   dependencies: Dependency[];
+}
+
+export enum ProjectType {
+  Angular = "Angular"
 }
 
 export interface LernaConfig {

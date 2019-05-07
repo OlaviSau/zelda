@@ -35,7 +35,7 @@
 // import 'core-js/es6/set';
 
 /**
- * If the application will be indexed by Google Search, the following is required.
+ * If the selectedApplication will be indexed by Google Search, the following is required.
  * Googlebot uses a renderer based on Chrome 41.
  * https://developers.google.com/search/docs/guides/rendering
  **/
@@ -49,7 +49,7 @@
 
 /**
  * Web Animations `@angular/platform-browser/animations`
- * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.
+ * Only required if AnimationBuilder is used within the selectedApplication and using IE/Edge or Safari.
  * Standard animation support in Angular DOES NOT require any polyfills (as of Angular 6.0).
  **/
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.

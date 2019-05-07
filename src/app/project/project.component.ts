@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from "@angular/core";
 import {existsSync, lstatSync, readFileSync} from "fs";
-import {DependencyType, Project, ProjectConfig} from "../app.model";
-import {IPty, spawn} from "node-pty";
+import {DependencyType, Project, ProjectConfig, ProjectType} from "../app.model";
+import {spawn} from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
 import {ConfigService} from "../config/config.service";
@@ -10,8 +10,10 @@ import {exec} from "child_process";
 
 @Component({
   selector: "app-project",
+  styleUrls: ["./project.component.scss"],
   templateUrl: "./project.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ProjectComponent implements OnInit {
 
@@ -19,29 +21,33 @@ export class ProjectComponent implements OnInit {
     private changeDetector: ChangeDetectorRef,
     public lernaService: LernaService,
     private config: ConfigService
-  ) {}
+  ) {
+  }
 
   @Input() project: Project;
+  @Input() projectIndex: number;
   @Output() processCreated = new EventEmitter();
   @Output() killProcess = new EventEmitter();
 
   DependencyType = DependencyType;
+  ProjectType = ProjectType;
 
-  serveProcess: IPty | undefined = undefined;
   applications: string[] = [];
   selectedApplication: string;
 
   ngOnInit() {
-    const projectConfig: ProjectConfig = JSON.parse(stripComments(
-      readFileSync(`${this.project.directory}/angular.json`, {encoding: "utf8"})
-    ));
+    if (this.project.type === ProjectType.Angular) {
+      const projectConfig: ProjectConfig = JSON.parse(stripComments(
+        readFileSync(`${this.project.directory}/angular.json`, {encoding: "utf8"})
+      ));
 
-    if (projectConfig.defaultProject) {
-      this.selectedApplication = projectConfig.defaultProject;
-    }
+      for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
+        this.applications.push(projectName);
+      }
 
-    for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
-      this.applications.push(projectName);
+      if (projectConfig.defaultProject) {
+        this.selectedApplication = projectConfig.defaultProject;
+      }
     }
   }
 
@@ -65,20 +71,19 @@ export class ProjectComponent implements OnInit {
     );
   }
 
-  start(application) {
+  push() {
     execSequential(
-      () => this.npmCommand(this.project.directory, "run", "build:server", "--project", application),
-      () => this.serveProcess = this.npmCommand(this.project.directory, "run", "start", application)
+      () => this.emitProcess(exec(`rm -rf ${this.project.directory}/node_modules`)),
+      () => this.npmCommand(this.project.directory, "install")
     );
   }
 
-  stop() {
-    this.killProcess.emit(this.serveProcess);
-    this.serveProcess = undefined;
+  start() {
+    this.npmCommand(this.project.directory, "run", "start", this.selectedApplication);
   }
 
   private npmCommand(cwd, ...args) {
-   return this.emitProcess(spawn(this.node, [this.npm, ...args], { cwd, cols: 114, name: `npm ${args.join(" ")}` }));
+    return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, cols: 114, name: `npm ${args.join(" ")}`}));
   }
 
   get node() {

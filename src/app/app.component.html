@@ -1,9 +1,14 @@
-<mat-tab-group *ngIf="config.exists else noConfig">
-  <mat-tab [label]="project.name" *ngFor="let project of config.projects">
-      <app-project [project]="project" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+<mat-tab-group (selectedIndexChange)="selectProject(config.projects[$event])">
+  <mat-tab [label]="project.name" *ngFor="let project of config.projects; let projectIndex = index">
+      <app-project [project]="project" [projectIndex]="projectIndex" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <span class="fa fa-plus"></span>
+    </ng-template>
   </mat-tab>
 </mat-tab-group>
-<mat-tab-group (selectedIndexChange)="renderTerminal(processes[$event])">
+<mat-tab-group class="terminal-tabs" (selectedIndexChange)="renderTerminal(processes[$event])">
   <mat-tab *ngFor="let process of processes">
     <ng-template mat-tab-label>
       {{process.name}}
@@ -12,14 +17,3 @@
   </mat-tab>
 </mat-tab-group>
 <app-terminal #terminal></app-terminal>
-
-<ng-template #noConfig>
-  <div class="config-creator">
-    <div>Config Creator --TODO--</div>
-    <div>Create your own config.json in the root directory</div>
-    <div class="example-config">
-      {{config.example}}
-    </div>
-  </div>
-</ng-template>
-

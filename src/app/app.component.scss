@@ -10,23 +10,7 @@ app-root {
     flex: 1 1 auto;
   }
 
-  .mat-select {
-    width: 144px;
-    padding: 9px;
-    background: rgba(102, 51, 153, 0.05);
-    font-family: 'Roboto Mono', sans-serif;
-    .mat-select-value {
-      color: #673ab7;
-    }
-  }
-
-  .ng-scrollbar-visible {
-    --scrollbar-padding: 6px;
-    --scrollbar-thumb-color: rgba(102, 51, 153, 0.1);
-    --scrollbar-thumb-hover-color: rgba(102, 51, 153, 0.2);
-  }
-
-  .mat-tab-label-content {
+  .terminal-tabs .mat-tab-label-content {
     padding-right: 20px;
   }
 
@@ -50,11 +34,8 @@ app-root {
       font-size: 12px;
     }
 
-    .command-container {
-      margin-bottom: 20px;
-    }
-
   }
+
 
   app-terminal {
     flex: auto;
@@ -85,24 +66,7 @@ app-root {
     }
   }
 
-  .lerna-dependency {
-    padding: 10px;
-    margin: 20px;
-    font-family: "Roboto Mono", sans-serif;
-    background: rgba(102, 51, 153, 0.05);
-    position: relative;
-    user-select: none;
 
-    h4 {
-      cursor: pointer;
-      margin: 10px;
-    }
-    &.closed {
-      .mat-checkbox {
-        display: none;
-      }
-    }
-  }
 
   .config-creator {
     padding: 50px;
