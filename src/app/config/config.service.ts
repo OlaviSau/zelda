@@ -28,7 +28,7 @@ export class ConfigService implements Config {
     } else {
       project.dependencies = project.dependencies.filter(dep => dep.name && dep.directory && dep.type);
 
-      this.projects = Object.assign([], this.projects, {
+      this.projects = Object.assign([...this.projects], {
         [index]: {
           ...this.projects[index],
           ...project
