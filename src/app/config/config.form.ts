@@ -1,6 +1,6 @@
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 
-export class ProjectConfigForm {
+export class ConfigForm {
   constructor(project) {
     this.group = new FormGroup({
       name: new FormControl(project.name),
@@ -16,12 +16,14 @@ export class ProjectConfigForm {
         )
       ))
     });
+    this.dependencies = this.group.controls.dependencies;
   }
 
   group;
+  dependencies;
 
   addDependency() {
-    this.group.controls.dependencies.push(new FormGroup(
+    this.dependencies.push(new FormGroup(
       {
         "name": new FormControl(""),
         "type": new FormControl(""),
@@ -31,10 +33,6 @@ export class ProjectConfigForm {
   }
 
   removeDependency(index) {
-    this.group.controls.dependencies.removeAt(index);
-  }
-
-  get dependencies() {
-    return this.group.controls.dependencies.controls;
+    this.dependencies.removeAt(index);
   }
 }

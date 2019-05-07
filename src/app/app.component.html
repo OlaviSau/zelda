@@ -1,6 +1,6 @@
 <mat-tab-group (selectedIndexChange)="selectProject(config.projects[$event])">
   <mat-tab [label]="project.name" *ngFor="let project of config.projects; let projectIndex = index">
-      <app-project [project]="project" [projectIndex]="projectIndex" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+      <app-project [projectIndex]="projectIndex" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
   </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label>

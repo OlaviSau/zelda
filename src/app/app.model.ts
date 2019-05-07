@@ -29,7 +29,7 @@ export interface LernaConfig {
   packages: string[];
 }
 
-export interface ProjectConfig {
+export interface AngularProjectConfig {
   projects: {
     [key: string]: any
   };
@@ -40,7 +40,6 @@ export interface Dependency {
   directory: string;
   name: string;
   type: DependencyType;
-  scope?: string;
 }
 
 export interface PackageConfig {

@@ -2,15 +2,12 @@ import {Injectable} from "@angular/core";
 import {Config, Paths, Project, ProjectType} from "../app.model";
 import {existsSync, readFileSync, writeFileSync} from "fs";
 import {LernaService} from "../lerna/lerna.service";
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {MatSnackBar} from "@angular/material";
 
 @Injectable()
 export class ConfigService implements Config {
   public paths: Paths;
   public projects: Project[];
-  public configuringProjectIndex: undefined | number = undefined;
-  public projectForm;
 
   constructor(
     private lernaService: LernaService,
@@ -24,58 +21,25 @@ export class ConfigService implements Config {
     }
   }
 
-  configure(index: number) {
-    const project = this.projects[index];
-    this.projectForm = new FormGroup({
-      "name": new FormControl(project.name),
-      "type": new FormControl(project.type),
-      "directory": new FormControl(project.directory),
-      "dependencies": new FormArray(project.dependencies.map(
-        dependency => new FormGroup(
-          {
-            "name": new FormControl(dependency.name),
-            "type": new FormControl(dependency.type),
-            "directory": new FormControl(dependency.directory)
-          }
-        )
-      ))
-    });
-    this.configuringProjectIndex = index;
-  }
+  save(project: Project, index) {
+    if (!project) {
+    } else if (project.type === ProjectType.Angular && !existsSync(`${project.directory}/angular.json`)) {
+      this.snackBar.open(`${project.directory}/angular.json could not be found`, "Dismiss");
+    } else {
+      project.dependencies = project.dependencies.filter(dep => dep.name && dep.directory && dep.type);
 
-  addDependency() {
-    this.projectForm.get("dependencies").push(new FormGroup(
-      {
-        "name": new FormControl(""),
-        "type": new FormControl(""),
-        "directory": new FormControl("")
-      })
-    );
-  }
+      this.projects = Object.assign([], this.projects, {
+        [index]: {
+          ...this.projects[index],
+          ...project
+        }
+      });
 
-  removeDependency(index) {
-    this.projectForm.get("dependencies").removeAt(index);
-  }
 
-  save() {
-    const projectToSave = this.projectForm.value as Project;
-    if (projectToSave.type === ProjectType.Angular && !existsSync(`${projectToSave.directory}/angular.json`)) {
-      this.snackBar.open(`${projectToSave.directory}/angular.json could not be found`, "Dismiss");
-      this.configuringProjectIndex = undefined;
-      return;
+      writeFileSync("config.json", JSON.stringify({
+        paths: this.paths,
+        projects: this.projects
+      }, null, 2), {encoding: "utf8"});
     }
-
-    projectToSave.dependencies = projectToSave.dependencies.filter(dep => dep.name && dep.directory && dep.type);
-
-    this.projects = Object.assign([], this.projects, {[this.configuringProjectIndex]: {
-        ...this.projects[this.configuringProjectIndex],
-        ...projectToSave
-    }});
-    this.configuringProjectIndex = undefined;
-
-    writeFileSync("config.json", JSON.stringify({
-      paths: this.paths,
-      projects: this.projects
-    }, null, 2), { encoding: "utf8" });
   }
 }

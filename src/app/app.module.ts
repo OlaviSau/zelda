@@ -23,11 +23,13 @@ import {LernaService} from "./lerna/lerna.service";
 import {ConfigService} from "./config/config.service";
 import {NgScrollbarModule} from "ngx-scrollbar";
 import {ReactiveFormsModule} from "@angular/forms";
+import {ConfigComponent} from "./config/config.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectComponent,
+    ConfigComponent,
     TerminalComponent
   ],
   imports: [

@@ -1,0 +1,30 @@
+<form [formGroup]="form.group">
+  <mat-form-field>
+    <input formControlName="name" matInput placeholder="Project Name" type="text">
+  </mat-form-field>
+  <mat-select formControlName="type" class="type" placeholder="Project Type">
+    <ng-scrollbar [compact]="true">
+      <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
+    </ng-scrollbar>
+  </mat-select>
+  <mat-form-field class="directory">
+    <input formControlName="directory" matInput placeholder="Project Directory" type="text">
+  </mat-form-field>
+  <div class="dependencies" formArrayName="dependencies">
+    <div class="dependency" [formGroupName]="dependencyIndex" *ngFor="let d of form.dependencies.controls; let dependencyIndex=index">
+      <mat-form-field>
+        <input formControlName="name" matInput placeholder="Dependency Name" type="text">
+      </mat-form-field>
+      <mat-select formControlName="type" class="type" placeholder="Dependency Type">
+        <ng-scrollbar [compact]="true">
+          <mat-option *ngFor="let type of DependencyType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
+        </ng-scrollbar>
+      </mat-select>
+      <mat-form-field class="directory">
+        <input formControlName="directory" matInput placeholder="Dependency Directory" type="text">
+      </mat-form-field>
+      <button class="remove" mat-button (click)="form.removeDependency(dependencyIndex)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+    </div>
+    <button mat-button (click)="form.addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
+  </div>
+</form>

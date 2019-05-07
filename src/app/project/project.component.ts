@@ -1,6 +1,16 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 import {existsSync, lstatSync, readFileSync} from "fs";
-import {DependencyType, Project, ProjectConfig, ProjectType} from "../app.model";
+import {DependencyType, Project, AngularProjectConfig, ProjectType} from "../app.model";
 import {spawn} from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
@@ -24,20 +34,22 @@ export class ProjectComponent implements OnInit {
   ) {
   }
 
-  @Input() project: Project;
-  @Input() projectIndex: number;
-  @Output() processCreated = new EventEmitter();
-  @Output() killProcess = new EventEmitter();
-
+  project: Project;
+  configuring = false;
   DependencyType = DependencyType;
-  ProjectType = ProjectType;
+
 
   applications: string[] = [];
   selectedApplication: string;
+  @Input() projectIndex: number;
+  @Output() processCreated = new EventEmitter();
+  @Output() killProcess = new EventEmitter();
+  @ViewChild("projectConfiguring") projectConfiguring;
 
   ngOnInit() {
+    this.project = this.config.projects[this.projectIndex];
     if (this.project.type === ProjectType.Angular) {
-      const projectConfig: ProjectConfig = JSON.parse(stripComments(
+      const projectConfig: AngularProjectConfig = JSON.parse(stripComments(
         readFileSync(`${this.project.directory}/angular.json`, {encoding: "utf8"})
       ));
 
