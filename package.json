@@ -6,7 +6,7 @@
     "angular:serve": "ng serve",
     "electron:serve": "wait-on http-get://localhost:5200 && electron . --serve",
     "rebuild": "electron-rebuild -f -w node-pty",
-    "preinstall": "npm i -g windows-build-tools",
+    "preinstall": "npm i -g --production windows-build-tools",
     "postinstall": "tsc -p ./builder/tsconfig.json && npm run rebuild",
     "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src"
   },
