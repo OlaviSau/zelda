@@ -71,32 +71,46 @@ export class ProjectComponent implements OnInit {
 
   link(link) {
     execSequential(
-      () => this.npmCommand(link.directory, "link"),
+      () => this.npmCommand({
+        cwd: link.directory,
+        args: ["link"],
+        name: `${link.name}: Link`
+      }),
       () => exec(`rm -rf ${this.project.directory}/node_modules/${link.name}`),
-      () => this.npmCommand(this.project.directory, "link", `${link.name}`)
+      () => this.npmCommand({
+        cwd: this.project.directory,
+        args: ["link", link.name],
+        name: `${this.project.name}: Link ${link.name}`
+      })
     );
   }
 
   install() {
-    execSequential(
-      () => this.emitProcess(exec(`rm -rf ${this.project.directory}/node_modules`)),
-      () => this.npmCommand(this.project.directory, "install")
-    );
+    this.npmCommand({
+      cwd: this.project.directory,
+      args: ["install"],
+      name: `${this.project.name}: Install`
+    });
   }
 
   push() {
-    execSequential(
-      () => this.emitProcess(exec(`rm -rf ${this.project.directory}/node_modules`)),
-      () => this.npmCommand(this.project.directory, "install")
-    );
+    return;
   }
 
   start() {
-    this.npmCommand(this.project.directory, "run", "start", this.selectedApplication);
+    this.npmCommand({
+      cwd: this.project.directory,
+      args: ["run", "start", this.selectedApplication],
+      name: this.project.name
+    });
   }
 
-  private npmCommand(cwd, ...args) {
-    return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, cols: 114, name: `npm ${args.join(" ")}`}));
+  private npmCommand({cwd, args, name}: {
+    cwd: string,
+    args: string[],
+    name?: string
+  }) {
+    return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, name, cols: 114}));
   }
 
   get node() {
