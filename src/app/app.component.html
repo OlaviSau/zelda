@@ -1,11 +1,9 @@
-<mat-tab-group (selectedIndexChange)="selectProject(config.projects[$event])">
-  <mat-tab [label]="project.name" *ngFor="let project of config.projects; let projectIndex = index">
+<mat-tab-group>
+  <mat-tab *ngFor="let project of config.projects; let projectIndex = index">
+      <ng-template mat-tab-label>
+        <span class="{{!project.name ? 'fa fa-plus' : ''}}">{{project.name}}</span>
+      </ng-template>
       <app-project [projectIndex]="projectIndex" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <span class="fa fa-plus"></span>
-    </ng-template>
   </mat-tab>
 </mat-tab-group>
 <mat-tab-group class="terminal-tabs" (selectedIndexChange)="renderTerminal(processes[$event])">

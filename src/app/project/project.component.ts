@@ -35,7 +35,8 @@ export class ProjectComponent implements OnInit {
 
   project: Project;
   configuring = false;
-  DependencyType = DependencyType;
+  readonly DependencyType = DependencyType;
+  readonly ProjectType = ProjectType;
 
 
   applications: string[] = [];
@@ -61,6 +62,9 @@ export class ProjectComponent implements OnInit {
       } else {
         this.selectedApplication = this.applications[0];
       }
+    }
+    if (!this.project.type) {
+      this.configuring = true;
     }
   }
 

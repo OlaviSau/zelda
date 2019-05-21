@@ -16,15 +16,18 @@ export class ConfigService implements Config {
     if (existsSync("config.json")) {
       const config = JSON.parse(readFileSync("config.json", {encoding: "utf8"})) as Config;
       this.paths = config.paths;
-      this.projects = config.projects;
+      this.projects = this.addCreationProject(config.projects);
       this.lernaService.addProjects(config.projects);
     }
   }
 
   save(project: Project, index) {
-    if (!project) {
+    if (!project || !project.name) {
+      this.snackBar.open(`A project must have a name`, "Dismiss");
+      return false;
     } else if (project.type === ProjectType.Angular && !existsSync(`${project.directory}/angular.json`)) {
       this.snackBar.open(`${project.directory}/angular.json could not be found`, "Dismiss");
+      return false;
     } else {
       project.dependencies = project.dependencies.filter(dep => dep.name && dep.directory && dep.type);
 
@@ -40,6 +43,17 @@ export class ConfigService implements Config {
         paths: this.paths,
         projects: this.projects
       }, null, 2), {encoding: "utf8"});
+      this.projects = this.addCreationProject(this.projects);
     }
+  }
+
+  addCreationProject(projects: Project[]) {
+    if (!projects.find(p => !p.name)) {
+      return [...projects, {
+        directory: "",
+        dependencies: []
+      }];
+    }
+    return  projects;
   }
 }

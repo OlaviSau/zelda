@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild, ViewEncapsulation} from "@angular/core";
-import {Process, Project} from "./app.model";
+import {Dependency, Process, Project, ProjectType} from "./app.model";
 import {IPty} from "node-pty";
 import {TerminalComponent} from "./terminal/terminal.component";
 import {ConfigService} from "./config/config.service";
@@ -16,7 +16,6 @@ export class AppComponent implements OnDestroy {
   @ViewChild("terminal") terminal: TerminalComponent;
 
   private selectedProcessID = null;
-  private selectedProject = null;
   processes: Process[] = [];
 
   constructor(public config: ConfigService) {}
@@ -41,10 +40,6 @@ export class AppComponent implements OnDestroy {
         this.terminal.write(buffer);
       }
     }
-  }
-
-  selectProject(project: Project) {
-    this.selectedProject = project;
   }
 
 
