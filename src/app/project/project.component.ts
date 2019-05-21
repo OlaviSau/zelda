@@ -22,7 +22,6 @@ import {exec} from "child_process";
   selector: "app-project",
   styleUrls: ["./project.component.scss"],
   templateUrl: "./project.component.html",
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
 export class ProjectComponent implements OnInit {
