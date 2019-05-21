@@ -59,6 +59,8 @@ export class ProjectComponent implements OnInit {
 
       if (projectConfig.defaultProject) {
         this.selectedApplication = projectConfig.defaultProject;
+      } else {
+        this.selectedApplication = this.applications[0];
       }
     }
   }

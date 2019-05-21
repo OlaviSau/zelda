@@ -1,5 +1,6 @@
 .interface-container {
-  padding: 20px 20px;
+  padding: 40px 20px 0 20px;
+  position: relative;
   box-sizing: border-box;
   .ng-scrollbar-visible {
     right: -20px!important;
@@ -36,8 +37,9 @@
     }
   }
 
-
-
+  .mat-checkbox-disabled {
+    pointer-events: none;
+  }
 
 
   .lerna-dependency {
@@ -58,19 +60,27 @@
       }
     }
   }
+}
 
-  .commands {
-    display: inline-block;
-    margin-left: 20px;
-    background: #673ab7;
-    border-radius: 5px;
-    color: white;
-    z-index: 10;
-    text-align: center;
-    padding: 6px;
-    .fa {
-      margin: 6px;
-      cursor: pointer;
-    }
+.command-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
+.commands {
+  display: inline-block;
+  color: black;
+  z-index: 10;
+  text-align: center;
+  padding: 6px;
+  .fa {
+    margin: 5px;
+    cursor: pointer;
   }
 }
