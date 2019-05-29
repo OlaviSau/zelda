@@ -9,7 +9,7 @@ import {buffer} from "rxjs/operators";
   templateUrl: "./terminal.component.html"
 })
 export class TerminalComponent implements AfterViewInit {
-  @ViewChild("container", {read: ElementRef}) container;
+  @ViewChild("container", {read: ElementRef, static: true}) container;
 
   terminal = new Terminal({
     cols: 114,
@@ -17,8 +17,13 @@ export class TerminalComponent implements AfterViewInit {
     fontSize: 12,
     theme: {
       background: "#1e1e1e"
-    }
+    },
+    rightClickSelectsWord: true
   });
+
+  constructor() {
+    this.terminal.attachCustomKeyEventHandler(({ctrlKey, key}) => ctrlKey && key === "c" ? document.execCommand("copy") : false);
+  }
 
   isTerminalOpen() {
     return !!this.container.nativeElement.hasChildNodes();

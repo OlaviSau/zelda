@@ -13,7 +13,7 @@ import {ConfigService} from "./config/config.service";
 })
 export class AppComponent implements OnDestroy {
 
-  @ViewChild("terminal") terminal: TerminalComponent;
+  @ViewChild("terminal", {static: true}) terminal: TerminalComponent;
 
   private selectedProcessID = null;
   processes: Process[] = [];

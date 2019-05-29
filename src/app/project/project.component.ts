@@ -1,16 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-  ViewEncapsulation
-} from "@angular/core";
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from "@angular/core";
 import {existsSync, lstatSync, readFileSync} from "fs";
-import {DependencyType, Project, AngularProjectConfig, ProjectType} from "../app.model";
+import {AngularProjectConfig, DependencyType, Project, ProjectType} from "../app.model";
 import {spawn} from "node-pty";
 import {LernaService} from "../lerna/lerna.service";
 import {stripComments} from "tslint/lib/utils";
@@ -44,7 +34,7 @@ export class ProjectComponent implements OnInit {
   @Input() projectIndex: number;
   @Output() processCreated = new EventEmitter();
   @Output() killProcess = new EventEmitter();
-  @ViewChild("projectConfiguring") projectConfiguring;
+  @ViewChild("projectConfiguring", {static: false}) projectConfiguring;
 
   ngOnInit() {
     this.project = this.config.projects[this.projectIndex];
@@ -97,8 +87,35 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  push() {
-    return;
+  build() {
+    const timestamp = Date.now();
+    for (const dependency of this.project.dependencies.filter(({type}) => type === DependencyType.Lerna)) {
+      const ps = this.lernaService.packages[dependency.directory].filter(p => this.isPackageLinked(p));
+      if (!ps.length) {
+        continue;
+      }
+
+      execSequential(
+        () => this.npmCommand({
+          cwd: dependency.directory,
+          args: ["run", "build", "--" ].concat(...ps.map(p => ["--scope", p.name])),
+          name: `${this.project.name}: Build${ps.map(p => ` ${p.name}`)}`
+        }),
+        () => this.npmCommand({
+          cwd: dependency.directory,
+          args: ["run",
+            "release",
+            "--",
+            "--skip-git",
+            "--canary",
+            `dev-zelda-${timestamp}`,
+            "--npm-tag",
+            `dev-zelda-${timestamp}`
+          ].concat(...ps.map(p => ["--scope", p.name])),
+          name: `${this.project.name}: Release${ps.map(p => ` ${p.name}`)}`
+        })
+      );
+    }
   }
 
   start() {

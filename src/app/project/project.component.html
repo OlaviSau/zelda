@@ -8,6 +8,7 @@
     <span *ngIf="!configuring" class="fa fa-cog" (click)="configuring = true" matTooltip="Configure"></span>
     <span *ngIf="configuring" class="fa fa-save" (click)="config.save(projectConfiguring.form.group.value, projectIndex) ? configuring = false : null" matTooltip="Save"></span>
     <span *ngIf="project.type" class="fa fa-download" (click)="install()" matTooltip="Install"></span>
+    <span *ngIf="project.type === ProjectType.Angular" class="fa fa-hammer" (click)="build()" matTooltip="Build & Release"></span>
     <span *ngIf="project.type === ProjectType.Angular"  class="fa fa-play" (click)="start()" matTooltip="Start"></span>
   </div>
 </div>

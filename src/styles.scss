@@ -75,6 +75,14 @@ html {
       background: rgba(102, 51, 153, 0.05);
     }
   }
+  .mat-snack-bar-container {
+    background: white;
+    color: black;
+
+    .mat-button {
+      color: #673ab7;
+    }
+  }
 
   .ng-scrollbar-visible {
     --scrollbar-padding: 6px;

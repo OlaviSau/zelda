@@ -1,17 +1,14 @@
-import { BrowserBuilder, NormalizedBrowserBuilderSchema } from "@angular-devkit/build-angular";
-import { Path, virtualFs } from "@angular-devkit/core/src/virtual-fs";
-import { Stats } from "fs";
+import { createBuilder } from "@angular-devkit/architect";
+import { executeBrowserBuilder } from "@angular-devkit/build-angular";
+import { Schema as BrowserBuilderSchema } from "@angular-devkit/build-angular/src/browser/schema";
+import { json } from "@angular-devkit/core";
 
-export class ElectronBuilder extends BrowserBuilder {
-  buildWebpackConfig(root: Path, projectRoot: Path, host: virtualFs.Host<Stats>, browserOptions: NormalizedBrowserBuilderSchema) {
-    return {
-      ...super.buildWebpackConfig(root, projectRoot, host, browserOptions),
-      ...{
-        target: "electron-renderer",
-        externals: (ctx: any, req: any, done: any) => (/^node-pty$/.test(req) ? done(null, `commonjs ${req}`) : done())
-      }
-    };
-  }
-}
-
-export default ElectronBuilder;
+export default createBuilder<BrowserBuilderSchema & json.JsonObject>((options, context) => executeBrowserBuilder(options, context, {
+  webpackConfiguration: (configuration) => ({
+    ...configuration,
+    ...{
+      target: "electron-renderer",
+      externals: (ctx: any, req: any, done: any) => (/^node-pty$/.test(req) ? done(null, `commonjs ${req}`) : done())
+    }
+  })
+}));
