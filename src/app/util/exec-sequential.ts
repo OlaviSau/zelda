@@ -1,5 +1,10 @@
-export function execSequential(...commands: (() => any)[]) {
-  if (typeof commands[0] === "function") {
-    commands[0]().on("exit", () => execSequential(...commands.slice(1)));
+import { IPty } from "node-pty";
+import { ChildProcess } from "child_process";
+
+type ProcessFactory = () => IPty | ChildProcess;
+
+export function execSequential(command?: ProcessFactory, ...nextCommands: ProcessFactory[]) {
+  if (typeof command === "function") {
+    command().on("exit", exitCode => exitCode === 0 ? execSequential(...nextCommands) : null);
   }
 }

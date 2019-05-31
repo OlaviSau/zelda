@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, ViewChild, ViewEncapsulation} from "@angular/core";
-import {Dependency, Process, Project, ProjectType} from "./app.model";
-import {IPty} from "node-pty";
-import {TerminalComponent} from "./terminal/terminal.component";
-import {ConfigService} from "./config/config.service";
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Process } from "./app.model";
+import { IPty } from "node-pty";
+import { TerminalComponent } from "./terminal/terminal.component";
+import { ConfigService } from "./config/config.service";
 
 @Component({
   selector: "app-root",

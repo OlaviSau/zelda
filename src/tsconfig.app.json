@@ -4,7 +4,10 @@
     "outDir": "../out-tsc/app",
     "types": [
       "node"
-    ]
+    ],
+    "paths": {
+      "ngx-scrollbar": ["./node_modules/ngx-scrollbar"]
+    }
   },
   "exclude": [
     "src/test.ts",

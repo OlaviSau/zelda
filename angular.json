@@ -17,6 +17,7 @@
         "build": {
           "builder": "./builder:build",
           "options": {
+            "preserveSymlinks": true,
             "outputPath": "dist/zelda",
             "index": "src/index.html",
             "main": "src/main.ts",
