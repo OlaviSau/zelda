@@ -22,7 +22,7 @@ export class TerminalComponent implements AfterViewInit {
   });
 
   constructor() {
-    this.terminal.attachCustomKeyEventHandler(({ctrlKey, key}) => ctrlKey && key === "c" ? document.execCommand("copy") : false);
+    this.terminal.on("blur", () => document.execCommand("copy"));
   }
 
   isTerminalOpen() {

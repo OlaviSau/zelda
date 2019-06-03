@@ -1,12 +1,21 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation} from "@angular/core";
-import {existsSync, lstatSync, readFileSync} from "fs";
-import {AngularProjectConfig, DependencyType, Project, ProjectType} from "../app.model";
-import {spawn} from "node-pty";
-import {LernaService} from "../lerna/lerna.service";
-import {stripComments} from "tslint/lib/utils";
-import {ConfigService} from "../config/config.service";
-import {execSequential} from "../util/exec-sequential";
-import {exec} from "child_process";
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
+import { existsSync, lstatSync, readFileSync } from "fs";
+import { AngularProjectConfig, DependencyType, Project, ProjectType } from "../app.model";
+import { spawn } from "node-pty";
+import { LernaService } from "../lerna/lerna.service";
+import { stripComments } from "tslint/lib/utils";
+import { ConfigService } from "../config/config.service";
+import { execSequential } from "../util/exec-sequential";
+import { exec } from "child_process";
 
 @Component({
   selector: "app-project",
@@ -46,11 +55,12 @@ export class ProjectComponent implements OnInit {
       for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
         this.applications.push(projectName);
       }
+      const [defaultProject] = this.applications;
 
       if (projectConfig.defaultProject) {
         this.selectedApplication = projectConfig.defaultProject;
       } else {
-        this.selectedApplication = this.applications[0];
+        this.selectedApplication = defaultProject;
       }
     }
     if (!this.project.type) {
