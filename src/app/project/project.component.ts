@@ -141,7 +141,7 @@ export class ProjectComponent implements OnInit {
     args: string[],
     name?: string
   }) {
-    return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, name, cols: 114}));
+    return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, name, cols: window.innerWidth / 7}));
   }
 
   get node() {

@@ -10,6 +10,9 @@ app-root {
     flex: 1 1 auto;
   }
 
+  .terminal-tabs {
+    flex: none;
+  }
   .terminal-tabs .mat-tab-label-content {
     padding-right: 20px;
   }
@@ -38,22 +41,17 @@ app-root {
 
 
   app-terminal {
-    flex: auto;
+    height: 560px;
     position: relative;
     display: block;
     .terminal-window {
       position: relative;
       background-color: #1e1e1e;
-      margin: 40px auto;
-      width: 800px;
-      height: 450px;
-      outline: 20px solid rgba(102, 51, 153, 0.05);
       text-align: center;
+      height: 100%;
+
       .xterm-viewport {
         overflow: auto;
-      }
-      .xterm-screen {
-        margin: 2px auto;
       }
     }
     .fa.fa-expand {

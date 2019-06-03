@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild} from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from "@angular/core";
 
 import { IPty} from "node-pty";
 import { Terminal } from "xterm";
@@ -9,11 +9,15 @@ import {buffer} from "rxjs/operators";
   templateUrl: "./terminal.component.html"
 })
 export class TerminalComponent implements AfterViewInit {
+
+  constructor() {
+    this.terminal.on("blur", () => document.execCommand("copy"));
+  }
   @ViewChild("container", {read: ElementRef, static: true}) container;
 
   terminal = new Terminal({
-    cols: 114,
-    rows: 32,
+    cols: Math.floor(window.innerWidth / 7),
+    rows: 40,
     fontSize: 12,
     theme: {
       background: "#1e1e1e"
@@ -21,8 +25,9 @@ export class TerminalComponent implements AfterViewInit {
     rightClickSelectsWord: true
   });
 
-  constructor() {
-    this.terminal.on("blur", () => document.execCommand("copy"));
+  @HostListener("window:resize")
+  onResize() {
+     this.terminal.resize(Math.floor(window.innerWidth / 7), 40);
   }
 
   isTerminalOpen() {
