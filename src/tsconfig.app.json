@@ -6,7 +6,8 @@
       "node"
     ],
     "paths": {
-      "ngx-scrollbar": ["./node_modules/ngx-scrollbar"]
+      "ngx-scrollbar": ["./node_modules/ngx-scrollbar"],
+      "node-pty": ["./node-pty"]
     }
   },
   "exclude": [

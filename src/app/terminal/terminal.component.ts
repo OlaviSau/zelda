@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from "@angular/core";
 
-import { IPty} from "node-pty";
 import { Terminal } from "xterm";
-import {buffer} from "rxjs/operators";
 
 @Component({
   selector: "app-terminal",
@@ -16,8 +14,8 @@ export class TerminalComponent implements AfterViewInit {
   @ViewChild("container", {read: ElementRef, static: true}) container;
 
   terminal = new Terminal({
-    cols: Math.floor(window.innerWidth / 7),
-    rows: 40,
+    cols: Math.floor(window.innerWidth / 8),
+    rows: 30,
     fontSize: 12,
     theme: {
       background: "#1e1e1e"
@@ -27,7 +25,7 @@ export class TerminalComponent implements AfterViewInit {
 
   @HostListener("window:resize")
   onResize() {
-     this.terminal.resize(Math.floor(window.innerWidth / 7), 40);
+     this.terminal.resize(Math.floor(window.innerWidth / 8), 30);
   }
 
   isTerminalOpen() {

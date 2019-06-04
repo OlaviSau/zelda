@@ -6,6 +6,7 @@ app-root {
   left: 0;
   right: 0;
   top: 0;
+  overflow: hidden;
   > .mat-tab-group {
     flex: 1 1 auto;
   }
@@ -41,7 +42,7 @@ app-root {
 
 
   app-terminal {
-    height: 560px;
+    height: 420px;
     position: relative;
     display: block;
     .terminal-window {
@@ -53,14 +54,6 @@ app-root {
       .xterm-viewport {
         overflow: auto;
       }
-    }
-    .fa.fa-expand {
-      color: white;
-      position: absolute;
-      top: 9px;
-      right: 10px;
-      z-index: 10;
-      cursor: pointer;
     }
   }
 

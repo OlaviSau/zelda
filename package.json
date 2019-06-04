@@ -7,8 +7,7 @@
     "electron:serve": "wait-on http-get://localhost:5200 && electron . --serve",
     "build:electron": "electron-rebuild -f -w node-pty",
     "build:tools": "tsc -p ./builder/tsconfig.json",
-    "preinstall": "npm i -g --production windows-build-tools",
-    "postinstall": "npm run build:tools && npm run build:electron",
+    "postinstall": "npm run build:tools",
     "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src"
   },
   "main": "main.js",
@@ -27,7 +26,6 @@
     "ngx-scrollbar": "latest",
     "core-js": "^2.5.4",
     "glob": "^7.1.3",
-    "node-pty": "^0.8.1",
     "rxjs": "~6.5.2",
     "strip-json-comments": "^2.0.1",
     "tslib": "^1.9.0",
