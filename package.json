@@ -7,7 +7,7 @@
     "electron:serve": "wait-on http-get://localhost:5200 && electron . --serve",
     "build:electron": "electron-rebuild -f -w node-pty-prebuilt-multiarch",
     "build:tools": "tsc -p ./builder/tsconfig.json",
-    "postinstall": "npm run build:tools",
+    "postinstall": "npm run build:tools && npm run build:electron",
     "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src"
   },
   "main": "main.js",
