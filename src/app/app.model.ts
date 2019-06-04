@@ -1,4 +1,4 @@
-import {IPty} from "node-pty";
+import {IPty} from "node-pty-prebuilt-multiarch";
 
 export interface Config {
   projects: Project[];

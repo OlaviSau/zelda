@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { existsSync, lstatSync, readFileSync } from "fs";
 import { AngularProjectConfig, DependencyType, Project, ProjectType } from "../app.model";
-import { spawn } from "node-pty";
+import { spawn } from "node-pty-prebuilt-multiarch";
 import { LernaService } from "../lerna/lerna.service";
 import { stripComments } from "tslint/lib/utils";
 import { ConfigService } from "../config/config.service";

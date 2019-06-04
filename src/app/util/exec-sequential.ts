@@ -1,4 +1,4 @@
-import { IPty } from "node-pty";
+import { IPty } from "node-pty-prebuilt-multiarch";
 import { ChildProcess } from "child_process";
 
 type ProcessFactory = () => IPty | ChildProcess;
