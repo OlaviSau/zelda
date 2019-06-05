@@ -9,8 +9,8 @@
 <mat-tab-group class="terminal-tabs" (selectedIndexChange)="renderTerminal(processes[$event])">
   <mat-tab *ngFor="let process of processes">
     <ng-template mat-tab-label>
-      {{process.name}}
-      <i class="fa fa-trash-alt" (click)="kill(process.pty)"></i>
+        <i class="fa fa-trash-alt" (click)="kill(process.pty)"></i>
+        {{process.name}}
     </ng-template>
   </mat-tab>
 </mat-tab-group>
