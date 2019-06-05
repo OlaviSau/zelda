@@ -1,14 +1,16 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
   ViewEncapsulation
 } from "@angular/core";
-import { existsSync, lstatSync, readFileSync } from "fs";
+import { FSWatcher, lstat, readFile, watch } from "fs";
 import { AngularProjectConfig, DependencyType, Project, ProjectType } from "../app.model";
 import { spawn } from "node-pty-prebuilt-multiarch";
 import { LernaService } from "../lerna/lerna.service";
@@ -16,24 +18,42 @@ import { stripComments } from "tslint/lib/utils";
 import { ConfigService } from "../config/config.service";
 import { execSequential } from "../util/exec-sequential";
 import { exec } from "child_process";
+import { MatSnackBar } from "@angular/material";
+import { BehaviorSubject } from "rxjs";
+import { switchMap, tap } from "rxjs/operators";
+
+const { keys } = Object;
 
 @Component({
   selector: "app-project",
   styleUrls: ["./project.component.scss"],
   templateUrl: "./project.component.html",
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent implements OnInit, OnDestroy {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
     public lernaService: LernaService,
-    private config: ConfigService
+    private config: ConfigService,
+    private snackBar: MatSnackBar
   ) {
+  }
+
+  get node() {
+    return this.config.paths.node;
+  }
+
+  get npm() {
+    return this.config.paths.npm;
   }
 
   project: Project;
   configuring = false;
+  projectWatcher: FSWatcher | undefined;
+  projectWatcherSubject$ = new BehaviorSubject("initialize");
+  moduleWatchers$ = {};
   readonly DependencyType = DependencyType;
   readonly ProjectType = ProjectType;
 
@@ -47,30 +67,46 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
     this.project = this.config.projects[this.projectIndex];
+    this.projectWatcher = watch(this.project.directory, { recursive: true }, event => this.projectWatcherSubject$.next(event));
     if (this.project.type === ProjectType.Angular) {
-      const projectConfig: AngularProjectConfig = JSON.parse(stripComments(
-        readFileSync(`${this.project.directory}/angular.json`, {encoding: "utf8"})
-      ));
+        readFile(`${this.project.directory}/angular.json`, {encoding: "utf8"}, (err, data) => {
+          if (err) {
+            return this.snackBar.open(`angular.json could not be found`, "Dismiss");
+          }
+          const projectConfig: AngularProjectConfig = JSON.parse(stripComments(data));
+          for (const projectName of keys(projectConfig.projects)) {
+            this.applications.push(projectName);
+          }
+          const [defaultProject] = this.applications;
 
-      for (const projectName of Object.getOwnPropertyNames(projectConfig.projects)) {
-        this.applications.push(projectName);
-      }
-      const [defaultProject] = this.applications;
-
-      if (projectConfig.defaultProject) {
-        this.selectedApplication = projectConfig.defaultProject;
-      } else {
-        this.selectedApplication = defaultProject;
-      }
-    }
-    if (!this.project.type) {
+          if (projectConfig.defaultProject) {
+            this.selectedApplication = projectConfig.defaultProject;
+          } else {
+            this.selectedApplication = defaultProject;
+          }
+          this.changeDetector.detectChanges();
+        });
+    } else if (!this.project.type) {
       this.configuring = true;
     }
   }
 
   isPackageLinked(link) {
-    const path = `${this.project.directory}/node_modules/${link.name}`;
-    return existsSync(path) && lstatSync(path).isSymbolicLink();
+    if (!this.moduleWatchers$[link.name]) {
+      this.moduleWatchers$[link.name] = this.projectWatcherSubject$.pipe(
+        switchMap(() => new Promise(resolve => lstat(`${this.project.directory}/node_modules/${link.name}`,
+          (err, stats) =>  resolve(err ? false : stats.isSymbolicLink())
+        ))),
+        tap(() => this.changeDetector.detectChanges())
+      );
+    }
+    return this.moduleWatchers$[link.name];
+  }
+
+  ngOnDestroy() {
+    if (this.projectWatcher) {
+      this.projectWatcher.close();
+    }
   }
 
   link(link) {
@@ -142,14 +178,6 @@ export class ProjectComponent implements OnInit {
     name?: string
   }) {
     return this.emitProcess(spawn(this.node, [this.npm, ...args], {cwd, name, cols: window.innerWidth / 7}));
-  }
-
-  get node() {
-    return this.config.paths.node;
-  }
-
-  get npm() {
-    return this.config.paths.npm;
   }
 
   private emitProcess(process: any) {

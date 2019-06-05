@@ -27,8 +27,8 @@
         </h4>
 
         <mat-checkbox *ngFor="let p of lernaService.packages[dependency.directory]"
-                      [disabled]="isPackageLinked(p)"
-                      [checked]="isPackageLinked(p)"
+                      [disabled]="isPackageLinked(p) | async"
+                      [checked]="isPackageLinked(p) | async"
                       (click)="link(p)"
         >{{p.name}}</mat-checkbox>
       </div>
