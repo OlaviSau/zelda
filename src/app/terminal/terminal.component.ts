@@ -5,7 +5,7 @@ import { debounce } from "../util/debounce";
 import { ProcessState } from "../process/process.state";
 import { Process } from "../process/process";
 import { EMPTY, Subject } from "rxjs";
-import { startWith, switchMap, tap } from "rxjs/operators";
+import { catchError, startWith, switchMap, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-terminal",
@@ -34,7 +34,8 @@ export class TerminalComponent implements OnDestroy, AfterViewInit {
       this.terminal.reset();
       return process ? process.buffer$ : EMPTY;
     }),
-  ).subscribe(chunk => this.terminal.write(chunk));
+    catchError(() => EMPTY),
+  ).subscribe((chunk: string) => this.terminal.write(chunk));
 
   ngOnDestroy() {
     this.buffer$$.unsubscribe();

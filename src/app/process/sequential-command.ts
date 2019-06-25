@@ -21,7 +21,10 @@ export class SequentialCommand implements Process {
     this.currentHandle = factory();
     this.currentHandle.buffer$.subscribe({
       next: chunk => this.buffer$.next(chunk),
-      error: () => this.factories = [],
+      error: err => {
+        this.buffer$.error(err);
+        this.factories = [];
+      },
       complete: () => this.nextCommand()
     });
   }
