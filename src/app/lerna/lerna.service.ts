@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Dependency, DependencyType, LernaConfig, PackageConfig, Project} from "../app.model";
+import {Dependency, DependencyType, LernaConfig, PackageConfig, ProjectConfig} from "../app.model";
 import {existsSync, readFileSync, statSync} from "fs";
 import {sync} from "glob";
 
@@ -9,7 +9,7 @@ export class LernaService {
     [key: string]: Dependency[];
   } = {};
 
-  addProjects(projects: Project[]) {
+  addProjects(projects: ProjectConfig[]) {
     for (const project of projects) {
       for (const dependency of project.dependencies) {
         this.processLernaConfig(dependency);

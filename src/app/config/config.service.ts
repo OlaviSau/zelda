@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Config, Paths, Project, ProjectType} from "../app.model";
+import {Config, Paths, ProjectConfig, ProjectType} from "../app.model";
 import {existsSync, readFileSync, writeFileSync} from "fs";
 import {LernaService} from "../lerna/lerna.service";
 import {MatSnackBar} from "@angular/material";
@@ -7,7 +7,7 @@ import {MatSnackBar} from "@angular/material";
 @Injectable()
 export class ConfigService implements Config {
   public paths: Paths;
-  public projects: Project[];
+  public projects: ProjectConfig[];
 
   constructor(
     private lernaService: LernaService,
@@ -21,7 +21,7 @@ export class ConfigService implements Config {
     }
   }
 
-  save(project: Project, index) {
+  save(project: ProjectConfig, index) {
     if (!project || !project.name) {
       this.snackBar.open(`A project must have a name`, "Dismiss");
       return false;
@@ -47,13 +47,15 @@ export class ConfigService implements Config {
     }
   }
 
-  addCreationProject(projects: Project[]) {
+  addCreationProject(projects: ProjectConfig[]) {
     if (!projects.find(p => !p.name)) {
       return [...projects, {
+        name: "",
+        type: null,
         directory: "",
         dependencies: []
       }];
     }
-    return  projects;
+    return projects;
   }
 }

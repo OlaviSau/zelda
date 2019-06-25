@@ -1,7 +1,7 @@
 import {IPty} from "node-pty-prebuilt-multiarch";
 
 export interface Config {
-  projects: Project[];
+  projects: ProjectConfig[];
   paths: Paths;
 }
 
@@ -12,10 +12,9 @@ export interface Paths {
 }
 
 
-export interface Project {
-  defaultApplication?: string;
-  name?: string;
-  type?: ProjectType;
+export interface ProjectConfig {
+  name: string;
+  type: ProjectType;
   directory: string;
   dependencies: Dependency[];
 }

@@ -1,3 +1,13 @@
-<div class="terminal-window" >
+<mat-tab-group class="terminal-tabs">
+  <mat-tab *ngFor="let process of processState.all$ | async">
+    <ng-template mat-tab-label>
+      <span (click)="processState.select(process)">
+        <span class="fa fa-trash-alt" (click)="process.kill(); processState.remove(process)"></span>
+        {{process.name}}
+      </span>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+<div class="terminal-window">
   <div class="terminal-container" #container></div>
 </div>

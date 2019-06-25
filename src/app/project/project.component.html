@@ -5,38 +5,36 @@
     </ng-scrollbar>
   </mat-select>
   <div class="commands">
-    <span *ngIf="project.type === ProjectType.Angular"  class="fa fa-play" (click)="start()" matTooltip="Start"></span>
-    <span *ngIf="project.type" class="fa fa-download" (click)="install()" matTooltip="Install"></span>
-    <span *ngIf="project.type === ProjectType.Angular" class="fa fa-hammer" (click)="build()" matTooltip="Build & Release"></span>
+    <span *ngIf="project.type === ProjectType.Angular"  class="fa fa-play" (click)="processState.add(npm.start(selectedApplication))" matTooltip="Start"></span>
+    <span *ngIf="project.type" class="fa fa-download" (click)="processState.add(npm.install())" matTooltip="Install"></span>
+    <span *ngIf="project.type === ProjectType.Angular" class="fa fa-hammer" (click)="npm.deploy()" matTooltip="Build & Release"></span>
     <span *ngIf="!configuring" class="fa fa-cog" (click)="configuring = true" matTooltip="Configure"></span>
-    <span *ngIf="configuring" class="fa fa-save" (click)="config.save(projectConfiguring.form.group.value, projectIndex) ? configuring = false : null" matTooltip="Save"></span>
+    <span *ngIf="configuring" class="fa fa-save" (click)="config.save(projectConfiguring.form.value, projectIndex) ? configuring = false : null" matTooltip="Save"></span>
   </div>
 </div>
 <ng-scrollbar class="interface-container" [compact]="true" #scrollbar>
-  <app-config *ngIf="configuring" [project]="project" #projectConfiguring></app-config>
+  <app-config *ngIf="configuring else dependencies" [project]="project" #projectConfiguring></app-config>
 
-  <ng-container *ngIf="!configuring">
-    <ng-container *ngFor="let dependency of project.dependencies"  [ngSwitch]="dependency.type">
+  <ng-template #dependencies>
+    <ng-container *ngFor="let dependency of project.dependencies" [ngSwitch]="dependency.type">
       <div *ngSwitchCase="DependencyType.Lerna" class="lerna-dependency closed" #accordion>
         <h4 (click)="accordion.classList.toggle('closed'); scrollbar.update()">
-        <span class="fa"
-              [class.fa-plus]="accordion.classList.contains('closed')"
-              [class.fa-minus]="!accordion.classList.contains('closed')"
-        ></span>
+        <span class="fa accordion-icon"></span>
           {{dependency.name}}
+          <span class="sub-header" *ngIf="filterLernaPackagesByStatus$(dependency, LinkedStatus.Linked) | async as linkedPackages">
+            <span *ngIf="linkedPackages.length" class="fa fa-link"></span>
+            <span *ngFor="let p of linkedPackages">
+                {{p.name}}
+            </span>
+          </span>
         </h4>
-
-        <mat-checkbox *ngFor="let p of lernaService.packages[dependency.directory]"
-                      [disabled]="isPackageLinked(p) | async"
-                      [checked]="isPackageLinked(p) | async"
-                      (click)="link(p)"
-        >{{p.name}}</mat-checkbox>
+        <ng-container *ngIf="filterLernaPackagesByStatus$(dependency, LinkedStatus.NotLinked) | async as lernaPackages">
+          <span *ngFor="let p of lernaPackages" [class.linking]="" class="package"  (click)="processState.add(npm.link(p.name, p.directory))">
+            <span class="fa fa-link"></span> {{p.name}}
+          </span>
+        </ng-container>
       </div>
-      <mat-checkbox *ngSwitchDefault
-                    [disabled]="isPackageLinked(dependency)"
-                    [checked]="isPackageLinked(dependency)"
-                    (click)="link(dependency)"
-      >{{dependency.name}}</mat-checkbox>
+      <span *ngSwitchDefault (click)="processState.add(npm.link(dependency.name, dependency.directory))" class="package">{{dependency.name}}</span>
     </ng-container>
-  </ng-container>
+  </ng-template>
 </ng-scrollbar>

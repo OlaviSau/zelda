@@ -15,22 +15,24 @@ import {
   MatTabsModule,
   MatTooltipModule
 } from "@angular/material";
-import {CommonModule} from "@angular/common";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ProjectComponent} from "./project/project.component";
-import {TerminalComponent} from "./terminal/terminal.component";
-import {LernaService} from "./lerna/lerna.service";
-import {ConfigService} from "./config/config.service";
-import {NgScrollbarModule} from "ngx-scrollbar";
-import {ReactiveFormsModule} from "@angular/forms";
-import {ConfigComponent} from "./config/config.component";
+import { CommonModule } from "@angular/common";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ProjectComponent } from "./project/project.component";
+import { TerminalComponent } from "./terminal/terminal.component";
+import { LernaService } from "./lerna/lerna.service";
+import { ConfigService } from "./config/config.service";
+import { NgScrollbarModule } from "ngx-scrollbar";
+import { ReactiveFormsModule } from "@angular/forms";
+import { ConfigComponent } from "./config/config.component";
+import { KeysPipe } from "./pipe/keys.pipe";
 
 @NgModule({
   declarations: [
     AppComponent,
     ProjectComponent,
     ConfigComponent,
-    TerminalComponent
+    TerminalComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,
@@ -57,4 +59,5 @@ import {ConfigComponent} from "./config/config.component";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

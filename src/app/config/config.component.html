@@ -1,4 +1,4 @@
-<form [formGroup]="form.group">
+<form [formGroup]="form">
   <mat-form-field>
     <input formControlName="name" matInput placeholder="Project Name" type="text">
   </mat-form-field>
@@ -11,7 +11,7 @@
     <input formControlName="directory" matInput placeholder="Project Directory" type="text">
   </mat-form-field>
   <div class="dependencies" formArrayName="dependencies">
-    <div class="dependency" [formGroupName]="dependencyIndex" *ngFor="let d of form.dependencies.controls; let dependencyIndex=index">
+    <div class="dependency" [formGroupName]="key" *ngFor="let key of dependencies.controls | keys">
       <mat-form-field>
         <input formControlName="name" matInput placeholder="Dependency Name" type="text">
       </mat-form-field>
@@ -23,8 +23,8 @@
       <mat-form-field class="directory">
         <input formControlName="directory" matInput placeholder="Dependency Directory" type="text">
       </mat-form-field>
-      <button class="remove" mat-button (click)="form.removeDependency(dependencyIndex)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+      <button class="remove" mat-button (click)="removeDependency(key)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
     </div>
-    <button mat-button (click)="form.addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
+    <button mat-button (click)="addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
   </div>
 </form>

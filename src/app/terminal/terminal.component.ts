@@ -1,48 +1,52 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from "@angular/core";
 
 import { Terminal } from "xterm";
+import { debounce } from "../util/debounce";
+import { ProcessState } from "../process/process.state";
+import { Process } from "../process/process";
+import { EMPTY, Subject } from "rxjs";
+import { startWith, switchMap, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-terminal",
   templateUrl: "./terminal.component.html"
 })
-export class TerminalComponent implements AfterViewInit {
+export class TerminalComponent implements OnDestroy, AfterViewInit {
 
-  constructor() {
-    this.terminal.on("blur", () => document.execCommand("copy"));
+  constructor(public processState: ProcessState) {
+    this.terminal.onSelectionChange(() => document.execCommand("copy"));
   }
   @ViewChild("container", {read: ElementRef, static: true}) container;
 
   terminal = new Terminal({
-    cols: Math.floor(window.innerWidth / 8),
+    cols: Math.floor(window.innerWidth / 7),
     rows: 30,
     fontSize: 12,
     theme: {
       background: "#1e1e1e"
     },
-    rightClickSelectsWord: true
+    rightClickSelectsWord: true,
+    windowsMode: true
   });
 
-  @HostListener("window:resize")
-  onResize() {
-     this.terminal.resize(Math.floor(window.innerWidth / 8), 30);
-  }
+  private buffer$$ = this.processState.selected$.pipe(
+    switchMap(process => {
+      this.terminal.reset();
+      return process ? process.buffer$ : EMPTY;
+    }),
+  ).subscribe(chunk => this.terminal.write(chunk));
 
-  isTerminalOpen() {
-    return !!this.container.nativeElement.hasChildNodes();
-  }
-
-  write(chunk) {
-    this.terminal.write(chunk);
-  }
-
-  reset() {
-    this.terminal.reset();
+  ngOnDestroy() {
+    this.buffer$$.unsubscribe();
   }
 
   ngAfterViewInit() {
-    if (!this.isTerminalOpen()) {
-      this.terminal.open(this.container.nativeElement);
-    }
+    this.terminal.open(this.container.nativeElement);
+  }
+
+  @HostListener("window:resize")
+  @debounce()
+  onResize() {
+     this.terminal.resize(Math.floor(window.innerWidth / 7), 30);
   }
 }

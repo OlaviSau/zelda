@@ -33,18 +33,6 @@ button.mat-stroked-button {
   margin-left: 20px;
 }
 
-.mat-checkbox {
-  margin: 10px;
-  height: auto;
-  padding: 5px 10px;
-  text-align: center;
-  display: inline-block;
-  background: rgba(102, 51, 153, 0.1);
-  .mat-checkbox-frame, .mat-checkbox-background {
-    border-radius: 50% !important;
-  }
-}
-
 html {
   .mat-select {
     width: 144px;

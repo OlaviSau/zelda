@@ -3,15 +3,7 @@
       <ng-template mat-tab-label>
         <span class="{{!project.name ? 'fa fa-plus' : ''}}">{{project.name}}</span>
       </ng-template>
-      <app-project [projectIndex]="projectIndex" (processCreated)="listen($event)" (killProcess)="kill($event)"></app-project>
+      <app-project [projectIndex]="projectIndex"></app-project>
   </mat-tab>
 </mat-tab-group>
-<mat-tab-group class="terminal-tabs" (selectedIndexChange)="renderTerminal(processes[$event])">
-  <mat-tab *ngFor="let process of processes">
-    <ng-template mat-tab-label>
-        <i class="fa fa-trash-alt" (click)="kill(process.pty)"></i>
-        {{process.name}}
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
-<app-terminal #terminal></app-terminal>
+<app-terminal></app-terminal>
