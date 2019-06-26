@@ -10,7 +10,7 @@ export class NPM {
     return new SequentialCommand(
       [
         () => this.command(directory, ["npm", "link"]),
-        () => this.command(this.project.directory, ["rm", "-rf", `node_modules/${name}`]),
+        // () => this.command(this.project.directory, ["rm", "-rf", `node_modules/${name}`]),
         () => this.command(this.project.directory, ["npm", "link", name])
       ],
       `${this.project.name}: Link ${name}`
