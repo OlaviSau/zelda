@@ -19,12 +19,12 @@ import { CommonModule } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ProjectComponent } from "./project/project.component";
 import { TerminalComponent } from "./terminal/terminal.component";
-import { LernaService } from "./lerna/lerna.service";
 import { ConfigService } from "./config/config.service";
 import { NgScrollbarModule } from "ngx-scrollbar";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ConfigComponent } from "./config/config.component";
 import { KeysPipe } from "./pipe/keys.pipe";
+import { ComplexDependencyComponent } from "./dependency/complex-dependency.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +32,7 @@ import { KeysPipe } from "./pipe/keys.pipe";
     ProjectComponent,
     ConfigComponent,
     TerminalComponent,
+    ComplexDependencyComponent,
     KeysPipe
   ],
   imports: [
@@ -54,7 +55,6 @@ import { KeysPipe } from "./pipe/keys.pipe";
     NgScrollbarModule
   ],
   providers: [
-    LernaService,
     ConfigService
   ],
   bootstrap: [AppComponent]

@@ -1,0 +1,15 @@
+<div class="lerna-dependency closed" #accordion>
+    <h4 (click)="accordion.classList.toggle('closed')">
+        <span class="fa accordion-icon"></span>
+        {{name}}
+        <span class="sub-header" *ngIf="linkedDependencies$ | async as linkedDependencies">
+          <span *ngIf="linkedDependencies.length" class="fa fa-link"></span>
+          <span *ngFor="let dependency of linkedDependencies">
+              {{dependency.name}}
+          </span>
+        </span>
+    </h4>
+    <span *ngFor="let dependency of notLinkedDependencies$ | async" class="package" (click)="link.emit(dependency)">
+      <span class="fa fa-link"></span> {{dependency.name}}
+    </span>
+</div>

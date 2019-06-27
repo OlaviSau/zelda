@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { Process } from "./process";
-import { distinctUntilChanged, map, scan } from "rxjs/operators";
+import { scan } from "rxjs/operators";
+import { select } from "../util/select";
 
 interface State {
   processes: Process[];
@@ -20,13 +21,11 @@ export class ProcessState {
       selected: undefined
     }));
   readonly all$ = this.state$.pipe(
-    map(state => state.processes),
-    distinctUntilChanged()
+    select(state => state.processes)
   );
 
   readonly selected$ = this.state$.pipe(
-    map(state => state.selected),
-    distinctUntilChanged()
+    select(state => state.selected)
   );
 
   select(selected: Process) {

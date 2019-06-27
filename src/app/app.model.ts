@@ -1,5 +1,3 @@
-import {IPty} from "node-pty-prebuilt-multiarch";
-
 export interface Config {
   projects: ProjectConfig[];
   paths: Paths;
@@ -14,7 +12,7 @@ export interface Paths {
 
 export interface ProjectConfig {
   name: string;
-  type: ProjectType;
+  type: ProjectType | null;
   directory: string;
   dependencies: Dependency[];
 }
@@ -22,10 +20,6 @@ export interface ProjectConfig {
 export enum ProjectType {
   Angular = "Angular",
   Package = "Package"
-}
-
-export interface LernaConfig {
-  packages: string[];
 }
 
 export interface AngularProjectConfig {
@@ -39,16 +33,6 @@ export interface Dependency {
   directory: string;
   name: string;
   type: DependencyType;
-}
-
-export interface PackageConfig {
-  name: string;
-}
-
-export interface Process {
-  pty: IPty;
-  buffer: string[];
-  name: string;
 }
 
 export enum DependencyType {

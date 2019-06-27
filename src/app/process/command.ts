@@ -17,7 +17,6 @@ export class Command implements Process {
       if (code !== 0) {
         this.buffer$.error(code);
       }
-      this.buffer$.next(`Process exited with code: ${code}`);
       this.buffer$.complete();
     });
   }

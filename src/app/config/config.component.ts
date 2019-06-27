@@ -1,6 +1,16 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
 import {DependencyType, ProjectConfig, ProjectType} from "../app.model";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup } from "@angular/forms";
+
+interface ConfigFormGroup extends FormGroup {
+  controls: {
+    name: AbstractControl,
+    type: AbstractControl,
+    directory: AbstractControl,
+    dependencies: FormArray
+  };
+}
+
 @Component({
   selector: "app-config",
   templateUrl: "./config.component.html",
@@ -14,8 +24,8 @@ export class ConfigComponent implements OnInit {
 
   @Input() project: ProjectConfig;
 
-  form;
-  dependencies;
+  form: ConfigFormGroup;
+  dependencies: FormArray;
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -31,7 +41,7 @@ export class ConfigComponent implements OnInit {
           }
         )
       ))
-    });
+    }) as ConfigFormGroup;
     this.dependencies = this.form.controls.dependencies;
   }
 
@@ -45,7 +55,7 @@ export class ConfigComponent implements OnInit {
     );
   }
 
-  removeDependency(index) {
+  removeDependency(index: number) {
     this.dependencies.removeAt(index);
   }
 }

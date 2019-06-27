@@ -1,12 +1,15 @@
 import { SequentialCommand } from "../process/sequential-command";
 import { Command } from "../process/command";
 import { Project } from "../project/project";
+import { Dependency, DependencyType, Paths } from "../app.model";
+import { filter, map, take } from "rxjs/operators";
+import { ConcurrentCommand } from "../process/concurrent-command";
 
 export class NPM {
 
-  constructor(private paths, private project: Project) {}
+  constructor(private paths: Paths, private project: Project) {}
 
-  link(name, directory: string) {
+  link(name: string, directory: string) {
     return new SequentialCommand(
       [
         () => this.command(directory, ["npm", "link"]),
@@ -17,20 +20,21 @@ export class NPM {
     );
   }
 
-  deploy() {
-    // for (const dependency of this.project.dependencies.filter(({type}) => type === DependencyType.Lerna)) {
-    //   this.filterLinkedLernaPackages$(dependency.directory)
-    //     .pipe(map(packages => packages.map(p => p.name)))
-    //     .subscribe(
-    //       names => names.length ? execSequential(
-    //         () => this.build(dependency.directory, names),
-    //         () => this.release(dependency.directory, names)
-    //       ) : null
-    //     ).unsubscribe();
-    // }
+  deploy(dependencies: {[key: string]: string[]}) {
+    return new ConcurrentCommand(
+      Object.keys(dependencies).filter(directory => dependencies[directory].length).map(
+        directory => new SequentialCommand(
+          [
+            () => this.build(directory, dependencies[directory]),
+            () => this.release(directory, dependencies[directory])
+          ]
+        )
+      ),
+      `${this.project.name}: Deploy`
+    );
   }
 
-  release(directory, names) {
+  release(directory: string, names: string[]) {
     return this.command(directory, [
         "npm",
         "run",
@@ -45,7 +49,7 @@ export class NPM {
     );
   }
 
-  build(directory, names) {
+  build(directory: string, names: string[]) {
     return this.command(
       directory,
       ["npm", "run", "build", "--"].concat(
@@ -63,10 +67,10 @@ export class NPM {
     );
   }
 
-  start(...args) {
+  start(...args: string[]) {
     return this.command(
       this.project.directory,
-      ["npm", "run", "start", ...args],
+      ["npm", "start", ...args],
       this.project.name
     );
   }
@@ -74,7 +78,7 @@ export class NPM {
   private command(cwd: string, segments: string[], name?: string): Command {
     return new Command(
       cwd,
-      segments.map(segment => this.paths[segment] || segment),
+      segments.map(segment => this.paths[segment as keyof Paths] || segment),
       name
     );
   }

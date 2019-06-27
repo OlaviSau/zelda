@@ -5,7 +5,7 @@ import { ReplaySubject } from "rxjs";
 type CommandFactory = () => Command;
 
 export class SequentialCommand implements Process {
-  constructor(private factories: CommandFactory[], readonly name?) {
+  constructor(private factories: CommandFactory[], readonly name?: string) {
     this.nextCommand();
   }
 
