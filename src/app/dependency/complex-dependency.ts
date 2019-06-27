@@ -7,9 +7,9 @@ export class ComplexDependency implements Dependency {
   readonly dependencies: PackageDependency[] = [];
   readonly type = DependencyType.Lerna;
 
-  constructor(dependency: {name: string, directory: string}, strategy: (directory: string) => PackageDependency[]) {
+  constructor(dependency: {name: string, directory: string}, dependencies: PackageDependency[]) {
     this.directory = dependency.directory;
     this.name = dependency.name;
-    this.dependencies = strategy(this.directory);
+    this.dependencies = dependencies;
   }
 }

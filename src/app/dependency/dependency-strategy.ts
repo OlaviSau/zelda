@@ -1,3 +1,3 @@
-import { PackageDependency } from "./package-dependency";
+import { Dependency } from "../app.model";
 
-export type DependencyStrategy = (directory: string) => PackageDependency[];
+export type DependencyStrategy = (dependency: Dependency) => Dependency;
