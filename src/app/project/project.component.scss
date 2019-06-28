@@ -49,51 +49,6 @@
       width: 100%;
     }
   }
-
-  .mat-checkbox-disabled {
-    pointer-events: none;
-  }
-
-  .package {
-    margin: 10px;
-    height: auto;
-    padding: 5px 10px;
-    text-align: center;
-    display: inline-block;
-    background: rgba(102, 51, 153, 0.1);
-    cursor: pointer;
-    font-size: 12px;
-  }
-
-  .package:hover {
-    color: white;
-  }
-
-
-  .lerna-dependency {
-    padding: 10px;
-    margin: 20px 0;
-    font-family: "Roboto Mono", sans-serif;
-    background: rgba(102, 51, 153, 0.05);
-    position: relative;
-    user-select: none;
-
-    h4 {
-      cursor: pointer;
-      margin: 10px;
-    }
-    &.closed {
-      .package {
-        display: none;
-      }
-      .fa.accordion-icon:before {
-        content: "\f067";
-      }
-    }
-    .fa.accordion-icon:before {
-      content: "\f068";
-    }
-  }
 }
 
 .command-container {

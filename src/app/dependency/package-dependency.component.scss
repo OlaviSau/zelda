@@ -1,0 +1,22 @@
+app-package-dependency {
+  margin: 10px;
+  height: auto;
+  padding: 5px 10px;
+  text-align: center;
+  display: inline-block;
+  background: rgba(102, 51, 153, 0.1);
+  cursor: pointer;
+  font-size: 12px;
+
+  &.linking {
+    cursor: initial;
+    pointer-events: none;
+    color: white;
+    background: rgba(102, 51, 153, 0.2);
+  }
+
+  &:not(.linking):hover {
+    color: white;
+    background: rgba(102, 51, 153, 0.2);
+  }
+}

@@ -9,17 +9,6 @@ export class NPM {
 
   constructor(private paths: Paths, private project: Project) {}
 
-  link(name: string, directory: string) {
-    return new SequentialCommand(
-      [
-        () => this.command(directory, ["npm", "link"]),
-        // () => this.command(this.project.directory, ["rm", "-rf", `node_modules/${name}`]),
-        () => this.command(this.project.directory, ["npm", "link", name])
-      ],
-      `${this.project.name}: Link ${name}`
-    );
-  }
-
   deploy(dependencies: {[key: string]: string[]}) {
     return new ConcurrentCommand(
       Object.keys(dependencies).filter(directory => dependencies[directory].length).map(

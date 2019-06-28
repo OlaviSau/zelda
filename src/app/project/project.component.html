@@ -17,14 +17,12 @@
 
   <ng-template #dependencies>
     <app-complex-dependency *ngFor="let dependency of complexDependencies"
-                            [dependencies]="dependency.dependencies"
+                            [dependency]="dependency"
                             [project]="project"
-                            [name]="dependency.name"
-                            (link)="processState.add(npm.link($event.name, $event.directory))"
     ></app-complex-dependency>
-    <span *ngFor="let dependency of packageDependencies"
-          (click)="processState.add(npm.link(dependency.name, dependency.directory))"
-          class="package"
-    >{{dependency.name}}</span>
+    <app-package-dependency *ngFor="let dependency of packageDependencies"
+                            [dependency]="dependency"
+                            [project]="project"
+    ></app-package-dependency>
   </ng-template>
 </ng-scrollbar>

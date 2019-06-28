@@ -1,24 +1,26 @@
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter, Input, OnChanges, Output,
+  Component, EventEmitter, HostBinding, Input, OnChanges, Output,
   ViewEncapsulation
 } from "@angular/core";
 import { combineLatest, Observable } from "rxjs";
 import { Project } from "../project/project";
 import { map } from "rxjs/operators";
 import { PackageDependency } from "./package-dependency";
+import { DependencyState } from "./dependency.state";
+import { ComplexDependency } from "./complex-dependency";
 
 @Component({
   selector: "app-complex-dependency",
   templateUrl: "./complex-dependency.component.html",
+  styleUrls: ["./complex-dependency.component.scss"],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ComplexDependencyComponent implements OnChanges {
-  @Input() dependencies: PackageDependency[];
+  @Input() dependency: ComplexDependency;
   @Input() project: Project;
-  @Input() name: string;
-  @Output() link = new EventEmitter<PackageDependency>();
+  @HostBinding("class.closed") closed = true;
 
   linkedDependencies$: Observable<PackageDependency[]>;
   notLinkedDependencies$: Observable<PackageDependency[]>;
@@ -30,9 +32,9 @@ export class ComplexDependencyComponent implements OnChanges {
 
   private filterByStatus$(status: boolean) {
     return combineLatest(
-      this.dependencies.map(packageDependency => packageDependency.isLinked$(this.project))
+      this.dependency.dependencies.map(packageDependency => packageDependency.isLinked$(this.project))
     ).pipe(
-      map(isLinked => this.dependencies.filter((item, index) => isLinked[index] === status))
+      map(isLinked => this.dependency.dependencies.filter((item, index) => isLinked[index] === status))
     );
   }
 }

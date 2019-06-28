@@ -3,6 +3,7 @@ import { BehaviorSubject } from "rxjs";
 import { Process } from "./process";
 import { scan } from "rxjs/operators";
 import { select } from "../util/select";
+import { ConfigService } from "../config/config.service";
 
 interface State {
   processes: Process[];
@@ -13,6 +14,8 @@ interface State {
   providedIn: "root"
 })
 export class ProcessState {
+
+  constructor(private config: ConfigService) {}
 
   private actions$ = new BehaviorSubject<(state: State) => State>(state => state);
   private state$ = this.actions$.pipe(

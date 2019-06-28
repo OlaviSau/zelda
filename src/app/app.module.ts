@@ -25,6 +25,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ConfigComponent } from "./config/config.component";
 import { KeysPipe } from "./pipe/keys.pipe";
 import { ComplexDependencyComponent } from "./dependency/complex-dependency.component";
+import { PackageDependencyComponent } from "./dependency/package-dependency.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { ComplexDependencyComponent } from "./dependency/complex-dependency.comp
     ConfigComponent,
     TerminalComponent,
     ComplexDependencyComponent,
+    PackageDependencyComponent,
     KeysPipe
   ],
   imports: [

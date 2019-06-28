@@ -1,0 +1,25 @@
+app-complex-dependency {
+  display: block;
+  padding: 10px;
+  margin: 20px 0;
+  font-family: "Roboto Mono", sans-serif;
+  background: rgba(102, 51, 153, 0.05);
+  position: relative;
+  user-select: none;
+
+  h4 {
+    cursor: pointer;
+    margin: 10px;
+  }
+  &.closed {
+    app-package-dependency {
+      display: none;
+    }
+    .fa.accordion-icon:before {
+      content: "\f067";
+    }
+  }
+  .fa.accordion-icon:before {
+    content: "\f068";
+  }
+}
