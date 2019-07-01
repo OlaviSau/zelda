@@ -44,3 +44,4 @@ Thumbs.db
 config.json
 builder/src/electron/projectIndex.js
 zelda-win32-x64
+tasks.json

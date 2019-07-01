@@ -1,0 +1,16 @@
+<ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
+    <form [formGroup]="form">
+        <div class="tasks" formArrayName="tasks">
+            <div class="task" [formGroupName]="task.key" *ngFor="let task of tasks.controls | keyvalue">
+                <mat-form-field>
+                    <input (keydown.enter)="addTask()" formControlName="content" matInput placeholder="Task" type="text"/>
+                    <button (click)="removeTask(task.key)"
+                            mat-icon-button
+                            matTooltip="Mark as complete"
+                    ><mat-icon class="fa fa-check"></mat-icon></button>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</ng-scrollbar>
+

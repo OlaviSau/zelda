@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  ViewChild,
+  ViewEncapsulation
+} from "@angular/core";
 
 import { Terminal } from "xterm";
 import { debounce } from "../util/debounce";
@@ -9,7 +18,10 @@ import { EMPTY } from "rxjs";
 
 @Component({
   selector: "app-terminal",
-  templateUrl: "./terminal.component.html"
+  styleUrls: ["./terminal.component.scss"],
+  templateUrl: "./terminal.component.html",
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TerminalComponent implements OnDestroy, AfterViewInit {
 

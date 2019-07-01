@@ -11,46 +11,8 @@ app-root {
     flex: 1 1 auto;
   }
 
-  .terminal-tabs {
-    flex: none;
-    .mat-tab-label-content {
-      padding: 0 20px;
-    }
-  }
-
   .mat-tab-body.mat-tab-body-active {
     overflow-y: hidden;
-  }
-
-  .fa-trash-alt {
-    position: absolute;
-    left: 10px;
-    padding: 5px;
-    color: #673ab7;
-    &:hover {
-      color: white;
-      background: #673ab7;
-      border-radius: 50%;
-    }
-  }
-
-  app-terminal {
-    height: 469px;
-    position: relative;
-    display: block;
-    .terminal-window {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #1e1e1e;
-      text-align: center;
-      height: 420px;
-
-      .xterm-viewport {
-        overflow: auto;
-      }
-    }
   }
 
   .config-creator {

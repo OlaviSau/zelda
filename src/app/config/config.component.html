@@ -3,7 +3,7 @@
     <input formControlName="name" matInput placeholder="Project Name" type="text">
   </mat-form-field>
   <mat-select formControlName="type" class="type" placeholder="Project Type">
-    <ng-scrollbar [compact]="true">
+    <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
       <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
     </ng-scrollbar>
   </mat-select>
@@ -11,19 +11,19 @@
     <input formControlName="directory" matInput placeholder="Project Directory" type="text">
   </mat-form-field>
   <div class="dependencies" formArrayName="dependencies">
-    <div class="dependency" [formGroupName]="key" *ngFor="let key of dependencies.controls | keys">
+    <div class="dependency" [formGroupName]="dependency.key" *ngFor="let dependency of dependencies.controls | keyvalue">
       <mat-form-field>
         <input formControlName="name" matInput placeholder="Dependency Name" type="text">
       </mat-form-field>
       <mat-select formControlName="type" class="type" placeholder="Dependency Type">
-        <ng-scrollbar [compact]="true">
+        <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
           <mat-option *ngFor="let type of DependencyType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
         </ng-scrollbar>
       </mat-select>
       <mat-form-field class="directory">
         <input formControlName="directory" matInput placeholder="Dependency Directory" type="text">
       </mat-form-field>
-      <button class="remove" mat-button (click)="removeDependency(+key)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+      <button class="remove" mat-button (click)="removeDependency(dependency.key)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
     </div>
     <button mat-button (click)="addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
   </div>

@@ -5,8 +5,8 @@ import { AppComponent } from "./app.component";
 import {
   MatButtonModule,
   MatCardModule,
-  MatCheckboxModule,
-  MatFormFieldModule,
+  MatCheckboxModule, MatDialogModule,
+  MatFormFieldModule, MatIconModule,
   MatInputModule,
   MatListModule,
   MatOptionModule,
@@ -23,9 +23,9 @@ import { ConfigService } from "./config/config.service";
 import { NgScrollbarModule } from "ngx-scrollbar";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ConfigComponent } from "./config/config.component";
-import { KeysPipe } from "./pipe/keys.pipe";
 import { ComplexDependencyComponent } from "./dependency/complex-dependency.component";
 import { PackageDependencyComponent } from "./dependency/package-dependency.component";
+import { TasksComponent } from "./task/tasks.component";
 
 @NgModule({
   declarations: [
@@ -35,7 +35,10 @@ import { PackageDependencyComponent } from "./dependency/package-dependency.comp
     TerminalComponent,
     ComplexDependencyComponent,
     PackageDependencyComponent,
-    KeysPipe
+    TasksComponent
+  ],
+  entryComponents: [
+    TasksComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,9 @@ import { PackageDependencyComponent } from "./dependency/package-dependency.comp
     MatInputModule,
     BrowserAnimationsModule,
     MatInputModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [
     ConfigService

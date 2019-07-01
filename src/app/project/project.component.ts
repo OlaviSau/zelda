@@ -11,13 +11,14 @@ import { readFile } from "fs";
 import { AngularProjectConfig, ProjectType } from "../app.model";
 import { stripComments } from "tslint/lib/utils";
 import { ConfigService } from "../config/config.service";
-import { MatSnackBar } from "@angular/material";
+import { MatDialog, MatSnackBar } from "@angular/material";
 import { Project } from "./project";
 import { NPM } from "../npm/npm";
 import { ProcessState } from "../process/process.state";
 import { ConfigComponent } from "../config/config.component";
 import { ComplexDependency } from "../dependency/complex-dependency";
 import { PackageDependency } from "../dependency/package-dependency";
+import { TasksComponent } from "../task/tasks.component";
 
 @Component({
   selector: "app-project",
@@ -32,6 +33,7 @@ export class ProjectComponent implements OnInit {
     private changeDetector: ChangeDetectorRef,
     private config: ConfigService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     public processState: ProcessState
   ) {
   }
@@ -76,4 +78,7 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  openTasks() {
+    this.dialog.open(TasksComponent);
+  }
 }

@@ -72,6 +72,10 @@ html {
     }
   }
 
+  .mat-dialog-container {
+    padding: 0;
+  }
+
   .ng-scrollbar-visible {
     --scrollbar-padding: 6px;
     --scrollbar-thumb-color: rgba(102, 51, 153, 0.2);

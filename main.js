@@ -36,7 +36,9 @@ function createWindow () {
     }));
   }
 
-  mainWindow.webContents.openDevTools();
+  if(args.some(arg => arg === '--development')) {
+    mainWindow.webContents.openDevTools();
+  }
 
 
   // Emitted when the window is closed.
