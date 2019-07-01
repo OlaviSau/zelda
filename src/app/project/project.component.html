@@ -1,4 +1,4 @@
-<div align-center class="command-container">
+<div class="command-container">
   <mat-select *ngIf="project.type === ProjectType.Angular" [(value)]="selectedApplication">
     <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
       <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
