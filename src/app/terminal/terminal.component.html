@@ -1,6 +1,7 @@
 <div class="terminal-tabs">
-  <div class="terminal-tab" [class.active]="(processState.selected$ | async) === process"
-       *ngFor="let process of processState.all$ | async"
+  <div *ngFor="let process of processState.all$ | async"
+       class="terminal-tab"
+       [class.active]="selected === process"
        (click)="processState.select(process)">
     <span class="fa fa-trash-alt" (click)="process.kill(); processState.remove(process)"></span>
     {{process.name}}

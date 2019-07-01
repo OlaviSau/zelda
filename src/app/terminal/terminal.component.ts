@@ -15,6 +15,7 @@ import { ProcessState } from "../process/process.state";
 import { catchError, finalize, switchMap, tap } from "rxjs/operators";
 import { ignoreNil } from "../util/ignore-nil";
 import { EMPTY } from "rxjs";
+import { Process } from "../process/process";
 
 @Component({
   selector: "app-terminal",
@@ -41,8 +42,12 @@ export class TerminalComponent implements OnDestroy, AfterViewInit {
     windowsMode: true
   });
 
+  selected: Process | undefined;
   private buffer$$ = this.processState.selected$.pipe(
-    tap(() => this.terminal.reset()),
+    tap(selected => {
+      this.terminal.reset();
+      this.selected = selected;
+    }),
     ignoreNil(),
     switchMap(process => process.buffer$.pipe(
       finalize(() => this.terminal.writeln(`The process has exited with code 0`)),
