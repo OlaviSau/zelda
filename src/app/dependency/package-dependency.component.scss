@@ -12,11 +12,11 @@ app-package-dependency {
     cursor: initial;
     pointer-events: none;
     color: white;
-    background: rgba(102, 51, 153, 0.2);
+    background: #673ab7;
   }
 
   &:not(.linking):hover {
     color: white;
-    background: rgba(102, 51, 153, 0.2);
+    background: #673ab7;
   }
 }
