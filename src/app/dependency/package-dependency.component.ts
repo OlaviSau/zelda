@@ -1,16 +1,21 @@
 import {
   ChangeDetectionStrategy,
-  Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, OnDestroy, Output,
+  Component,
+  HostBinding,
+  HostListener,
+  Input,
   ViewEncapsulation
 } from "@angular/core";
-import { combineLatest, Observable } from "rxjs";
-import { Project } from "../project/project";
 import { map } from "rxjs/operators";
-import { PackageDependency } from "./package-dependency";
 import { DependencyState } from "./dependency.state";
+import { SequentialProcess } from "../process/sequential.process";
+import { PtyProcess } from "../process/pty.process";
+import { Project } from "../project/project";
+import { ProcessState } from "../process/process.state";
+import { Dependency } from "./dependency";
 
 @Component({
-  selector: "app-package-dependency",
+  selector: "lx-package-dependency",
   templateUrl: "./package-dependency.component.html",
   styleUrls: ["./package-dependency.component.scss"],
   encapsulation: ViewEncapsulation.None,
@@ -18,9 +23,12 @@ import { DependencyState } from "./dependency.state";
 })
 export class PackageDependencyComponent {
 
-  constructor(public dependencyState: DependencyState) {}
-  @Input() dependency: PackageDependency;
-  @Input() project: Project;
+  constructor(
+    private dependencyState: DependencyState,
+    private processState: ProcessState
+  ) {}
+  @Input() dependency!: Dependency;
+  @Input() project!: Project;
 
   @HostBinding("class.linking") linking = false;
 
@@ -30,7 +38,21 @@ export class PackageDependencyComponent {
     )),
   );
 
-  @HostListener("click") private link() {
-    this.dependencyState.link({dependency: this.dependency, project: this.project});
+  @HostListener("click") link() {
+    const command = new SequentialProcess(
+      [
+        () => new PtyProcess(this.dependency.directory, ["npm", "link"]),
+        () => new PtyProcess(this.project.directory, ["npm", "link", this.dependency.name])
+      ],
+      `${this.project.name}: Link ${this.dependency.name}`
+    );
+    this.processState.add(command);
+    const link = {project: this.project, dependency: this.dependency};
+    this.dependencyState.linking(link);
+
+    command.buffer$.subscribe({
+      error: () => this.dependencyState.linkingComplete(link),
+      complete: () => this.dependencyState.linkingComplete(link)
+    });
   }
 }

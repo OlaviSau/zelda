@@ -17,6 +17,13 @@ body, html {
   padding: 0;
   margin: 0;
 }
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(102, 51, 153, 0.1);
+}
 
 .mat-option-text {
   font-family: "Roboto Mono", sans-serif;
@@ -45,12 +52,8 @@ html {
   }
   .mat-select-panel {
     border-radius: 0;
-    background-color: #EDEEF3;
     position: relative;
     height: 256px;
-    .ng-scrollbar-visible {
-      padding: 0;
-    }
   }
   .mat-option {
     &.mat-active {
@@ -74,14 +77,6 @@ html {
 
   .mat-dialog-container {
     padding: 0;
-  }
-
-  .ng-scrollbar-visible {
-    --scrollbar-padding: 6px;
-    --scrollbar-thumb-color: rgba(102, 51, 153, 0.2);
-    --scrollbar-thumb-hover-color: rgba(102, 51, 153, 0.3);
-    .ng-scrollbar {
-      border-radius: 0;
-    }
+    border-radius: 0;
   }
 }

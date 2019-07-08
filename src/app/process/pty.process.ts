@@ -1,15 +1,20 @@
 import { IPty, spawn } from "node-pty-prebuilt-multiarch";
 import { ReplaySubject } from "rxjs";
 import { Process } from "./process";
+import { sync } from "which";
 
-export class Command implements Process {
+export class PtyProcess implements Process {
   constructor(cwd: string, segments: string[], readonly name?: string) {
     const [executable, ...args] = segments;
     this.name = name;
     this.handle = spawn(
-      executable,
+      sync(executable),
       args,
-      {cwd, cols: Math.floor(window.innerWidth / 7)}
+      {
+        cwd,
+        cols: Math.floor(window.innerWidth / 7) - 1,
+        rows: 30
+      }
     );
 
     this.handle.on("data", data => this.buffer$.next(data));

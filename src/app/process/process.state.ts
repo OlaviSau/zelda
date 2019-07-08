@@ -1,55 +1,40 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
 import { Process } from "./process";
-import { scan } from "rxjs/operators";
-import { select } from "../util/select";
+import { select } from "../state/select";
+import { State } from "../state/state";
+import { exclude } from "../util/array/exclude";
+import { other } from "../util/array/other";
+import { include } from "../util/array/include";
 
-interface State {
+@Injectable()
+export class ProcessState extends State<{
   processes: Process[];
-  selected: Process | undefined;
-}
+  selected?: Process;
+}> {
 
-@Injectable({
-  providedIn: "root"
-})
-export class ProcessState {
-
-  private actions$ = new BehaviorSubject<(state: State) => State>(state => state);
-  private state$ = this.actions$.pipe(
-    scan((state: State, action) => action(state), {
-      processes: [],
-      selected: undefined
-    }));
-  readonly all$ = this.state$.pipe(
-    select(state => state.processes)
-  );
-
-  readonly selected$ = this.state$.pipe(
-    select(state => state.selected)
-  );
+  constructor() {
+    super({processes: []});
+  }
+  readonly all$ = this.pipe(select(state => state.processes));
+  readonly selected$ = this.pipe(select(state => state.selected));
 
   select(selected: Process) {
-    this.actions$.next(state => ({
-      ...state,
-        selected
-    }));
+    this.update({selected});
   }
 
   remove(processToRemove: Process) {
-    this.actions$.next(state => (
-      {
-        selected: state.selected === processToRemove ? state.processes.find(process => process !== processToRemove) : state.selected,
-        processes: state.processes.filter(process => process !== processToRemove)
-      }
-    ));
+    const selected = this.value.selected;
+    const processes = this.value.processes;
+    this.update({
+      selected: selected === processToRemove ? other(processes, processToRemove) : selected,
+      processes: exclude(processes, processToRemove)
+    });
   }
 
   add(process: Process) {
-    this.actions$.next(state => (
-      {
-        selected: state.selected || process,
-        processes: [...state.processes, process]
-      }
-    ));
+    this.update({
+      selected: this.value.selected || process,
+      processes: include(this.value.processes, process)
+    });
   }
 }

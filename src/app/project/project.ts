@@ -1,30 +1,22 @@
-import { Dependency, ProjectConfig, ProjectType } from "../app.model";
-import { Observable } from "rxjs";
-import { watch } from "fs";
-import { shareReplay } from "rxjs/operators";
-import { dependencyFactory } from "../dependency/dependency.factory";
+import { Dependency } from "../dependency/dependency";
 
-export class Project implements ProjectConfig {
-  readonly dependencies: Dependency[];
-  readonly directory: string;
-  readonly type: ProjectType | null;
-  readonly name: string;
+export enum ProjectType {
+  Angular = "Angular",
+  Package = "Package"
+}
 
-  public dependencyChange$ = new Observable(self => {
-    const watcher = watch(
-      this.directory,
-      { recursive: true },
-      (event, filename) => filename && filename.includes("node_modules") ? self.next(event) : null
-    );
-    self.next("initialize");
-    return () => watcher.close();
-  }).pipe(shareReplay());
+export interface Command {
+  segments: [];
+  tip: string;
+  icon: string;
+  name: string;
+  directory: string;
+}
 
-  constructor({dependencies, directory, type, name}: ProjectConfig) {
-    this.dependencies = dependencies.map(dependencyFactory);
-    this.directory = directory;
-    this.type = type;
-    this.name = name;
-  }
-
+export interface Project {
+  name: string;
+  type: ProjectType;
+  directory: string;
+  dependencies: Dependency[];
+  commands: Command[];
 }

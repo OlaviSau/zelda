@@ -1,4 +1,4 @@
-<h4 (click)="closed = !closed">
+<h4 *ngIf="dependency$ | async as dependency" (click)="closed = !closed">
     <span class="fa accordion-icon"></span>
     {{dependency.name}}
     <span class="sub-header" *ngIf="linkedDependencies$ | async as linkedDependencies">
@@ -8,8 +8,8 @@
       </span>
     </span>
 </h4>
-<app-package-dependency
+<lx-package-dependency
     *ngFor="let dependency of notLinkedDependencies$ | async"
     [dependency]="dependency"
-    [project]="project"
-></app-package-dependency>
+    [project]="project$ | async"
+></lx-package-dependency>

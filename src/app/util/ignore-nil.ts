@@ -1,4 +1,4 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction } from "rxjs";
+import { Observable, OperatorFunction } from "rxjs";
 import { filter } from "rxjs/operators";
 
 export function ignoreNil<T>(): OperatorFunction<T, NonNullable<T>> {

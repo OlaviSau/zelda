@@ -1,48 +1,26 @@
-app-terminal {
+lx-terminal {
   flex: 0 0 460px;
   position: relative;
-  display: block;
-  .terminal-tabs {
-    height: 40px;
-    display: flex;
-    background-color: rgba(102, 51, 153, 0.05);
-    .terminal-tab {
-      display: flex;
-      align-items: center;
-      position: relative;
-      cursor: pointer;
-      padding: 0 30px;
-      font-family: Roboto,"Helvetica Neue",sans-serif;
-      font-size: 14px;
-      height: 100%;
-      box-sizing: border-box;
-      &.active {
-        border-bottom: 2px solid #673ab7;
-      }
-    }
-    .fa-trash-alt {
-      color: #673ab7;
-      padding: 4px;
-      margin-right: 4px;
-      &:hover {
-        color: white;
-        background: #673ab7;
-        border-radius: 50%;
-      }
+  display: flex;
+  flex-direction: column;
+
+  .fa-trash-alt {
+    color: #673ab7;
+    padding: 4px;
+    margin-right: 4px;
+    &:hover {
+      color: white;
+      background: #673ab7;
+      border-radius: 50%;
     }
   }
-
   .terminal-window {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background-color: #1e1e1e;
     text-align: center;
-    height: 420px;
+    flex: 0 0 420px;
+  }
 
-    .xterm-viewport {
-      overflow: auto;
-    }
+  .xterm .xterm-viewport::-webkit-scrollbar-thumb {
+    background: #EDEEF3;
   }
 }

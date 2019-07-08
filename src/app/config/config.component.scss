@@ -1,0 +1,58 @@
+lx-config {
+  padding: 20px;
+
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  align-items: center;
+  flex-direction: column;
+  overflow-x: hidden;
+  background: #EDEEF3;
+
+  h4 {
+    flex-basis: 100%;
+    padding: 0 10px;
+  }
+
+  form {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    width: 80%;
+    .mat-form-field {
+      margin: 0 10px;
+      font-family: "Roboto Mono", sans-serif;
+    }
+    .type {
+      height: 39px;
+      box-sizing: border-box;
+      display: inline-block;
+      margin-bottom: 20px;
+      width: 160px;
+    }
+    .remove {
+      margin-bottom: 20px;
+    }
+    .directory {
+      flex: auto;
+    }
+    .segments {
+      flex-basis: 100%;
+    }
+    .segment {
+      display: inline-block;
+    }
+
+
+    .dependencies {
+      width: 100%;
+    }
+    .dependency {
+      display: flex;
+      align-items: flex-end;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+  }
+}

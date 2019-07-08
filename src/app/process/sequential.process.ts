@@ -1,15 +1,15 @@
 import { Process } from "./process";
-import { Command } from "./command";
+import { PtyProcess } from "./pty.process";
 import { ReplaySubject } from "rxjs";
 
-type CommandFactory = () => Command;
+export type ProcessFactory = () => PtyProcess;
 
-export class SequentialCommand implements Process {
-  constructor(private factories: CommandFactory[], readonly name?: string) {
+export class SequentialProcess implements Process {
+  constructor(private factories: ProcessFactory[], readonly name?: string) {
     this.nextCommand();
   }
 
-  private currentHandle: Process;
+  private currentHandle: Process | undefined;
   readonly buffer$ = new ReplaySubject<string>();
 
   private nextCommand() {
@@ -31,6 +31,8 @@ export class SequentialCommand implements Process {
 
   kill() {
     this.factories = [];
-    this.currentHandle.kill();
+    if (this.currentHandle) {
+      this.currentHandle.kill();
+    }
   }
 }

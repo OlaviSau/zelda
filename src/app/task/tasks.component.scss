@@ -1,13 +1,14 @@
-app-tasks {
+lx-tasks {
   display: block;
   width: 400px;
   height: 600px;
   position: relative;
-  padding: 20px 0 0;
+  padding-top: 20px;
+  overflow: scroll;
 
   .mat-form-field {
     width: 100%;
-    padding: 0 20px;
+    padding: 0 12px 0 20px;
     box-sizing: border-box;
     .mat-icon-button {
       position: absolute;

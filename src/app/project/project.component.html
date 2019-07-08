@@ -1,29 +1,8 @@
-<div class="command-container">
-  <mat-select *ngIf="project.type === ProjectType.Angular" [(value)]="selectedApplication">
-    <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
-      <mat-option *ngFor="let app of applications" [value]="app">{{app}}</mat-option>
-    </ng-scrollbar>
-  </mat-select>
-  <div class="commands">
-    <span *ngIf="project.type === ProjectType.Angular"  class="fa fa-play" (click)="processState.add(npm.start(selectedApplication))" matTooltip="Start"></span>
-    <span *ngIf="project.type" class="fa fa-download" (click)="processState.add(npm.install())" matTooltip="Install"></span>
-<!--    <span *ngIf="project.type === ProjectType.Angular" class="fa fa-hammer" (click)="processState.add(npm.deploy())" matTooltip="Build & Release"></span>-->
-    <span *ngIf="!configuring" class="fa fa-cog" (click)="configuring = true" matTooltip="Configure"></span>
-    <span *ngIf="configuring" class="fa fa-save" (click)="config.save(projectConfiguring.form.value, projectIndex) ? configuring = false : null" matTooltip="Save"></span>
-    <span class="fa fa-tasks" (click)="openTasks()" matTooltip="Tasks"></span>
-  </div>
-</div>
-<ng-scrollbar class="interface-container" [compact]="true" [disableOnBreakpoints]="false">
-  <app-config *ngIf="configuring else dependencies" [project]="project" #projectConfiguring></app-config>
-
-  <ng-template #dependencies>
-    <app-complex-dependency *ngFor="let dependency of complexDependencies"
-                            [dependency]="dependency"
-                            [project]="project"
-    ></app-complex-dependency>
-    <app-package-dependency *ngFor="let dependency of packageDependencies"
-                            [dependency]="dependency"
-                            [project]="project"
-    ></app-package-dependency>
-  </ng-template>
-</ng-scrollbar>
+<lx-complex-dependency *ngFor="let dependency of complexDependencies$ | async"
+                        [dependency]="dependency"
+                        [project]="projectState.selected$ | async"
+></lx-complex-dependency>
+<lx-package-dependency *ngFor="let dependency of packageDependencies$ | async"
+                        [dependency]="dependency"
+                        [project]="projectState.selected$ | async"
+></lx-package-dependency>

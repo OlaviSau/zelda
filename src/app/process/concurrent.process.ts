@@ -1,7 +1,7 @@
 import { ReplaySubject } from "rxjs";
 import { Process } from "./process";
 
-export class ConcurrentCommand implements Process {
+export class ConcurrentProcess implements Process {
   private completedCount = 0;
   constructor(private commands: Process[], readonly name?: string) {
     for (const command of commands) {

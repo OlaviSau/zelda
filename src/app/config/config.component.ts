@@ -1,61 +1,94 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
-import {DependencyType, ProjectConfig, ProjectType} from "../app.model";
-import { AbstractControl, FormArray, FormControl, FormGroup } from "@angular/forms";
-
-interface ConfigFormGroup extends FormGroup {
-  controls: {
-    name: AbstractControl,
-    type: AbstractControl,
-    directory: AbstractControl,
-    dependencies: FormArray
-  };
-}
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from "@angular/core";
+import { Dependency, DependencyType } from "../dependency/dependency";
+import { Command, Project, ProjectType } from "../project/project";
+import { ProjectState } from "../project/project.state";
+import { MatDialog } from "@angular/material";
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+import { FormGroup as FormGroupType } from "../form/types";
 
 @Component({
-  selector: "app-config",
+  selector: "lx-config",
   templateUrl: "./config.component.html",
+  styleUrls: ["./config.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ConfigComponent implements OnInit {
+export class ConfigComponent implements OnDestroy {
 
   readonly ProjectType = ProjectType;
   readonly DependencyType = DependencyType;
 
-  @Input() project: ProjectConfig;
+  constructor(
+    public projectState: ProjectState,
+    private dialog: MatDialog
+  ) {}
 
-  form: ConfigFormGroup;
-  dependencies: FormArray;
+  form = new FormGroup({
+    name: new FormControl(""),
+    type: new FormControl(ProjectType.Angular),
+    directory: new FormControl(""),
+    dependencies: new FormArray([]),
+    commands: new FormArray([])
+  }) as FormGroupType<Project>;
 
-  ngOnInit() {
-    this.form = new FormGroup({
-      name: new FormControl(this.project.name),
-      type: new FormControl(this.project.type),
-      directory: new FormControl(this.project.directory),
-      dependencies: new FormArray(this.project.dependencies.map(
-        dependency => new FormGroup(
-          {
-            name: new FormControl(dependency.name),
-            type: new FormControl(dependency.type),
-            directory: new FormControl(dependency.directory)
-          }
-        )
-      ))
-    }) as ConfigFormGroup;
-    this.dependencies = this.form.controls.dependencies;
+  project$$ = this.projectState.selected$.subscribe(
+    project => {
+      if (project) {
+        for (const dependency of project.dependencies) {
+          this.addDependency(dependency);
+        }
+        for (const command of project.commands) {
+          this.addCommand(command);
+        }
+        this.form.patchValue(project);
+      }
+    }
+  );
+  addCommand(command?: Command) {
+    this.form.controls.commands.push(
+      new FormGroup({
+        name: new FormControl(command ? command.name : ""),
+        directory: new FormControl(command ? command.directory : ""),
+        segments: new FormArray(command ? command.segments.map(segment => new FormControl(segment)) : []),
+        icon: new FormControl(command ? command.icon : ""),
+        tip: new FormControl(command ? command.tip : "")
+      })
+    );
   }
 
-  addDependency() {
-    this.dependencies.push(new FormGroup(
-      {
-        "name": new FormControl(""),
-        "type": new FormControl(""),
-        "directory": new FormControl("")
+  removeCommand(index: number) {
+    this.form.controls.commands.removeAt(index);
+  }
+
+  addDependency(dependency?: Dependency) {
+    this.form.controls.dependencies.push(
+      new FormGroup({
+        name: new FormControl(dependency ? dependency.name : ""),
+        type: new FormControl(dependency ? dependency.type : DependencyType.Lerna),
+        directory: new FormControl(dependency ? dependency.directory : ""),
       })
     );
   }
 
   removeDependency(index: number) {
-    this.dependencies.removeAt(index);
+    this.form.controls.dependencies.removeAt(index);
+  }
+
+  ngOnDestroy() {
+    this.project$$.unsubscribe();
+  }
+
+  save() {
+    this.projectState.save(this.form.value);
+    this.dialog.closeAll();
+  }
+
+  delete(project: Project) {
+    this.projectState.delete(project);
+    this.dialog.closeAll();
+  }
+
+  cancel() {
+    this.dialog.closeAll();
   }
 }

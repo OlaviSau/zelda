@@ -1,30 +1,58 @@
 <form [formGroup]="form">
   <mat-form-field>
-    <input formControlName="name" matInput placeholder="Project Name" type="text">
+    <input formControlName="name" matInput placeholder="Project Name" type="text" required>
   </mat-form-field>
   <mat-select formControlName="type" class="type" placeholder="Project Type">
-    <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
-      <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
-    </ng-scrollbar>
+    <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
   </mat-select>
   <mat-form-field class="directory">
-    <input formControlName="directory" matInput placeholder="Project Directory" type="text">
+    <input formControlName="directory" matInput placeholder="Project Directory" type="text" required>
   </mat-form-field>
+  <h4>Dependencies</h4>
   <div class="dependencies" formArrayName="dependencies">
-    <div class="dependency" [formGroupName]="dependency.key" *ngFor="let dependency of dependencies.controls | keyvalue">
+    <div class="dependency" [formGroupName]="i" *ngFor="let dependency of form.controls.dependencies.controls; let i = index">
       <mat-form-field>
-        <input formControlName="name" matInput placeholder="Dependency Name" type="text">
+        <input formControlName="name" matInput placeholder="Dependency Name" type="text" required>
       </mat-form-field>
       <mat-select formControlName="type" class="type" placeholder="Dependency Type">
-        <ng-scrollbar [compact]="true" [disableOnBreakpoints]="false">
-          <mat-option *ngFor="let type of DependencyType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
-        </ng-scrollbar>
+        <mat-option *ngFor="let type of DependencyType | keyvalue" [value]="type.key">{{type.value}}</mat-option>
       </mat-select>
       <mat-form-field class="directory">
-        <input formControlName="directory" matInput placeholder="Dependency Directory" type="text">
+        <input formControlName="directory" matInput placeholder="Dependency Directory" type="text" required>
       </mat-form-field>
-      <button class="remove" mat-button (click)="removeDependency(dependency.key)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+      <button class="remove" mat-button (click)="removeDependency(+i)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
     </div>
     <button mat-button (click)="addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
   </div>
+  <h4>Commands</h4>
+  <div class="dependencies" formArrayName="commands">
+    <div class="dependency" [formGroupName]="i" *ngFor="let command of form.controls.commands.controls; let i = index">
+      <mat-form-field>
+        <input formControlName="name" matInput placeholder="Command Name" type="text" required>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="tip" matInput placeholder="Command Tip" type="text" required>
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="icon" matInput placeholder="Command Icon" type="text" required>
+      </mat-form-field>
+      <mat-form-field class="directory">
+        <input formControlName="directory" matInput placeholder="Command Directory" type="text" required>
+      </mat-form-field>
+      <button class="remove" mat-button (click)="removeCommand(i)" matTooltip="Remove Command"><span class="fa fa-minus"></span></button>
+      <div class="segments" formArrayName="segments">
+        <div class="segment" *ngFor="let segment of command.controls.segments.controls; let segmentIndex = index">
+          <mat-form-field>
+            <input [formControlName]="segmentIndex" matInput placeholder="Segment" type="text" required>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <button mat-button (click)="addCommand()" matTooltip="Add Command"><span class="fa fa-plus"></span></button>
+  </div>
 </form>
+<div>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button *ngIf="projectState.selected$ | async as project" mat-button (click)="delete(project)">Delete</button>
+  <button mat-button (click)="save()">Save</button>
+</div>

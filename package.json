@@ -9,7 +9,9 @@
     "build:electron": "electron-rebuild -f -w node-pty-prebuilt-multiarch",
     "build:tools": "tsc -p ./builder/tsconfig.json",
     "postinstall": "npm run build:tools && npm run build:electron",
-    "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src"
+    "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "main": "main.js",
   "private": true,
@@ -27,34 +29,29 @@
     "core-js": "^2.6.9",
     "electron": "4.0.5",
     "glob": "^7.1.4",
-    "ngx-scrollbar": "latest",
     "node-pty-prebuilt-multiarch": "0.8.1",
     "rxjs": "~6.5.2",
     "simple-scrollbar": "^0.4.0",
     "strip-json-comments": "^2.0.1",
     "tslib": "^1.10.0",
     "xterm": "^3.14.4",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "which": "latest"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.3",
     "@angular/cli": "^8.0.3",
     "@angular/compiler-cli": "^8.0.1",
     "@angular/language-service": "^8.0.1",
-    "@types/jasmine": "~2.8.8",
-    "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
+    "@types/which": "latest",
     "@types/webpack": "^4.4.33",
+    "@types/jest": "^24.0.15",
+    "jest": "^24.8.0",
+    "jest-preset-angular": "^7.1.1",
     "codelyzer": "~4.5.0",
     "concurrently": "^3.6.1",
     "electron-rebuild": "^1.8.5",
-    "jasmine-core": "~2.99.1",
-    "jasmine-spec-reporter": "~4.2.1",
-    "karma": "~3.1.1",
-    "karma-chrome-launcher": "~2.2.0",
-    "karma-coverage-istanbul-reporter": "~2.0.1",
-    "karma-jasmine": "~1.1.2",
-    "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.4.0",
     "tree-kill": "^1.2.1",
     "ts-node": "~7.0.0",
@@ -62,5 +59,11 @@
     "typescript": "~3.4.5",
     "wait-on": "^3.2.0",
     "webpack-angular-externals": "^1.0.2"
+  },
+  "jest": {
+    "preset": "jest-preset-angular",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupJest.ts"
+    ]
   }
 }
