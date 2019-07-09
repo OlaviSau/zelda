@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild, ViewChildren,
+  ViewEncapsulation
+} from "@angular/core";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { readFile, writeFile } from "fs";
 
@@ -27,7 +36,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   }) as TasksFormGroup;
   tasks = this.form.controls.tasks;
 
-  constructor(private changeDetector: ChangeDetectorRef) {}
+  constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) {}
 
   ngOnInit() {
     readFile("tasks.json", {encoding: "utf8"}, (err, data) => {
@@ -58,6 +67,8 @@ export class TasksComponent implements OnInit, OnDestroy {
         content: new FormControl("")
       })
     );
+
+    setTimeout(() => this.elementRef.nativeElement.querySelector(".task:last-child input").focus());
   }
 
   removeTask(index: number) {

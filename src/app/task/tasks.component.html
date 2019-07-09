@@ -1,9 +1,9 @@
 <form [formGroup]="form">
     <div class="tasks" formArrayName="tasks">
-        <div class="task" [formGroupName]="task.key" *ngFor="let task of tasks.controls | keyvalue">
+        <div class="task" [formGroupName]="index" *ngFor="let task of tasks.controls; let index = index">
             <mat-form-field>
                 <input (keydown.enter)="addTask()" formControlName="content" matInput placeholder="Task" type="text"/>
-                <button (click)="removeTask(task.key)"
+                <button (click)="removeTask(index)"
                         mat-icon-button
                         matTooltip="Mark as complete"
                 ><mat-icon class="fa fa-check"></mat-icon></button>
