@@ -8,6 +8,11 @@ lx-package-dependency {
   cursor: pointer;
   font-size: 12px;
 
+  .fa-circle-notch {
+    font-size: 14px;
+    line-height: 14px;
+  }
+
   &.linking {
     cursor: initial;
     pointer-events: none;

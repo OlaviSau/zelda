@@ -3,10 +3,10 @@
         <div class="task" [formGroupName]="index" *ngFor="let task of tasks.controls; let index = index">
             <mat-form-field>
                 <input (keydown.enter)="addTask()" formControlName="content" matInput placeholder="Task" type="text"/>
-                <button (click)="removeTask(index)"
+                <a (click)="removeTask(index)"
                         mat-icon-button
                         matTooltip="Mark as complete"
-                ><mat-icon class="fa fa-check"></mat-icon></button>
+                ><mat-icon class="fa fa-check"></mat-icon></a>
             </mat-form-field>
         </div>
     </div>
