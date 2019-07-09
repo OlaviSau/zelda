@@ -40,13 +40,9 @@
         <input formControlName="directory" matInput placeholder="Command Directory" type="text" required>
       </mat-form-field>
       <button class="remove" mat-button (click)="removeCommand(i)" matTooltip="Remove Command"><span class="fa fa-minus"></span></button>
-      <div class="segments" formArrayName="segments">
-        <div class="segment" *ngFor="let segment of command.controls.segments.controls; let segmentIndex = index">
-          <mat-form-field>
-            <input [formControlName]="segmentIndex" matInput placeholder="Segment" type="text" required>
-          </mat-form-field>
-        </div>
-      </div>
+      <mat-form-field class="segments">
+        <input formControlName="segments" matInput placeholder="Command" type="text" required>
+      </mat-form-field>
     </div>
     <button mat-button (click)="addCommand()" matTooltip="Add Command"><span class="fa fa-plus"></span></button>
   </div>

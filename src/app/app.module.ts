@@ -26,6 +26,7 @@ import { TasksComponent } from "./task/tasks.component";
 import { ProcessState } from "./process/process.state";
 import { ProjectState } from "./project/project.state";
 import { DependencyState } from "./dependency/dependency.state";
+import { CommandContainerComponent } from "./command-container/command-container.component";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { DependencyState } from "./dependency/dependency.state";
     TerminalComponent,
     ComplexDependencyComponent,
     PackageDependencyComponent,
-    TasksComponent
+    TasksComponent,
+    CommandContainerComponent
   ],
   entryComponents: [
     TasksComponent

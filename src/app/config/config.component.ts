@@ -49,7 +49,7 @@ export class ConfigComponent implements OnDestroy {
       new FormGroup({
         name: new FormControl(command ? command.name : ""),
         directory: new FormControl(command ? command.directory : ""),
-        segments: new FormArray(command ? command.segments.map(segment => new FormControl(segment)) : []),
+        segments: new FormControl(command ? command.segments : ""),
         icon: new FormControl(command ? command.icon : ""),
         tip: new FormControl(command ? command.tip : "")
       })

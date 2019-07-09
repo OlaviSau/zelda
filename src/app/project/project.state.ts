@@ -26,13 +26,10 @@ export class ProjectState extends State<{
   constructor(private processState: ProcessState) {
     super({projects: []});
     this.config.read().then(
-      state => {
-        const [selected] = state.projects;
-        this.next({
-          projects: state.projects,
-          selected
-        });
-      }
+      state => this.next({
+        ...state,
+        selected: state.projects[0]
+      })
     );
   }
 
@@ -56,16 +53,6 @@ export class ProjectState extends State<{
     this.config.write({projects});
   }
 
-  install(project: Project) {
-    this.processState.add(
-      new PtyProcess(
-        project.directory,
-        ["npm", "install"],
-        `${project.name}: Install`
-      )
-    );
-  }
-
   deploy(project: Project, dependencies: { [key: string]: string[] }) {
     this.processState.add(
       new ConcurrentProcess(
@@ -74,10 +61,8 @@ export class ProjectState extends State<{
             [
               () => new PtyProcess(
                 directory,
-                ["npm", "run", "build", "--"].concat(
-                  ...dependencies[directory].map(name => ["--scope", name])
-                ),
-                `${project.name}: Build${dependencies[directory].map(name => ` ${name}`)}`
+                ["npm", "run", "build"],
+                `${project.name}: Build`
               ),
               () => new PtyProcess(directory, [
                   "npm",

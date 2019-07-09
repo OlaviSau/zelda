@@ -6,7 +6,7 @@ export enum ProjectType {
 }
 
 export interface Command {
-  segments: [];
+  segments: string;
   tip: string;
   icon: string;
   name: string;

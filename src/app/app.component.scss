@@ -8,26 +8,6 @@ lx-root {
   top: 0;
   overflow: hidden;
 
-  .command-container {
-    background: white;
-    display: flex;
-    flex: 0 0 40px;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .commands {
-    display: inline-block;
-    color: black;
-    z-index: 10;
-    text-align: center;
-    padding: 6px;
-    .fa {
-      margin: 5px;
-      cursor: pointer;
-    }
-  }
-
   .tabs {
     flex: 0 0 40px;
     display: flex;
