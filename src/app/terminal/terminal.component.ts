@@ -11,8 +11,7 @@ import {
 import { Terminal } from "xterm";
 import { debounce } from "../util/debounce";
 import { ProcessState } from "../process/process.state";
-import { switchMap, tap } from "rxjs/operators";
-import { ignoreNil } from "../util/ignore-nil";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "lx-terminal",
@@ -34,14 +33,23 @@ export class TerminalComponent implements OnDestroy {
     windowsMode: true
   });
 
-  private buffer$$ = this.processState.selected$.pipe(
-    tap(() => this.terminal.reset()),
-    ignoreNil(),
-    switchMap(process => process.buffer$),
-  ).subscribe({
-    next: chunk => this.terminal.write(chunk),
-    error: code => this.terminal.writeln(`The process errored with code: ${code}`)
-  });
+  private selected$$ = this.processState.selected$.subscribe(
+    process => {
+      this.terminal.reset();
+      if (this.buffer$$) {
+        this.buffer$$.unsubscribe();
+      }
+      if (process) {
+        this.buffer$$ = process.buffer$.subscribe({
+          next: chunk => this.terminal.write(chunk),
+          complete: () => this.terminal.writeln("The process has exited"),
+          error: code => this.terminal.writeln(`The process errored with code: ${code}`)
+        });
+      }
+    }
+  );
+
+  private buffer$$: Subscription | undefined;
 
   @ViewChild("container", {
     read: ElementRef, static: true
@@ -57,7 +65,10 @@ export class TerminalComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.buffer$$.unsubscribe();
+    if (this.buffer$$) {
+      this.buffer$$.unsubscribe();
+    }
+    this.selected$$.unsubscribe();
     this.terminal.dispose();
   }
 }
