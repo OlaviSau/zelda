@@ -5,7 +5,6 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild, ViewChildren,
   ViewEncapsulation
 } from "@angular/core";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
