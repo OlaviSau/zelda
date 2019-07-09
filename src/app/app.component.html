@@ -1,15 +1,4 @@
-<div class="project-tabs tabs">
-    <div *ngFor="let project of projectState.all$ | async"
-         class="tab"
-         [class.active]="(projectState.selected$ | async) === project"
-         (click)="projectState.select(project)">
-        {{project.name}}
-    </div>
-    <div class="tab"
-         (click)="projectState.select(); openConfig()">
-        <span class="fa fa-plus"></span>
-    </div>
-</div>
+<lx-project-tabs></lx-project-tabs>
 <lx-command-container></lx-command-container>
 <lx-project></lx-project>
 <lx-terminal></lx-terminal>

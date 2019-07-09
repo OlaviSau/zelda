@@ -8,7 +8,6 @@ import { ProjectState } from "../project/project.state";
 import { MatDialog, MatSnackBar } from "@angular/material";
 import { PtyProcess } from "../process/pty.process";
 import { ProcessState } from "../process/process.state";
-import { ConfigComponent } from "../config/config.component";
 import { TasksComponent } from "../task/tasks.component";
 
 @Component({
@@ -109,15 +108,6 @@ export class CommandContainerComponent {
     segments.push(currentSegment);
 
     return segments;
-  }
-
-  openConfig() {
-    this.dialog.open(ConfigComponent, {
-      maxHeight: "100vh",
-      maxWidth: "100vw",
-      height: "100vh",
-      width: "100vw"
-    });
   }
 
   openTasks() {

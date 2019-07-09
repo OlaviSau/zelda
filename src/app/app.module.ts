@@ -27,6 +27,8 @@ import { ProcessState } from "./process/process.state";
 import { ProjectState } from "./project/project.state";
 import { DependencyState } from "./dependency/dependency.state";
 import { CommandContainerComponent } from "./command-container/command-container.component";
+import { ProjectTabsComponent } from "./project/project-tabs.component";
+import { LongHoverDirective } from "./long-hover/long-hover.directive";
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { CommandContainerComponent } from "./command-container/command-container
     ComplexDependencyComponent,
     PackageDependencyComponent,
     TasksComponent,
-    CommandContainerComponent
+    CommandContainerComponent,
+    ProjectTabsComponent,
+    LongHoverDirective
   ],
   entryComponents: [
     TasksComponent

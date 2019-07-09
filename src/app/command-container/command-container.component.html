@@ -3,6 +3,5 @@
 </mat-select>
 <div *ngIf="projectState.selected$ | async as project" class="commands">
   <span *ngFor="let command of project.commands" class="fa {{command.icon}}" (click)="execute(project, command)" [matTooltip]="command.tip"></span>
-  <span class="fa fa-cog" (click)="openConfig()" matTooltip="Configure"></span>
   <span class="fa fa-tasks" (click)="openTasks()" matTooltip="Tasks"></span>
 </div>

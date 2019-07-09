@@ -23,51 +23,21 @@ export class ConfigComponent implements OnDestroy {
     private dialog: MatDialog
   ) {}
 
-  form = new FormGroup({
-    name: new FormControl(""),
-    type: new FormControl(ProjectType.Angular),
-    directory: new FormControl(""),
-    dependencies: new FormArray([]),
-    commands: new FormArray([])
-  }) as FormGroupType<Project>;
+  form = this.createForm({});
 
   project$$ = this.projectState.selected$.subscribe(
-    project => {
-      if (project) {
-        for (const dependency of project.dependencies) {
-          this.addDependency(dependency);
-        }
-        for (const command of project.commands) {
-          this.addCommand(command);
-        }
-        this.form.patchValue(project);
-      }
-    }
+    (project) => this.form = this.createForm(project || {})
   );
-  addCommand(command?: Command) {
-    this.form.controls.commands.push(
-      new FormGroup({
-        name: new FormControl(command ? command.name : ""),
-        directory: new FormControl(command ? command.directory : ""),
-        segments: new FormControl(command ? command.segments : ""),
-        icon: new FormControl(command ? command.icon : ""),
-        tip: new FormControl(command ? command.tip : "")
-      })
-    );
+  addCommand(command: Partial<Command> = {}) {
+    this.form.controls.commands.push(this.createCommand(command));
   }
 
   removeCommand(index: number) {
     this.form.controls.commands.removeAt(index);
   }
 
-  addDependency(dependency?: Dependency) {
-    this.form.controls.dependencies.push(
-      new FormGroup({
-        name: new FormControl(dependency ? dependency.name : ""),
-        type: new FormControl(dependency ? dependency.type : DependencyType.Lerna),
-        directory: new FormControl(dependency ? dependency.directory : ""),
-      })
-    );
+  addDependency(dependency: Partial<Dependency> = {}) {
+    this.form.controls.dependencies.push(this.createDependency(dependency));
   }
 
   removeDependency(index: number) {
@@ -90,5 +60,49 @@ export class ConfigComponent implements OnDestroy {
 
   cancel() {
     this.dialog.closeAll();
+  }
+
+  createForm({
+    name = "",
+    type = ProjectType.Angular,
+    directory = "",
+    dependencies = [],
+    commands = []
+   }: Partial<Project> = {}): FormGroupType<Project> {
+    return new FormGroup({
+      name: new FormControl(name),
+      type: new FormControl(type),
+      directory: new FormControl(directory),
+      dependencies: new FormArray(dependencies.map(dependency => this.createDependency(dependency))),
+      commands: new FormArray(commands.map(command => this.createCommand(command)))
+    }) as FormGroupType<Project>;
+  }
+
+  createCommand({
+    name = "",
+    tip = "",
+    directory = "",
+    segments = "",
+    icon = ""
+  }: Partial<Command>) {
+    return new FormGroup({
+      name: new FormControl(name),
+      directory: new FormControl(directory),
+      segments: new FormControl(segments),
+      icon: new FormControl(icon),
+      tip: new FormControl(tip)
+    });
+  }
+
+  createDependency({
+    name = "",
+    type = DependencyType.Lerna,
+    directory = ""
+  }: Partial<Dependency>) {
+    return new FormGroup({
+      name: new FormControl(name),
+      type: new FormControl(type),
+      directory: new FormControl(directory),
+    });
   }
 }
