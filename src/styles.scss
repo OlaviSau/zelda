@@ -75,8 +75,26 @@ html {
     }
   }
 
+
+  @keyframes slide {
+    0%{ }
+    100%{
+      transform: translateY(0);
+    }
+  }
+
+  .cdk-overlay-pane.slide {
+    transform: translateY(-100%);
+    animation: slide .8s forwards 0s ease;
+  }
+
+  .mat-dialog-container {
+    will-change: transform, opacity;
+  }
+
   .mat-dialog-container {
     padding: 0;
     border-radius: 0;
   }
 }
+

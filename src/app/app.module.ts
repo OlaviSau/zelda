@@ -15,7 +15,6 @@ import {
   MatTooltipModule
 } from "@angular/material";
 import { CommonModule } from "@angular/common";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ProjectComponent } from "./project/project.component";
 import { TerminalComponent } from "./terminal/terminal.component";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -29,6 +28,9 @@ import { DependencyState } from "./dependency/dependency.state";
 import { CommandContainerComponent } from "./command-container/command-container.component";
 import { ProjectTabsComponent } from "./project/project-tabs.component";
 import { LongHoverDirective } from "./long-hover/long-hover.directive";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { IconPickerDialogComponent } from "./icon-picker/icon-picker-dialog.component";
+import { IconPickerComponent } from "./icon-picker/icon-picker.component";
 
 @NgModule({
   declarations: [
@@ -41,10 +43,9 @@ import { LongHoverDirective } from "./long-hover/long-hover.directive";
     TasksComponent,
     CommandContainerComponent,
     ProjectTabsComponent,
-    LongHoverDirective
-  ],
-  entryComponents: [
-    TasksComponent
+    LongHoverDirective,
+    IconPickerDialogComponent,
+    IconPickerComponent
   ],
   imports: [
     BrowserModule,
@@ -58,10 +59,10 @@ import { LongHoverDirective } from "./long-hover/long-hover.directive";
     MatSelectModule,
     MatOptionModule,
     MatInputModule,
-    BrowserAnimationsModule,
     MatInputModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    NoopAnimationsModule
   ],
   providers: [
     ProcessState,

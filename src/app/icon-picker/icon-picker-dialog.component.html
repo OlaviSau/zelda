@@ -1,0 +1,4 @@
+<div>
+  <input (keyup)="filterIcons(search.value)" #search type="text" placeholder="Search">
+  <span *ngFor="let icon of filteredIcons"  class="fa {{icon}}" (click)="selectIcon(icon)"></span>
+</div>

@@ -1,0 +1,26 @@
+lx-icon-picker {
+  width: 45.5px;
+  height: 45.5px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  color: #673ab7;
+  outline: none;
+  user-select: none;
+  margin-bottom: 1.25em;
+  border-radius: 50%;
+  cursor: pointer;
+
+
+
+  &:hover {
+    background: #673ab7;
+    color: white;
+  }
+
+  input {
+    display: none;
+  }
+}

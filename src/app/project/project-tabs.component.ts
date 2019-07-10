@@ -24,7 +24,9 @@ export class ProjectTabsComponent {
       maxHeight: "100vh",
       maxWidth: "100vw",
       height: "100vh",
-      width: "100vw"
+      width: "100vw",
+      hasBackdrop: false,
+      panelClass: "slide"
     });
   }
 }

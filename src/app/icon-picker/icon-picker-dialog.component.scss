@@ -1,0 +1,29 @@
+lx-icon-picker-dialog {
+  display: block;
+  width: 400px;
+  height: 600px;
+  padding: 4px;
+  box-sizing: border-box;
+
+  input {
+    width: 100%;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+    border-bottom: 1px solid #673ab7;
+  }
+
+  .fa {
+    padding: 7px;
+    font-size: 14px;
+    width: 28px;
+    height: 28px;
+    box-sizing: border-box;
+    cursor: pointer;
+    &:hover {
+      background: #673ab7;
+      color: white;
+    }
+  }
+}

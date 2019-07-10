@@ -34,9 +34,9 @@
     "simple-scrollbar": "^0.4.0",
     "strip-json-comments": "^2.0.1",
     "tslib": "^1.10.0",
+    "which": "latest",
     "xterm": "^3.14.4",
-    "zone.js": "~0.9.1",
-    "which": "latest"
+    "zone.js": "~0.9.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.3",

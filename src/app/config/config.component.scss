@@ -18,6 +18,7 @@ lx-config {
   form {
     display: flex;
     align-items: flex-end;
+    flex: 1 0 auto;
     flex-wrap: wrap;
     width: 80%;
     .mat-form-field {
@@ -36,6 +37,9 @@ lx-config {
     }
     .directory {
       flex: auto;
+    }
+    .name {
+      width: 250px;
     }
     .segments {
       flex-basis: 100%;
