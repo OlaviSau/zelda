@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewEncapsulation } from "@angular/core";
 import { ignoreNil } from "../util/ignore-nil";
 import { filter, map, switchMap } from "rxjs/operators";
 import { Command, Project, ProjectType } from "../project/project";
@@ -9,6 +9,7 @@ import { MatDialog, MatSnackBar } from "@angular/material";
 import { PtyProcess } from "../process/pty.process";
 import { ProcessState } from "../process/process.state";
 import { TasksComponent } from "../task/tasks.component";
+import { ProcessFactory, SequentialProcess } from "../process/sequential.process";
 
 @Component({
   selector: "lx-command-container",
@@ -25,6 +26,9 @@ export class CommandContainerComponent {
     private changeDetector: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
+
+  queued = [] as Command[];
+  private commandQueue: ProcessFactory[] | undefined = undefined;
 
   isAngular$ = this.projectState.selected$.pipe(
     ignoreNil(),
@@ -57,15 +61,34 @@ export class CommandContainerComponent {
       });
     }))
   );
+  @HostListener("document:keydown", ["$event"])
+  queueCommands(event: KeyboardEvent) {
+    if (event.shiftKey && !this.commandQueue) {
+      this.commandQueue = [];
+    }
+  }
+
+  @HostListener("document:keyup", ["$event"])
+  executeCommands(event: KeyboardEvent) {
+    if (!event.shiftKey && this.commandQueue && this.commandQueue.length) {
+      this.processState.add(new SequentialProcess(this.commandQueue, "Custom Process"));
+      this.commandQueue = undefined;
+      this.queued = [];
+    }
+  }
 
   execute(project: Project, command: Command) {
-    this.processState.add(
-      new PtyProcess(
-        this.replace(command.directory, project),
-        this.parse(this.replace(command.segments, project)),
-        this.replace(command.name, project)
-      )
+    const factory = () => new PtyProcess(
+      this.replace(command.directory, project),
+      this.parse(this.replace(command.segments, project)),
+      this.replace(command.name, project)
     );
+    if (this.commandQueue) {
+      this.commandQueue.push(factory);
+      this.queued = [...this.queued, command];
+    } else {
+      this.processState.add(factory());
+    }
   }
 
   replace(value: string, project: Project) {

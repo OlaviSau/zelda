@@ -11,8 +11,12 @@ lx-command-container {
     text-align: center;
     padding: 6px;
     .fa {
-      margin: 5px;
+      padding: 5px;
       cursor: pointer;
+      &:hover, &.queued {
+        background: #673ab7;
+        color: white;
+      }
     }
   }
 }
