@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, HostListener, ViewEncapsulation } from "@angular/core";
 import { Command, ProjectType } from "../project/project";
 import { ProjectState } from "../project/project.state";
-import { MatDialog } from "@angular/material";
 import { PtyProcess } from "../process/pty.process";
 import { ProcessState } from "../process/process.state";
-import { TasksComponent } from "../task/tasks.component";
 import { SequentialProcess } from "../process/sequential.process";
 import { map } from "rxjs/operators";
 import { ReplacementService } from "./replacement.service";
@@ -20,18 +18,13 @@ export class CommandContainerComponent {
   constructor(
     private projectState: ProjectState,
     private processState: ProcessState,
-    private dialog: MatDialog,
     private replacementService: ReplacementService
   ) {}
 
   isAngular$ = this.projectState.selected$.pipe(map(project => project && project.type === ProjectType.Angular));
   commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands : []));
   queued?: Command[];
-  extraReplacements: {[K: string]: string} = {};
 
-  openTasks() {
-    this.dialog.open(TasksComponent);
-  }
 
   @HostListener("document:keydown", ["$event"])
   queueCommands(event: KeyboardEvent) {

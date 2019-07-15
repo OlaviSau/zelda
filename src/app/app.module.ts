@@ -21,7 +21,6 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ConfigComponent } from "./config/config.component";
 import { ComplexDependencyComponent } from "./dependency/complex-dependency.component";
 import { PackageDependencyComponent } from "./dependency/package-dependency.component";
-import { TasksComponent } from "./task/tasks.component";
 import { ProcessState } from "./process/process.state";
 import { ProjectState } from "./project/project.state";
 import { DependencyState } from "./dependency/dependency.state";
@@ -42,7 +41,6 @@ import { ReplacementService } from "./command-container/replacement.service";
     TerminalComponent,
     ComplexDependencyComponent,
     PackageDependencyComponent,
-    TasksComponent,
     CommandContainerComponent,
     ProjectTabsComponent,
     LongHoverDirective,
