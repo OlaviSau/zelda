@@ -1,0 +1,3 @@
+<mat-select [formControl]="projectControl">
+  <mat-option *ngFor="let project of projects$ | async" [value]="project">{{project}}</mat-option>
+</mat-select>

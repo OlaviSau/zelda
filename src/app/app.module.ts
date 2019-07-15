@@ -31,6 +31,8 @@ import { LongHoverDirective } from "./long-hover/long-hover.directive";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IconPickerDialogComponent } from "./icon-picker/icon-picker-dialog.component";
 import { IconPickerComponent } from "./icon-picker/icon-picker.component";
+import { AngularProjectSelectorComponent } from "./project/angular/angular-project-selector.component";
+import { ReplacementService } from "./command-container/replacement.service";
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { IconPickerComponent } from "./icon-picker/icon-picker.component";
     ProjectTabsComponent,
     LongHoverDirective,
     IconPickerDialogComponent,
-    IconPickerComponent
+    IconPickerComponent,
+    AngularProjectSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +70,8 @@ import { IconPickerComponent } from "./icon-picker/icon-picker.component";
   providers: [
     ProcessState,
     ProjectState,
-    DependencyState
+    DependencyState,
+    ReplacementService
   ],
   bootstrap: [AppComponent]
 })

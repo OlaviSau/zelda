@@ -1,15 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewEncapsulation } from "@angular/core";
-import { ignoreNil } from "../util/ignore-nil";
-import { filter, map, switchMap } from "rxjs/operators";
-import { Command, Project, ProjectType } from "../project/project";
-import { readFile } from "fs";
-import { stripComments } from "tslint/lib/utils";
+import { ChangeDetectionStrategy, Component, HostListener, ViewEncapsulation } from "@angular/core";
+import { Command, ProjectType } from "../project/project";
 import { ProjectState } from "../project/project.state";
-import { MatDialog, MatSnackBar } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { PtyProcess } from "../process/pty.process";
 import { ProcessState } from "../process/process.state";
 import { TasksComponent } from "../task/tasks.component";
-import { ProcessFactory, SequentialProcess } from "../process/sequential.process";
+import { SequentialProcess } from "../process/sequential.process";
+import { map } from "rxjs/operators";
+import { ReplacementService } from "./replacement.service";
 
 @Component({
   selector: "lx-command-container",
@@ -20,87 +18,55 @@ import { ProcessFactory, SequentialProcess } from "../process/sequential.process
 })
 export class CommandContainerComponent {
   constructor(
-    public projectState: ProjectState,
+    private projectState: ProjectState,
     private processState: ProcessState,
-    private snack: MatSnackBar,
-    private changeDetector: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private replacementService: ReplacementService
   ) {}
 
-  queued = [] as Command[];
-  private commandQueue: ProcessFactory[] | undefined = undefined;
+  isAngular$ = this.projectState.selected$.pipe(map(project => project && project.type === ProjectType.Angular));
+  commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands : []));
+  queued?: Command[];
+  extraReplacements: {[K: string]: string} = {};
 
-  isAngular$ = this.projectState.selected$.pipe(
-    ignoreNil(),
-    map(project => project.type === ProjectType.Angular)
-  );
-  selectedApplication: string | undefined;
-  applications$ = this.projectState.selected$.pipe(
-    ignoreNil(),
-    filter(project => !!project.directory && project.type === ProjectType.Angular),
-    switchMap(project => new Promise(resolve => {
-      readFile(`${project.directory}/angular.json`, {encoding: "utf8"}, (err, data) => {
-        if (err) {
-          this.snack.open(`angular.json could not be found`, "Dismiss");
-          return;
-        }
-        const angularConfig: {
-          projects: {
-            [key: string]: any
-          };
-          defaultProject?: string;
-        } = JSON.parse(stripComments(data));
-        const applications = Object.keys(angularConfig.projects);
-        const [defaultProject = angularConfig.defaultProject] = applications;
+  openTasks() {
+    this.dialog.open(TasksComponent);
+  }
 
-        this.selectedApplication = defaultProject;
-        this.changeDetector.markForCheck();
-        Object.keys(angularConfig.projects);
-
-        resolve(applications);
-      });
-    }))
-  );
   @HostListener("document:keydown", ["$event"])
   queueCommands(event: KeyboardEvent) {
-    if (event.shiftKey && !this.commandQueue) {
-      this.commandQueue = [];
+    if (event.shiftKey && !this.queued) {
+      this.queued = [];
     }
   }
 
   @HostListener("document:keyup", ["$event"])
   executeCommands(event: KeyboardEvent) {
-    if (!event.shiftKey && this.commandQueue && this.commandQueue.length) {
-      this.processState.add(new SequentialProcess(this.commandQueue, "Custom Process"));
-      this.commandQueue = undefined;
-      this.queued = [];
+    if (!event.shiftKey && this.queued && this.queued.length) {
+      this.processState.add(new SequentialProcess(
+        this.queued.map(
+          command => () => this.createProcess(command)
+        ),
+        this.queued.map(command => this.replacementService.replace(command.name)).join(" && ")
+      ));
+      this.queued = undefined;
     }
   }
 
-  execute(project: Project, command: Command) {
-    const factory = () => new PtyProcess(
-      this.replace(command.directory, project),
-      this.parse(this.replace(command.segments, project)),
-      this.replace(command.name, project)
-    );
-    if (this.commandQueue) {
-      this.commandQueue.push(factory);
+  execute(command: Command) {
+    if (this.queued) {
       this.queued = [...this.queued, command];
     } else {
-      this.processState.add(factory());
+      this.processState.add(this.createProcess(command));
     }
   }
 
-  replace(value: string, project: Project) {
-    const replacements: { [key: string]: string } = {
-      "<project.directory>": project.directory,
-      "<project.name>": project.name,
-      "<angular.project>": this.selectedApplication || ""
-    };
-    for (const key in replacements) {
-      value = value.replace(key, replacements[key]);
-    }
-    return value;
+  private createProcess(command: Command) {
+    return new PtyProcess(
+      this.replacementService.replace(command.directory),
+      this.parse(this.replacementService.replace(command.segments)),
+      this.replacementService.replace(command.name)
+    );
   }
 
   parse(command: string): string[] {
@@ -131,9 +97,5 @@ export class CommandContainerComponent {
     segments.push(currentSegment);
 
     return segments;
-  }
-
-  openTasks() {
-    this.dialog.open(TasksComponent);
   }
 }
