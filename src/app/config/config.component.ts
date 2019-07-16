@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from "@angular/core";
 import { Dependency, DependencyType } from "../dependency/dependency";
-import { Command, Project, ProjectType } from "../project/project";
+import { Command, Project } from "../project/project";
 import { ProjectState } from "../project/project.state";
 import { MatDialog } from "@angular/material";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { FormGroup as FormGroupType } from "../form/types";
+import { Config } from "./config";
+import { exclude } from "../util/array/exclude";
+import { include } from "../util/array/include";
 
 @Component({
   selector: "lx-config",
@@ -15,12 +18,12 @@ import { FormGroup as FormGroupType } from "../form/types";
 })
 export class ConfigComponent implements OnDestroy {
 
-  readonly ProjectType = ProjectType;
   readonly DependencyType = DependencyType;
 
   constructor(
     public projectState: ProjectState,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private config: Config
   ) {}
 
   form = this.createForm({});
@@ -49,11 +52,18 @@ export class ConfigComponent implements OnDestroy {
   }
 
   save() {
-    this.projectState.save(this.form.value);
+    const projects = this.projectState.value.projects;
+    const selected = this.projectState.value.selected;
+    const project = this.form.value;
+    include(projects, project, selected && projects.indexOf(selected))
+    this.config.write({projects});
+    this.projectState.save(project);
     this.dialog.closeAll();
   }
 
   delete(project: Project) {
+    const projects = exclude(this.projectState.value.projects, project)
+    this.config.write({projects});
     this.projectState.delete(project);
     this.dialog.closeAll();
   }
@@ -64,14 +74,12 @@ export class ConfigComponent implements OnDestroy {
 
   createForm({
     name = "",
-    type = ProjectType.Angular,
     directory = "",
     dependencies = [],
     commands = []
    }: Partial<Project> = {}): FormGroupType<Project> {
     return new FormGroup({
       name: new FormControl(name),
-      type: new FormControl(type),
       directory: new FormControl(directory),
       dependencies: new FormArray(dependencies.map(dependency => this.createDependency(dependency))),
       commands: new FormArray(commands.map(command => this.createCommand(command)))

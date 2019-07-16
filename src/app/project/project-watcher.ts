@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { watch } from "fs";
-import { shareReplay, switchMap } from "rxjs/operators";
+import { switchMap } from "rxjs/operators";
 import { Project } from "./project";
 import { Dependency } from "../dependency/dependency";
 import { isLink } from "../util/is-link";
@@ -23,9 +23,7 @@ import { isLink } from "../util/is-link";
         );
         self.next("initialize");
         return () => watcher.close();
-      }).pipe(
-        shareReplay()
-      );
+      });
       this.watchers.set(project, dependencyChange$);
     }
     return dependencyChange$.pipe(switchMap(() => isLink(`${project.directory}/node_modules/${dependency.name}`)));

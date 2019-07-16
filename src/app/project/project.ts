@@ -1,10 +1,5 @@
 import { Dependency } from "../dependency/dependency";
 
-export enum ProjectType {
-  Angular = "Angular",
-  Package = "Package"
-}
-
 export interface Command {
   segments: string;
   tip: string;
@@ -15,7 +10,6 @@ export interface Command {
 
 export interface Project {
   name: string;
-  type: ProjectType;
   directory: string;
   dependencies: Dependency[];
   commands: Command[];

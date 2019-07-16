@@ -1,9 +1,9 @@
-<lx-angular-project-selector *ngIf="isAngular$ | async"></lx-angular-project-selector>
+<ng-template #specifics></ng-template>
 <div class="commands">
   <span *ngFor="let command of commands$ | async"
         class="fa {{command.icon}}"
-        [class.queued]="queued && queued.includes(command)"
-        (click)="execute(command)"
+        [class.queued]="processService.isQueued(command)"
+        (click)="processService.execute(command)"
         [matTooltip]="command.tip"
   ></span>
 </div>

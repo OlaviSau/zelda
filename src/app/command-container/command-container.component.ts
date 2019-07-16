@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, HostListener, ViewEncapsulation } from "@angular/core";
-import { Command, ProjectType } from "../project/project";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ComponentFactoryResolver,
+  OnDestroy,
+  ViewChild,
+  ViewContainerRef,
+  ViewEncapsulation
+} from "@angular/core";
 import { ProjectState } from "../project/project.state";
-import { PtyProcess } from "../process/pty.process";
-import { ProcessState } from "../process/process.state";
-import { SequentialProcess } from "../process/sequential.process";
 import { map } from "rxjs/operators";
-import { ReplacementService } from "./replacement.service";
+import { AngularProjectSelectorComponent } from "../project/angular/angular-project-selector.component";
+import { ProcessService } from "../process/process.service";
 
 @Component({
   selector: "lx-command-container",
@@ -14,81 +19,31 @@ import { ReplacementService } from "./replacement.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CommandContainerComponent {
+export class CommandContainerComponent implements OnDestroy {
   constructor(
     private projectState: ProjectState,
-    private processState: ProcessState,
-    private replacementService: ReplacementService
+    public processService: ProcessService,
+    private componentFactoryResolver: ComponentFactoryResolver
   ) {}
 
-  isAngular$ = this.projectState.selected$.pipe(map(project => project && project.type === ProjectType.Angular));
+  @ViewChild("specifics", { read: ViewContainerRef, static: true }) specifics: ViewContainerRef | undefined;
+
   commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands : []));
-  queued?: Command[];
-
-
-  @HostListener("document:keydown", ["$event"])
-  queueCommands(event: KeyboardEvent) {
-    if (event.shiftKey && !this.queued) {
-      this.queued = [];
-    }
-  }
-
-  @HostListener("document:keyup", ["$event"])
-  executeCommands(event: KeyboardEvent) {
-    if (!event.shiftKey && this.queued && this.queued.length) {
-      this.processState.add(new SequentialProcess(
-        this.queued.map(
-          command => () => this.createProcess(command)
-        ),
-        this.queued.map(command => this.replacementService.replace(command.name)).join(" && ")
-      ));
-      this.queued = undefined;
-    }
-  }
-
-  execute(command: Command) {
-    if (this.queued) {
-      this.queued = [...this.queued, command];
-    } else {
-      this.processState.add(this.createProcess(command));
-    }
-  }
-
-  private createProcess(command: Command) {
-    return new PtyProcess(
-      this.replacementService.replace(command.directory),
-      this.parse(this.replacementService.replace(command.segments)),
-      this.replacementService.replace(command.name)
-    );
-  }
-
-  parse(command: string): string[] {
-    let isStringOpen = false;
-    let isEscapeOpen = false;
-    let currentSegment = "";
-    const segments: string[] = [];
-
-    for (let i = 0; i < command.length; i++) {
-      const char = command.charAt(i);
-      if (isEscapeOpen) {
-        currentSegment += char;
-        isEscapeOpen = false;
-      } else if (char === "\\") {
-        isEscapeOpen = true;
-      } else if (char === "\"" || char === "'") {
-        isStringOpen = !isStringOpen;
-      } else if (isStringOpen) {
-        currentSegment += char;
-      } else if (char === " " && currentSegment) {
-        segments.push(currentSegment);
-        currentSegment = "";
-      } else {
-        currentSegment += char;
+  project$$ = this.projectState.selected$.subscribe(
+    project => {
+      if (this.specifics) {
+        this.specifics.clear();
+        if (project) {
+          for (const component of [AngularProjectSelectorComponent]) {
+            const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
+            this.specifics.createComponent(componentFactory);
+          }
+        }
       }
     }
+  );
 
-    segments.push(currentSegment);
-
-    return segments;
+  ngOnDestroy() {
+    this.project$$.unsubscribe();
   }
 }

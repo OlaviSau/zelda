@@ -2,9 +2,6 @@
   <mat-form-field>
     <input formControlName="name" matInput placeholder="Project Name" type="text" required>
   </mat-form-field>
-  <mat-select formControlName="type" class="type" placeholder="Project Type">
-    <mat-option *ngFor="let type of ProjectType| keyvalue" [value]="type.key">{{type.value}}</mat-option>
-  </mat-select>
   <mat-form-field class="directory">
     <input formControlName="directory" matInput placeholder="Project Directory" type="text" required>
   </mat-form-field>

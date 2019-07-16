@@ -1,7 +1,9 @@
 import {
   Directive,
   Input,
-  HostListener, HostBinding, ChangeDetectorRef
+  HostListener,
+  HostBinding,
+  ChangeDetectorRef
 } from "@angular/core";
 
 @Directive({ selector: "[longHover]" })

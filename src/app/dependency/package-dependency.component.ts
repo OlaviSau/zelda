@@ -8,11 +8,9 @@ import {
 } from "@angular/core";
 import { map } from "rxjs/operators";
 import { DependencyState } from "./dependency.state";
-import { SequentialProcess } from "../process/sequential.process";
-import { PtyProcess } from "../process/pty.process";
 import { Project } from "../project/project";
-import { ProcessState } from "../process/process.state";
 import { Dependency } from "./dependency";
+import { ProcessService } from "../process/process.service";
 
 @Component({
   selector: "lx-package-dependency",
@@ -25,12 +23,13 @@ export class PackageDependencyComponent {
 
   constructor(
     private dependencyState: DependencyState,
-    private processState: ProcessState
+    public processService: ProcessService
   ) {}
   @Input() dependency!: Dependency;
   @Input() project!: Project;
 
   @HostBinding("class.linking") linking = false;
+  @HostBinding("class.queued") queued = false;
 
   linking$ = this.dependencyState.linking$.pipe(
     map(links => this.linking = !!links.find(
@@ -39,20 +38,27 @@ export class PackageDependencyComponent {
   );
 
   @HostListener("click") link() {
-    const command = new SequentialProcess(
-      [
-        () => new PtyProcess(this.dependency.directory, ["npm", "link"]),
-        () => new PtyProcess(this.project.directory, ["npm", "link", this.dependency.name])
+    this.queued = true;
+    this.processService.execute({
+      commands: [
+        {
+          directory: this.dependency.directory,
+          segments: "npm link"
+        },
+        {
+          directory: this.project.directory,
+          segments: `npm link "${this.dependency.name}"`
+        }
       ],
-      `${this.project.name}: Link ${this.dependency.name}`
-    );
-    this.processState.add(command);
-    const link = {project: this.project, dependency: this.dependency};
-    this.dependencyState.linking(link);
-
-    command.buffer$.subscribe({
-      error: () => this.dependencyState.linkingComplete(link),
-      complete: () => this.dependencyState.linkingComplete(link)
+      name: `${this.project.name}: Link ${this.dependency.name}`
+    }).then(process => {
+      this.queued = false;
+      const link = {project: this.project, dependency: this.dependency};
+      this.dependencyState.linking(link);
+      process.buffer$.subscribe({
+        error: () => this.dependencyState.linkingComplete(link),
+        complete: () => this.dependencyState.linkingComplete(link)
+      });
     });
   }
 }

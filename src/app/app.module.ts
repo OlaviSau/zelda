@@ -31,7 +31,8 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IconPickerDialogComponent } from "./icon-picker/icon-picker-dialog.component";
 import { IconPickerComponent } from "./icon-picker/icon-picker.component";
 import { AngularProjectSelectorComponent } from "./project/angular/angular-project-selector.component";
-import { ReplacementService } from "./command-container/replacement.service";
+import { Config } from "./config/config";
+import { ProcessService } from "./process/process.service";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { ReplacementService } from "./command-container/replacement.service";
     ProcessState,
     ProjectState,
     DependencyState,
-    ReplacementService
+    ProcessService,
+    Config
   ],
   bootstrap: [AppComponent]
 })

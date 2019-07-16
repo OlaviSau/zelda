@@ -1,8 +1,7 @@
 import { Process } from "./process";
-import { PtyProcess } from "./pty.process";
 import { ReplaySubject } from "rxjs";
 
-export type ProcessFactory = () => PtyProcess;
+export type ProcessFactory = () => Process;
 
 export class SequentialProcess implements Process {
   constructor(private factories: ProcessFactory[], readonly name?: string) {

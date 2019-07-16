@@ -1,7 +1,6 @@
 import { ProjectState } from "./project.state";
 import { async, TestBed } from "@angular/core/testing";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-// import { Project, ProjectType } from "./project";
 import { ProcessState } from "../process/process.state";
 import { MatSnackBarModule } from "@angular/material";
 
@@ -10,8 +9,7 @@ describe("[Project]", () => {
   // const project: Project = {
   //   name: "project",
   //   directory: "directory",
-  //   dependencies: [],
-  //   type: ProjectType.Angular
+  //   dependencies: []
   // };
   beforeEach(() => {
     TestBed.configureTestingModule({
