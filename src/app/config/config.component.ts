@@ -52,10 +52,10 @@ export class ConfigComponent implements OnDestroy {
   }
 
   save() {
-    const projects = this.projectState.value.projects;
+    let projects = this.projectState.value.projects;
     const selected = this.projectState.value.selected;
     const project = this.form.value;
-    include(projects, project, selected && projects.indexOf(selected))
+    projects = include(projects, project, selected && projects.indexOf(selected))
     this.config.write({projects});
     this.projectState.save(project);
     this.dialog.closeAll();

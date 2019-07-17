@@ -40,9 +40,74 @@ $theme: mat-light-theme($primary-palette, $primary-palette, $primary-palette);
 @include mat-select-theme($theme);
 @include mat-button-theme($theme);
 
-.mat-tooltip {
-  max-width: 300px;
-  background: #673ab7;
-  color: white;
-  font-family: "Roboto", sans-serif;
+html {
+  .mat-dialog-container {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .mat-tooltip {
+    max-width: 300px;
+    background: #673ab7;
+    color: white;
+    font-family: "Roboto", sans-serif;
+  }
+
+  @keyframes slide {
+    0%{ }
+    100%{
+      transform: translateY(0);
+    }
+  }
+
+  .cdk-overlay-pane.slide {
+    transform: translateY(-100%);
+    animation: slide .8s forwards 0s ease;
+  }
+
+  .mat-dialog-container {
+    will-change: transform, opacity;
+  }
+  .mat-select {
+    width: 144px;
+    padding: 9px;
+    background: white;
+    font-family: 'Roboto Mono', sans-serif;
+    .mat-select-value {
+      color: black;
+    }
+  }
+  .mat-select-panel {
+    border-radius: 0;
+    position: relative;
+    height: 256px;
+  }
+  .mat-option {
+    &.mat-active {
+      background: rgba(102, 51, 153, 0.1);
+    }
+    &.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled):not(:hover) {
+      background: rgba(102, 51, 153, 0.1);
+    }
+    &:hover:not(.mat-option-disabled) {
+      background: rgba(102, 51, 153, 0.05);
+    }
+  }
+  .mat-snack-bar-container {
+    background: white;
+    color: black;
+
+    .mat-button {
+      color: #673ab7;
+    }
+  }
+  .mat-option-text {
+    font-family: "Roboto Mono", sans-serif;
+    font-size: 12px;
+  }
+
+  mat-list-item {
+    height: 30px;
+    font-family: 'Roboto Mono', sans-serif;
+  }
 }
