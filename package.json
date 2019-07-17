@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "start": "concurrently \"npm run angular:serve\" \"npm run electron:serve\"",
-    "develop": "concurrently \"npm run angular:serve\" \"npm run electron:serve -- --development\"",
     "angular:serve": "ng serve --aot",
     "electron:serve": "wait-on http-get://localhost:5200 && electron . --serve",
     "build:electron": "electron-rebuild -f -w node-pty-prebuilt-multiarch",

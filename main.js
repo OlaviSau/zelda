@@ -1,5 +1,5 @@
 // Modules to control selectedApplication life and create native browser window
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, globalShortcut } = require('electron');
 const { format } = require('url');
 const { join } = require('path');
 
@@ -21,7 +21,8 @@ function createWindow () {
     minWidth: 900,
     webPreferences: {
       nodeIntegration: true,
-    }
+    },
+    icon: `${__dirname}/heart.ico`
   });
 
   mainWindow.setMenu(null);
@@ -36,9 +37,10 @@ function createWindow () {
     }));
   }
 
-  if(args.some(arg => arg === '--development')) {
+  globalShortcut.register('CommandOrControl+Shift+I', () => {
     mainWindow.webContents.openDevTools();
-  }
+  });
+
 
 
   // Emitted when the window is closed.

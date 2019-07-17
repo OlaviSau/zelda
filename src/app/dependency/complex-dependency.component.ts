@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, Input, ViewEncapsulation } from "@angular/core";
 import { combineLatest, ReplaySubject } from "rxjs";
 import { Project } from "../project/project";
 import { map, switchMap } from "rxjs/operators";
@@ -31,7 +31,7 @@ export class ComplexDependencyComponent {
     this.project$.next(project);
   }
   @HostBinding("class.closed") closed = true;
-  constructor(private watcher: ProjectWatcher, private snack: MatSnackBar) {}
+  constructor(private watcher: ProjectWatcher, private snack: MatSnackBar, private changeDetector: ChangeDetectorRef) {}
 
   dependency$ = new ReplaySubject<Dependency>();
   project$ = new ReplaySubject<Project>();
@@ -47,7 +47,10 @@ export class ComplexDependencyComponent {
       switchMap(([dependencies, project]) => combineLatest(
         dependencies.map(dep => this.watcher.isLinked$(project, dep))
       ).pipe(
-        map(isLinked => dependencies.filter((_, index) => isLinked[index] === status))
+        map(isLinked => {
+          this.changeDetector.markForCheck();
+          return dependencies.filter((_, index) => isLinked[index] === status);
+        }),
       ))
     );
   }

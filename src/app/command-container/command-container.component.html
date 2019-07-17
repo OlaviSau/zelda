@@ -4,6 +4,6 @@
         class="fa {{command.icon}}"
         [class.queued]="processService.isQueued(command)"
         (click)="processService.execute(command)"
-        [matTooltip]="command.tip"
+        [matTooltip]="command.segments"
   ></span>
 </div>

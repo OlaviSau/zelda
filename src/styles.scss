@@ -92,6 +92,13 @@ html {
     will-change: transform, opacity;
   }
 
+  .mat-tooltip {
+    max-width: 300px;
+    background: #673ab7;
+    color: white;
+    font-family: "Roboto", sans-serif;
+  }
+
   .mat-dialog-container {
     padding: 0;
     border-radius: 0;
