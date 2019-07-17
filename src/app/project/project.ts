@@ -2,7 +2,6 @@ import { Dependency } from "../dependency/dependency";
 
 export interface Command {
   segments: string;
-  tip: string;
   icon: string;
   name: string;
   directory: string;

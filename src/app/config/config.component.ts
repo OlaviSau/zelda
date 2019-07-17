@@ -88,7 +88,6 @@ export class ConfigComponent implements OnDestroy {
 
   createCommand({
     name = "",
-    tip = "",
     directory = "",
     segments = "",
     icon = ""
@@ -97,8 +96,7 @@ export class ConfigComponent implements OnDestroy {
       name: new FormControl(name),
       directory: new FormControl(directory),
       segments: new FormControl(segments),
-      icon: new FormControl(icon),
-      tip: new FormControl(tip)
+      icon: new FormControl(icon)
     });
   }
 
