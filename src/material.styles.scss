@@ -1,0 +1,48 @@
+@import "~@angular/material/theming";
+$primary-palette: (
+  50 : #ede7f6,
+  100 : #d1c4e9,
+  200 : #b39ddb,
+  300 : #9575cd,
+  400 : #7e58c2,
+  500 : #673ab7,
+  600 : #5f34b0,
+  700 : #542ca7,
+  800 : #4a259f,
+  900 : #391890,
+  A100 : #d4c7ff,
+  A200 : #ad94ff,
+  A400 : #8661ff,
+  A700 : #7347ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+$theme: mat-light-theme($primary-palette, $primary-palette, $primary-palette);
+
+@include mat-core();
+@include mat-snack-bar-theme($theme);
+@include mat-select-theme($theme);
+@include mat-form-field-theme($theme);
+@include mat-select-theme($theme);
+@include mat-button-theme($theme);
+
+.mat-tooltip {
+  max-width: 300px;
+  background: #673ab7;
+  color: white;
+  font-family: "Roboto", sans-serif;
+}

@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "~src/app/app.component";
 @import "~xterm/dist/xterm.css";
+@import "material.styles";
 
 @font-face {
   font-family: 'Dosis';
@@ -33,11 +32,6 @@ body, html {
 mat-list-item {
   height: 30px;
   font-family: 'Roboto Mono', sans-serif;
-}
-
-button.mat-stroked-button {
-  font-family: 'Roboto Mono', sans-serif;
-  margin-left: 20px;
 }
 
 html {
@@ -90,13 +84,6 @@ html {
 
   .mat-dialog-container {
     will-change: transform, opacity;
-  }
-
-  .mat-tooltip {
-    max-width: 300px;
-    background: #673ab7;
-    color: white;
-    font-family: "Roboto", sans-serif;
   }
 
   .mat-dialog-container {
