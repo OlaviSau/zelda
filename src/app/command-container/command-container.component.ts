@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
-  OnDestroy,
+  OnDestroy, Type,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation
@@ -11,6 +11,7 @@ import { ProjectState } from "../project/project.state";
 import { map } from "rxjs/operators";
 import { AngularProjectSelectorComponent } from "../project/angular/angular-project-selector.component";
 import { ProcessService } from "../process/process.service";
+import { GitBranchComponent } from "../project/git/git-branch.component";
 
 @Component({
   selector: "lx-command-container",
@@ -34,7 +35,7 @@ export class CommandContainerComponent implements OnDestroy {
       if (this.specifics) {
         this.specifics.clear();
         if (project) {
-          for (const component of [AngularProjectSelectorComponent]) {
+          for (const component of [GitBranchComponent, AngularProjectSelectorComponent] as Type<any>[]) {
             const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
             this.specifics.createComponent(componentFactory);
           }

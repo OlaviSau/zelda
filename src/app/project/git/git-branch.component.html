@@ -1,0 +1,3 @@
+<mat-select [formControl]="branch" (selectionChange)="checkoutBranch($event.value)">
+  <mat-option *ngFor="let branch of branches$ | async" [value]="branch">{{branch}}</mat-option>
+</mat-select>

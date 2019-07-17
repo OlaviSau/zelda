@@ -33,6 +33,7 @@ import { IconPickerComponent } from "./icon-picker/icon-picker.component";
 import { AngularProjectSelectorComponent } from "./project/angular/angular-project-selector.component";
 import { Config } from "./config/config";
 import { ProcessService } from "./process/process.service";
+import { GitBranchComponent } from "./project/git/git-branch.component";
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ProcessService } from "./process/process.service";
     LongHoverDirective,
     IconPickerDialogComponent,
     IconPickerComponent,
-    AngularProjectSelectorComponent
+    AngularProjectSelectorComponent,
+    GitBranchComponent
   ],
   imports: [
     BrowserModule,

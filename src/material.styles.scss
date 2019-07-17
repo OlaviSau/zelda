@@ -67,6 +67,7 @@ html {
 
   .mat-dialog-container {
     will-change: transform, opacity;
+    overflow: hidden;
   }
   .mat-select {
     width: 144px;

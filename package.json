@@ -35,7 +35,8 @@
     "tslib": "^1.10.0",
     "which": "latest",
     "xterm": "^3.14.4",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "nodegit": "^0.24.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.3",

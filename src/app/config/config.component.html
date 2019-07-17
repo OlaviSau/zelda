@@ -1,13 +1,17 @@
 <form [formGroup]="form">
-  <mat-form-field>
-    <input formControlName="name" matInput placeholder="Project Name" type="text" required>
-  </mat-form-field>
-  <mat-form-field class="directory">
-    <input formControlName="directory" matInput placeholder="Project Directory" type="text" required>
-  </mat-form-field>
+  <div class="flex-container">
+    <div class="flex-row">
+      <mat-form-field class="name">
+        <input formControlName="name" matInput placeholder="Project Name" type="text" required>
+      </mat-form-field>
+      <mat-form-field class="directory">
+        <input formControlName="directory" matInput placeholder="Project Directory" type="text" required>
+      </mat-form-field>
+    </div>
+  </div>
   <h4>Dependencies</h4>
-  <div class="dependencies" formArrayName="dependencies">
-    <div class="dependency" [formGroupName]="i" *ngFor="let dependency of form.controls.dependencies.controls; let i = index">
+  <div class="flex-container" formArrayName="dependencies">
+    <div class="flex-row" [formGroupName]="i" *ngFor="let dependency of form.controls.dependencies.controls; let i = index">
       <mat-form-field>
         <input formControlName="name" matInput placeholder="Dependency Name" type="text" required>
       </mat-form-field>
@@ -22,8 +26,8 @@
     <button mat-button (click)="addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
   </div>
   <h4>Commands</h4>
-  <div class="dependencies" formArrayName="commands">
-    <div class="dependency" [formGroupName]="i" *ngFor="let command of form.controls.commands.controls; let i = index">
+  <div class="flex-container" formArrayName="commands">
+    <div class="flex-row" [formGroupName]="i" *ngFor="let command of form.controls.commands.controls; let i = index">
       <lx-icon-picker>
         <input formControlName="icon" type="text" required>
       </lx-icon-picker>

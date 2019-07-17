@@ -7,6 +7,7 @@ lx-config {
   box-sizing: border-box;
   align-items: center;
   flex-direction: column;
+  overflow-y: scroll;
   overflow-x: hidden;
   background: #EDEEF3;
 
@@ -16,10 +17,6 @@ lx-config {
   }
 
   form {
-    display: flex;
-    align-items: flex-end;
-    flex: 1 0 auto;
-    flex-wrap: wrap;
     width: 80%;
     .mat-form-field {
       margin: 0 10px;
@@ -39,7 +36,7 @@ lx-config {
       flex: auto;
     }
     .name {
-      width: 250px;
+      width: 300px;
     }
     .segments {
       flex-basis: 100%;
@@ -48,11 +45,12 @@ lx-config {
       display: inline-block;
     }
 
-
-    .dependencies {
-      width: 100%;
+    .flex-container {
+      display: flex;
+      flex-direction: column;
     }
-    .dependency {
+
+    .flex-row {
       display: flex;
       align-items: flex-end;
       width: 100%;

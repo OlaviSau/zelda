@@ -6,7 +6,9 @@ export default createBuilder<DevServerBuilderOptions>((options, context) => exec
     ...configuration,
     ...{
       target: "electron-renderer",
-      externals: (ctx: any, req: any, done: any) => (/^node-pty-prebuilt-multiarch$/.test(req) ? done(null, `commonjs ${req}`) : done())
+      externals: (ctx: any, req: any, done: any) => (
+        /^node-pty-prebuilt-multiarch|nodegit$/.test(req) ? done(null, `commonjs ${req}`) : done()
+      )
     }
   })
 }));
