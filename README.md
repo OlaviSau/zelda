@@ -9,7 +9,7 @@ cd zelda
 npm i
 npm start
 ```
-This is tested on a clean windows install that has node@10.0.16.
+This is tested on a clean windows 10.0.17763 that has node@10.0.16.
 
 # FAQ
 ## Linking produces an error: `cannot find the 'match' of undefined`
