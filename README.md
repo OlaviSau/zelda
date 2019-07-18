@@ -1,5 +1,5 @@
 # Installation
-Windows Build Tools installation might hang on the first run, just Control+C & run it again.
+Windows Build Tools installation might take a very long time to install on some computer. Be patient.
 
 `npm i && npm start` takes a while (5 minutes) for the first time, be patient.
 ```
