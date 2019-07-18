@@ -1,5 +1,6 @@
 # Installation
-Windows Build Tools installation might hang on the first run, just Control+C & run it again.
+Windows Build Tools installation might take a very long time to install on some computer. Be patient. On a clean docker instance the installation added 5GB to the size of the image, however if you have VSCode installed you already have most of the components.
+
 `npm i && npm start` takes a while (5 minutes) for the first time, be patient.
 ```
 npm i --global --production windows-build-tools
@@ -8,6 +9,7 @@ cd zelda
 npm i
 npm start
 ```
+This is tested on a clean windows 10.0.17763 that has node@10.0.16.
 
 # FAQ
 ## Linking produces an error: `cannot find the 'match' of undefined`
