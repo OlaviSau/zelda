@@ -7,7 +7,7 @@
     "electron:serve": "wait-on http-get://localhost:5200 && electron . --serve",
     "build:electron": "electron-rebuild -f -w node-pty-prebuilt-multiarch",
     "build:tools": "tsc -p ./builder/tsconfig.json",
-    "postinstall": "npm run build:tools && npm run build:electron",
+    "postinstall": "npm run build:tools",
     "electron-package": "ng build --prod --base-href ./ && electron-packager . --no-prune --ignore=/e2e --ignore=/src",
     "test": "jest",
     "test:watch": "jest --watch"
@@ -28,7 +28,7 @@
     "core-js": "^2.6.9",
     "electron": "4.0.5",
     "glob": "^7.1.4",
-    "node-pty-prebuilt-multiarch": "0.8.1",
+    "node-pty-prebuilt-multiarch": "0.9.0-beta2",
     "rxjs": "~6.5.2",
     "simple-scrollbar": "^0.4.0",
     "strip-json-comments": "^2.0.1",

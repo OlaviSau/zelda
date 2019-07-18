@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  HostBinding,
+  HostBinding, OnDestroy,
   ViewEncapsulation
 } from "@angular/core";
 import { ProjectState } from "../project.state";
@@ -13,6 +13,7 @@ import { EMPTY } from "rxjs";
 import { ProcessService } from "../../process/process.service";
 import { resolve } from "path";
 import { FormControl } from "@angular/forms";
+import { FSWatcher } from "fs";
 
 @Component({
   selector: "lx-git-branch",
@@ -21,20 +22,27 @@ import { FormControl } from "@angular/forms";
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GitBranchComponent {
+export class GitBranchComponent implements OnDestroy {
 
   @HostBinding("attr.hidden") hidden: true | undefined = true;
 
   constructor(
     public projectState: ProjectState,
     private processService: ProcessService
-  ) {}
+  ) {
+  }
+
+  private gitWatcher?: FSWatcher;
 
   private repository$ = this.projectState.selected$.pipe(
     ignoreNil(),
-    // tslint:disable-next-line:no-bitwise
     switchMap((project: Project) => Repository.openExt(project.directory, 1 << 4, resolve(project.directory, ".."))),
-    tap(() => this.hidden = undefined),
+    tap(() => {
+      this.hidden = undefined;
+      if (this.gitWatcher) {
+        this.gitWatcher.close();
+      }
+    }),
     shareReplay(),
     catchError(() => {
       this.hidden = true;
@@ -46,15 +54,13 @@ export class GitBranchComponent {
 
   branches$ = this.repository$.pipe(
     switchMap(repository => repository.getReferences(1)
-        .then(references => references
-          .filter(reference => {
-            if (reference.isHead()) {
-              this.branch.setValue(reference.shorthand());
-            }
+      .then(references => references.filter(reference => {
+        if (reference.isHead()) {
+          this.branch.setValue(reference.shorthand());
+        }
 
-            return !reference.isRemote() && reference.isBranch();
-          })
-          .map(reference => reference.shorthand()))
+        return !reference.isRemote() && reference.isBranch();
+      }).map(reference => reference.shorthand()))
     )
   );
 
@@ -64,9 +70,10 @@ export class GitBranchComponent {
         name: `${this.projectState.value.selected.name}: Checkout ${branch}`,
         directory: `${this.projectState.value.selected.directory}`,
         segments: `git checkout ${branch}`
-      }).then(process => process.buffer$.subscribe({
-        error: () => undefined
-      }));
+      });
     }
+  }
+
+  ngOnDestroy() {
   }
 }
