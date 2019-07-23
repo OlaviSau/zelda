@@ -4,6 +4,7 @@ lx-icon-picker-dialog {
   height: 600px;
   padding: 4px;
   box-sizing: border-box;
+  overflow-y: scroll;
 
   input {
     width: 100%;
@@ -17,8 +18,8 @@ lx-icon-picker-dialog {
   .fa {
     padding: 7px;
     font-size: 14px;
-    width: 28px;
-    height: 28px;
+    width: 27px;
+    height: 27px;
     box-sizing: border-box;
     cursor: pointer;
     &:hover {

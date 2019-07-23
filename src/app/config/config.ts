@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { JsonFile } from "../file/json.file";
 import { Project } from "../project/project";
+import { remote } from "electron";
 
 @Injectable()
 export class Config extends JsonFile<{
@@ -8,6 +9,19 @@ export class Config extends JsonFile<{
   selected?: Project;
 }> {
   constructor() {
-    super("config.json", { encoding: "utf8" });
+    super(Config.resolveConfig(), { encoding: "utf8" });
+  }
+  static resolveConfig() {
+    const argv = remote.process.argv;
+    let isConfig = false;
+    for (const arg of argv) {
+      if (isConfig) {
+        return arg;
+      }
+      if (arg === "--config") {
+        isConfig = true;
+      }
+    }
+    return "config.json";
   }
 }

@@ -35,7 +35,7 @@ export class CommandContainerComponent implements OnDestroy {
       if (this.specifics) {
         this.specifics.clear();
         if (project) {
-          for (const component of [GitBranchComponent, AngularProjectSelectorComponent] as Type<any>[]) {
+          for (const component of [AngularProjectSelectorComponent] as Type<any>[]) {
             const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
             this.specifics.createComponent(componentFactory);
           }

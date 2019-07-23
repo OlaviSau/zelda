@@ -54,13 +54,15 @@ export class GitBranchComponent implements OnDestroy {
 
   branches$ = this.repository$.pipe(
     switchMap(repository => repository.getReferences(1)
-      .then(references => references.filter(reference => {
-        if (reference.isHead()) {
-          this.branch.setValue(reference.shorthand());
-        }
+      .then(references => Promise.resolve(
+        references.filter(reference => {
+          if (reference.isHead()) {
+            this.branch.setValue(reference.shorthand());
+          }
 
-        return !reference.isRemote() && reference.isBranch();
-      }).map(reference => reference.shorthand()))
+          return !reference.isRemote() && reference.isBranch();
+        }).map(reference => reference.shorthand()))
+      )
     )
   );
 

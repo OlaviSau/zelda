@@ -39,6 +39,7 @@ $theme: mat-light-theme($primary-palette, $primary-palette, $primary-palette);
 @include mat-form-field-theme($theme);
 @include mat-select-theme($theme);
 @include mat-button-theme($theme);
+@include mat-dialog-theme($theme);
 
 html {
   .mat-dialog-container {

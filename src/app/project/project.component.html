@@ -1,8 +1,6 @@
 <lx-complex-dependency *ngFor="let dependency of complexDependencies$ | async"
                         [dependency]="dependency"
-                        [project]="projectState.selected$ | async"
 ></lx-complex-dependency>
 <lx-package-dependency *ngFor="let dependency of packageDependencies$ | async"
                         [dependency]="dependency"
-                        [project]="projectState.selected$ | async"
 ></lx-package-dependency>

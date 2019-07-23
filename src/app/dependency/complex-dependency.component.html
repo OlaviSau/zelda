@@ -11,5 +11,5 @@
 <lx-package-dependency
     *ngFor="let dependency of notLinkedDependencies$ | async"
     [dependency]="dependency"
-    [project]="project$ | async"
+    [project]="projectState.selected$ | async"
 ></lx-package-dependency>

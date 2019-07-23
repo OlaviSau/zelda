@@ -1,4 +1,5 @@
-import { FormGroup as NativeFormGroup, FormArray as NativeFormArray, FormControl as NativeFormControl } from "@angular/forms";
+import { FormGroup as NativeFormGroup, FormControl as NativeFormControl } from "@angular/forms";
+import { DynamicFormArray } from "./dynamic.form-array";
 
 export type FormControl<T> = {
   value: T;
@@ -7,20 +8,27 @@ export type FormControl<T> = {
 export type FormArray<T> = {
   controls: Control<T>[]
   value: T[];
-} & NativeFormArray;
+} & DynamicFormArray<T>;
 
 export type FormGroup<T> = {
   controls: {
     [K in keyof T]: Control<T[K]>
   };
-  value: T;
+  value: Partial<T>;
+  setValue(
+    value: Partial<T>,
+    options?: {
+      onlySelf?: boolean;
+      emitEvent?: boolean;
+    }
+  ): void;
 } & NativeFormGroup;
 
 
 export type Control<T> =
   T extends Array<infer V>
-  ? FormArray<V>
-  : T extends object
+    ? FormArray<V>
+    : T extends object
     ? FormGroup<T>
     : FormControl<T>;
 

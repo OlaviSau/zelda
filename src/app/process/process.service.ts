@@ -132,6 +132,7 @@ export class ProcessService implements OnDestroy {
   }
 
   setReplacement(key: keyof ReplacementDirectory, value: string) {
+    console.log(value);
     this.replacements[key] = value;
   }
 }

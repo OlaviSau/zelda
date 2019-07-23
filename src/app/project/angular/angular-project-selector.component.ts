@@ -34,7 +34,6 @@ export class AngularProjectSelectorComponent {
     private processService: ProcessService
   ) {
     this.projectControl = new FormControl("");
-    this.projectControl.registerOnChange((value: string) => this.processService.setReplacement("<angular.project>", value));
   }
 
   projectControl: FormControl;
@@ -52,6 +51,7 @@ export class AngularProjectSelectorComponent {
               const [defaultProject] = projects;
 
               this.projectControl.setValue(angularConfig.defaultProject || defaultProject);
+              this.update(angularConfig.defaultProject || defaultProject);
 
               resolve(projects);
             }
@@ -59,5 +59,10 @@ export class AngularProjectSelectorComponent {
           })
         );
       }
-    ));
+    )
+  );
+
+  update(value: string) {
+    this.processService.setReplacement("<angular.project>", value);
+  }
 }
