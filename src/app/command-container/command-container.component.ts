@@ -11,7 +11,6 @@ import { ProjectState } from "../project/project.state";
 import { map } from "rxjs/operators";
 import { AngularProjectSelectorComponent } from "../project/angular/angular-project-selector.component";
 import { ProcessService } from "../process/process.service";
-import { GitBranchComponent } from "../project/git/git-branch.component";
 
 @Component({
   selector: "lx-command-container",
