@@ -33,7 +33,8 @@ export class ComplexDependencyComponent {
     public projectState: ProjectState,
     private watcher: ProjectWatcher,
     private snack: MatSnackBar,
-    private changeDetector: ChangeDetectorRef) {}
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   dependency$ = new ReplaySubject<Dependency>();
   linkedDependencies$ = this.filterByStatus$(true);

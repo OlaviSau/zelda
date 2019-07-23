@@ -3,7 +3,6 @@ import { Dependency, DependencyType } from "../dependency/dependency";
 import { DynamicFormArray } from "../form/dynamic.form-array";
 
 export class DependencyFormArray extends DynamicFormArray<Dependency> {
-
   createIndex(dependency: Partial<Dependency>) {
     return new FormGroup({
       name: new FormControl(dependency.name || ""),

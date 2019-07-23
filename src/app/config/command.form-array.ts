@@ -3,7 +3,6 @@ import { DynamicFormArray } from "../form/dynamic.form-array";
 import { Command } from "../project/project";
 
 export class CommandFormArray extends DynamicFormArray<Command> {
-
   createIndex(command: Partial<Command>) {
     return new FormGroup({
       name: new FormControl(command.name || ""),

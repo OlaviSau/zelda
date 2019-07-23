@@ -32,6 +32,6 @@ export class ProjectState extends State<{
 
     projects = include(projects, selected, this.value.selected && projects.indexOf(this.value.selected));
 
-    this.update({projects, selected});
+    this.update({projects});
   }
 }
