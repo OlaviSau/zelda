@@ -31,19 +31,3 @@ export type Control<T> =
     : T extends object
     ? FormGroup<T>
     : FormControl<T>;
-
-// constructor(specification: T) {
-//     const controls: Partial<Controls<T>> = {};
-//     for (const key in specification) {
-//       const value = specification[key];
-//       if (Array.isArray(value)) {
-//         controls[key] = new FormArray(value) as any;
-//       } else if (typeof value === "object" && value) {
-//         controls[key] = new FormGroup(value) as any;
-//       } else {
-//         controls[key] = new FormControl(value) as any;
-//       }
-//     }
-//
-//     this.controls = controls as Controls<T>;
-//   }

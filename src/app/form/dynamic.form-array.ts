@@ -6,10 +6,10 @@ export abstract class DynamicFormArray<T> extends FormArray {
     validatorOrOpts?: ValidatorFn | ValidatorFn[] | AbstractControlOptions | null,
     asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[] | null
   ) {
-    super(values.map(value => this.createIndex(value)), validatorOrOpts, asyncValidator);
+    super(values.map(value => this.createControl(value)), validatorOrOpts, asyncValidator);
   }
 
-  abstract createIndex(dependency: Partial<T>): AbstractControl;
+  abstract createControl(dependency?: Partial<T>): AbstractControl;
 
   setValue(value: Partial<T>[], options: { onlySelf?: boolean; emitEvent?: boolean } = {}): void {
     this.patchValue(value, options);
@@ -20,10 +20,17 @@ export abstract class DynamicFormArray<T> extends FormArray {
       if (this.at(index)) {
         this.at(index).patchValue(dependency, {onlySelf: true, emitEvent: options.emitEvent});
       } else {
-        this.insert(index, this.createIndex(dependency));
+        this.createIndex(dependency, index);
       }
     });
     this.controls = this.controls.filter((control, index) => !!value[index]);
     this.updateValueAndValidity(options);
+  }
+
+  createIndex(dependency?: Partial<T>, index?: number) {
+    if (typeof index === "undefined") {
+      return this.push(this.createControl(dependency));
+    }
+    this.insert(index, this.createControl(dependency));
   }
 }

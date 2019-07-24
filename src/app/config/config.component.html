@@ -21,9 +21,9 @@
       <mat-form-field class="directory">
         <input formControlName="directory" matInput placeholder="Dependency Directory" type="text" required>
       </mat-form-field>
-      <button class="remove" mat-button (click)="removeDependency(+i)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
+      <button class="remove" mat-button (click)="form.controls.commands.removeAt(i)" matTooltip="Remove Dependency"><span class="fa fa-minus"></span></button>
     </div>
-    <button mat-button (click)="addDependency()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
+    <button mat-button (click)="form.controls.dependencies.createIndex()" matTooltip="Add Dependency"><span class="fa fa-plus"></span></button>
   </div>
   <h4>Commands</h4>
   <div class="flex-container" formArrayName="commands">
@@ -37,16 +37,16 @@
       <mat-form-field class="directory">
         <input formControlName="directory" matInput placeholder="Command Directory" type="text" required>
       </mat-form-field>
-      <button class="remove" mat-button (click)="removeCommand(i)" matTooltip="Remove Command"><span class="fa fa-minus"></span></button>
+      <button class="remove" mat-button (click)="form.controls.commands.removeAt(i)" matTooltip="Remove Command"><span class="fa fa-minus"></span></button>
       <mat-form-field class="segments">
         <input formControlName="segments" matInput placeholder="Command" type="text" required>
       </mat-form-field>
     </div>
-    <button mat-button (click)="addCommand()" matTooltip="Add Command"><span class="fa fa-plus"></span></button>
+    <button mat-button (click)="form.controls.commands.createIndex()" matTooltip="Add Command"><span class="fa fa-plus"></span></button>
   </div>
 </form>
 <div>
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button *ngIf="projectState.selected$ | async as project" mat-button (click)="delete(project)">Delete</button>
-  <button mat-button (click)="save()">Save</button>
+  <button mat-button (click)="dialog.close()">Cancel</button>
+  <button *ngIf="project$ | async as project" mat-button (click)="delete(project); dialog.close()">Delete</button>
+  <button mat-button (click)="save(); dialog.close()">Save</button>
 </div>
