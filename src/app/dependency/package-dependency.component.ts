@@ -47,6 +47,10 @@ export class PackageDependencyComponent {
         },
         {
           directory: this.project.directory,
+          segments: `rm -rf "node_modules/${this.dependency.name}"` // this is really important to trigger the change
+        },
+        {
+          directory: this.project.directory,
           segments: `npm link "${this.dependency.name}"`
         }
       ],

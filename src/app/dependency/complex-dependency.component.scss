@@ -11,6 +11,12 @@ lx-complex-dependency {
     cursor: pointer;
     margin: 10px;
   }
+
+  .fa.fa-link {
+    font-size: 12px;
+    transform: rotate(45deg);
+  }
+
   &.closed {
     lx-package-dependency {
       display: none;

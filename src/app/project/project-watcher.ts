@@ -1,17 +1,22 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { watch } from "fs";
-import { switchMap } from "rxjs/operators";
+import { filter, map, shareReplay, startWith, switchMap } from "rxjs/operators";
 import { Project } from "./project";
 import { Dependency } from "../dependency/dependency";
 import { isLink } from "../util/is-link";
+import { join } from "path";
+
+interface DependencyWithLinkedStatus extends Dependency {
+  linked: boolean;
+}
 
 @Injectable({
   providedIn: "root"
 }) export class ProjectWatcher {
   private watchers = new Map<Project, Observable<string>>();
 
-  isLinked$(project: Project, dependency: Dependency) {
+  isLinked$(project: Project, dependency: Dependency): Observable<DependencyWithLinkedStatus> {
     let dependencyChange$ = this.watchers.get(project);
 
     if (!dependencyChange$) {
@@ -19,13 +24,23 @@ import { isLink } from "../util/is-link";
         const watcher = watch(
           project.directory,
           { recursive: true },
-          (event, filename) => filename && filename.includes("node_modules") ? self.next(event) : null
+          (event, filename) => filename ? self.next(filename) : null
         );
-        self.next("initialize");
         return () => watcher.close();
-      });
+      }).pipe(shareReplay());
       this.watchers.set(project, dependencyChange$);
     }
-    return dependencyChange$.pipe(switchMap(() => isLink(`${project.directory}/node_modules/${dependency.name}`)));
+    const dependencyPath = join("node_modules", dependency.name);
+    const absoluteDependencyPath = join(project.directory, dependencyPath);
+
+    return dependencyChange$.pipe(
+      startWith(dependencyPath),
+      filter(path => path === dependencyPath),
+      switchMap(() => isLink(absoluteDependencyPath)),
+      map(linked => ({
+        ...dependency,
+        linked
+      }))
+    );
   }
 }
