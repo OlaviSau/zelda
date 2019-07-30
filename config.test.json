@@ -1,1 +1,10 @@
-{}
+{
+  "projects": [
+    {
+      "name": "Test Project",
+      "directory": "C:/git/zelda/test/project",
+      "dependencies": [],
+      "commands": []
+    }
+  ]
+}

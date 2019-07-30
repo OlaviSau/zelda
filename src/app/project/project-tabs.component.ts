@@ -1,6 +1,8 @@
 import {
   ChangeDetectionStrategy,
-  Component, HostBinding,
+  Component,
+  HostBinding,
+  HostListener, ViewContainerRef,
   ViewEncapsulation
 } from "@angular/core";
 import { ProjectState } from "./project.state";
@@ -17,7 +19,18 @@ import { MatDialog } from "@angular/material";
 export class ProjectTabsComponent {
   @HostBinding("class.tabs") cssClass = true;
 
-  constructor(public projectState: ProjectState, private dialog: MatDialog) {}
+  @HostListener("mousewheel", ["$event"]) scroll(event: WheelEvent) {
+    const host = this.host.element.nativeElement as HTMLElement;
+    host.scrollBy({
+      left: +event.deltaY
+    });
+  }
+
+  constructor(
+    public projectState: ProjectState,
+    private dialog: MatDialog,
+    private host: ViewContainerRef
+  ) {}
 
   openConfig() {
     this.dialog.open(ConfigComponent, {

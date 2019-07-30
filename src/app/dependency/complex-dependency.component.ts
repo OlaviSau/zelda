@@ -9,6 +9,7 @@ import { JsonFile } from "../file/json.file";
 import { MatSnackBar } from "@angular/material";
 import { ProjectState } from "../project/project.state";
 import { ignoreNil } from "../util/ignore-nil";
+import { AsyncArray } from "@bunne/async-array";
 
 @Component({
   selector: "lx-complex-dependency",
@@ -40,6 +41,7 @@ export class ComplexDependencyComponent {
       combineLatest(dependencies.map(dependency => this.watcher.isLinked$(project, dependency)))
     )
   );
+
   linkedDependencies$ = this.dependenciesWithStatus$.pipe(
     map(dependencies => dependencies.filter(dependency => dependency.linked))
   );
@@ -48,26 +50,26 @@ export class ComplexDependencyComponent {
   );
 
   private async resolve$(dependency: Dependency): Promise<Dependency[]> {
-    const dependencies: Dependency[] = [];
     if (dependency.type === DependencyType.Lerna) {
-      const lernaConfig = await JsonFile.read<{ packages: string[] }>(`${dependency.directory}/lerna.json`);
-      for (const pattern of lernaConfig.packages) {
-        const directories = await glob(`${dependency.directory}/${pattern}`);
-        for (const directory of directories) {
-          if (await exists(`${directory}/package.json`)) {
-            const {name} = await JsonFile.read<{ name: string }>(`${directory}/package.json`);
-            dependencies.push({
-              name,
-              directory,
-              type: DependencyType.Package
-            });
-          }
-        }
-      }
+      return new AsyncArray(
+        JsonFile.read<{ packages: string[] }>(`${dependency.directory}/lerna.json`)
+          .then(config => config.packages)
+      ).reduce(
+        (dependencies, pattern) =>
+          new AsyncArray(glob(`${dependency.directory}/${pattern}`))
+            .filter(directory => exists(`${directory}/package.json`))
+            .map(directory => JsonFile.read<{ name: string }>(`${directory}/package.json`)
+              .then(({name}) => ({
+                name,
+                directory,
+                type: DependencyType.Package
+              }))
+            ).concat(dependencies), new AsyncArray()
+      );
     } else {
       this.snack.open(`${dependency.name} is of unknown type`, "Dismiss");
     }
 
-    return dependencies;
+    return [];
   }
 }

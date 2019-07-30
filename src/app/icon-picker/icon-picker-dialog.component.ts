@@ -19,7 +19,6 @@ import { FormControl } from "@angular/forms";
 
   filterIcons(search: string) {
     this.filteredIcons = this.icons.filter(icon => icon.includes(search));
-    this.filteredIcons = this.icons.filter(icon => icon.includes(search));
   }
 
   selectIcon(icon: string) {

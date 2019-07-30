@@ -28,7 +28,7 @@ export abstract class DynamicFormArray<T> extends FormArray {
   }
 
   createIndex(dependency?: Partial<T>, index?: number) {
-    if (typeof index === "undefined") {
+    if (index === undefined) {
       return this.push(this.createControl(dependency));
     }
     this.insert(index, this.createControl(dependency));

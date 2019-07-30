@@ -45,22 +45,24 @@ export class ProcessService implements OnDestroy {
 
   executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
     if (!event.shiftKey && this.queued && this.queued.length) {
-      this.processState.add(new SequentialProcess(
-        this.queued.map(
-          que => () => {
-            let process: Process;
-            if (!(que.instructions as SequentialProcessInstructions).commands) {
-              process = this.createProcess(que.instructions as ProcessInstructions);
-            } else {
-              process = this.createSequentialProcess(que.instructions as SequentialProcessInstructions);
-            }
+      if (this.queued.length) {
+        this.processState.add(new SequentialProcess(
+          this.queued.map(
+            que => () => {
+              let process: Process;
+              if (!(que.instructions as SequentialProcessInstructions).commands) {
+                process = this.createProcess(que.instructions as ProcessInstructions);
+              } else {
+                process = this.createSequentialProcess(que.instructions as SequentialProcessInstructions);
+              }
 
-            que.resolve(process);
-            return process;
-          }
-        ),
-        this.queued.map(que => this.replace(que.instructions.name)).join(" && ")
-      ));
+              que.resolve(process);
+              return process;
+            }
+          ),
+          this.queued.map(que => this.replace(que.instructions.name)).join(" && ")
+        ));
+      }
       this.queued = undefined;
     }
   });
@@ -132,7 +134,6 @@ export class ProcessService implements OnDestroy {
   }
 
   setReplacement(key: keyof ReplacementDirectory, value: string) {
-    console.log(value);
     this.replacements[key] = value;
   }
 }

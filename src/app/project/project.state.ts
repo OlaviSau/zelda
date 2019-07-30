@@ -27,11 +27,12 @@ export class ProjectState extends State<{
     });
   }
 
-  save(selected: Project) {
-    let projects = this.value.projects;
+  save(project: Project) {
+    const { projects, selected } = this.value;
 
-    projects = include(projects, selected, this.value.selected && projects.indexOf(this.value.selected));
-
-    this.update({projects});
+    this.update({
+      projects: include(projects, project, selected),
+      selected: project
+    });
   }
 }

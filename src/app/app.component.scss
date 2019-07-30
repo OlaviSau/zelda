@@ -16,6 +16,9 @@ lx-root {
     &::-webkit-scrollbar {
       display: none;
     }
+    &::-webkit-scrollbar-thumb {
+      background: #673ab7;
+    }
 
     .tab {
       display: flex;
