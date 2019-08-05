@@ -19,13 +19,12 @@ describe('Application launch', function () {
       },
       args: ['.', '--serve', '--config', 'config.test.json']
     })
-    return app.start()
+    return app.start().then(refresh).then(wait(5000))
   })
 
   afterEach(() => app && app.isRunning() ? app.stop() : undefined);
 
-  it('shows core elements', () => refresh().then(wait(5000)).then(
-      () => Promise.all([
+  it('shows core elements', () => Promise.all([
       queryElement("lx-project-tabs").should.eventually.exist,
       queryElement("lx-command-container").should.eventually.exist,
       queryElement("lx-project").should.eventually.exist,
@@ -33,7 +32,7 @@ describe('Application launch', function () {
       queryElements("lx-project-tabs .tab").should.eventually.lengthOf(2),
       queryElement("lx-project > lx-complex-dependency").should.eventually.exist,
       queryElement("lx-project > lx-package-dependency").should.eventually.exist
-    ]))
+    ])
   )
 
   const wait = time => () => new Promise(resolve => setTimeout(resolve, time));
