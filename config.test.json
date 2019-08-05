@@ -1,9 +1,20 @@
 {
   "projects": [
     {
-      "name": "Test Project",
+      "name": "Project",
       "directory": "C:/git/zelda/test/project",
-      "dependencies": [],
+      "dependencies": [
+        {
+          "directory": "C:/git/zelda/test/dependency",
+          "type": "Package",
+          "name": "Dependency"
+        },
+        {
+          "directory": "C:/git/zelda/test/lerna-dependency",
+          "type": "Lerna",
+          "name": "Lerna Dependency"
+        }
+      ],
       "commands": []
     }
   ]

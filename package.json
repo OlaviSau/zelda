@@ -57,7 +57,7 @@
     "jest-preset-angular": "^7.1.1",
     "mocha": "^6.2.0",
     "protractor": "~5.4.0",
-    "spectron": "^7.0.0",
+    "spectron": "latest",
     "tree-kill": "^1.2.1",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",

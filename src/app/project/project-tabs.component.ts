@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  HostListener, ViewContainerRef,
+  HostListener,
+  ViewContainerRef,
   ViewEncapsulation
 } from "@angular/core";
 import { ProjectState } from "./project.state";

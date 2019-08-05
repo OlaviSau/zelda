@@ -22,6 +22,6 @@ export class Config extends JsonFile<{
         isConfig = true;
       }
     }
-    return "config.json";
+    return "config.test.json";
   }
 }

@@ -1,4 +1,5 @@
-import { readFile, writeFile } from "fs";
+import { writeFile } from "fs";
+import readFile from "../util/async/read-file";
 
 export class JsonFile<T> {
   constructor(private path: string, private options = { encoding: "utf8" }) {}
@@ -7,16 +8,10 @@ export class JsonFile<T> {
     return new JsonFile<T>(path, options).read();
   }
 
-  read() {
-    return new Promise<T>((resolve) => {
-      readFile(this.path, this.options, (err, data) => {
-        if (err) {
-          console.log(`Failed to read: ${this.path}`);
-          return;
-        }
-        resolve(JSON.parse(data));
-      });
-    });
+  read(): Promise<T> {
+    return readFile(this.path, this.options)
+      .then(content => JSON.parse(content))
+      .catch(() => console.log(`Failed to read: ${this.path}`));
   }
 
   write(value: T) {

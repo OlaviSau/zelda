@@ -52,8 +52,7 @@ export class ComplexDependencyComponent {
   private async resolve$(dependency: Dependency): Promise<Dependency[]> {
     if (dependency.type === DependencyType.Lerna) {
       return new AsyncArray(
-        JsonFile.read<{ packages: string[] }>(`${dependency.directory}/lerna.json`)
-          .then(config => config.packages)
+        JsonFile.read<{ packages: string[] }>(`${dependency.directory}/lerna.json`).then(config => config.packages)
       ).reduce(
         (dependencies, pattern) =>
           new AsyncArray(glob(`${dependency.directory}/${pattern}`))

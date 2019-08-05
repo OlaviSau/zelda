@@ -10,7 +10,7 @@ const args = process.argv.slice(1);
 
 function createWindow () {
 
-  const { screen }= require('electron');
+  const { screen } = require('electron');
   const size = screen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
