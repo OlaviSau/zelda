@@ -4,6 +4,7 @@ import { ProjectState } from "./project/project.state";
 import { ConfigComponent } from "./config/config.component";
 import { MatDialog } from "@angular/material";
 import { Project } from "./project/project";
+
 @Component({
   selector: "lx-root",
   templateUrl: "./app.component.html",
@@ -13,12 +14,13 @@ import { Project } from "./project/project";
 })
 export class AppComponent {
   constructor(config: Config, public projectState: ProjectState, private dialog: MatDialog) {
-    config.read().then(
-      state => projectState.next({
+    config
+      .read()
+      .then(state => projectState.next({
         ...state,
         selected: state.projects[0]
-      })
-    );
+      }))
+      .catch(() => projectState.next({projects: []}));
   }
 
   openConfig(project?: Project) {

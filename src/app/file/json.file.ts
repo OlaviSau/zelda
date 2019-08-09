@@ -9,9 +9,7 @@ export class JsonFile<T> {
   }
 
   read(): Promise<T> {
-    return readFile(this.path, this.options)
-      .then(content => JSON.parse(content))
-      .catch(() => console.log(`Failed to read: ${this.path}`));
+    return readFile(this.path, this.options).then(content => JSON.parse(content));
   }
 
   write(value: T) {
