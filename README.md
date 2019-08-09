@@ -14,7 +14,7 @@ This is tested on a clean windows 10.0.17763 that has node@10.0.16.
 # Configuring
 Get an existing config if you can as a base.
 To configure a existing project hover over the project tab.
-
+![alt text](https://raw.githubusercontent.com/OlaviSau/zelda/blob/master/docs/images/configuring-existing-project.png)
 
 # FAQ
 ## Linking produces an error: `cannot find the 'match' of undefined`
