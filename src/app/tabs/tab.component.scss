@@ -1,0 +1,26 @@
+lx-tab {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  padding: 0 30px;
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+  font-size: 14px;
+  height: 100%;
+  box-sizing: border-box;
+  transition: background 0.8s;
+  min-width: 100px;
+  background-position: center;
+  user-select: none;
+  white-space: nowrap;
+  &.active {
+    border-bottom: 2px solid #673ab7;
+  }
+  &:active {
+    background-color: rgba(102, 51, 153, 0.10);
+    background-size: 100%;
+    transition: background 0s;
+  }
+}

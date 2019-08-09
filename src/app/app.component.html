@@ -1,4 +1,16 @@
-<lx-project-tabs></lx-project-tabs>
+<lx-tabs>
+  <lx-tab *ngFor="let project of projectState.all$ | async"
+       [class.active]="(projectState.selected$ | async) === project"
+       (click)="projectState.select(project)"
+       longHover
+  >
+    <span class="fa fa-cog" (click)="openConfig(project)"></span>
+    <span class="project-name">{{project.name}}</span>
+  </lx-tab>
+  <lx-tab (click)="openConfig()">
+    <span class="fa fa-plus"></span>
+  </lx-tab>
+</lx-tabs>
 <lx-command-container></lx-command-container>
 <lx-project></lx-project>
 <lx-terminal></lx-terminal>

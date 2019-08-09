@@ -1,0 +1,12 @@
+lx-tabs {
+  flex: 0 0 40px;
+  display: flex;
+  background-color: rgba(102, 51, 153, 0.1);
+  overflow-x: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #673ab7;
+  }
+}

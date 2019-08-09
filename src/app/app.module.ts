@@ -25,7 +25,6 @@ import { ProcessState } from "./process/process.state";
 import { ProjectState } from "./project/project.state";
 import { DependencyState } from "./dependency/dependency.state";
 import { CommandContainerComponent } from "./command-container/command-container.component";
-import { ProjectTabsComponent } from "./project/project-tabs.component";
 import { LongHoverDirective } from "./long-hover/long-hover.directive";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IconPickerDialogComponent } from "./icon-picker/icon-picker-dialog.component";
@@ -34,6 +33,8 @@ import { AngularProjectSelectorComponent } from "./project/angular/angular-proje
 import { Config } from "./config/config";
 import { ProcessService } from "./process/process.service";
 import { GitBranchComponent } from "./project/git/git-branch.component";
+import { TabsComponent } from "./tabs/tabs.component";
+import { TabComponent } from "./tabs/tab.component";
 
 @NgModule({
   declarations: [
@@ -44,12 +45,13 @@ import { GitBranchComponent } from "./project/git/git-branch.component";
     ComplexDependencyComponent,
     PackageDependencyComponent,
     CommandContainerComponent,
-    ProjectTabsComponent,
     LongHoverDirective,
     IconPickerDialogComponent,
     IconPickerComponent,
     AngularProjectSelectorComponent,
-    GitBranchComponent
+    GitBranchComponent,
+    TabsComponent,
+    TabComponent
   ],
   imports: [
     BrowserModule,

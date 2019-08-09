@@ -23,6 +23,7 @@ export class ProcessState extends State<{
   }
 
   remove(processToRemove: Process) {
+    processToRemove.kill();
     const selected = this.value.selected;
     const processes = this.value.processes;
     this.update({
