@@ -1,3 +1,6 @@
+# Purpose
+It's basically a GUI for running commands, with linking especially catered to.
+
 # Installation
 Windows Build Tools installation might take a very long time to install on some computer. Be patient. On a clean docker instance the installation added 5GB to the size of the image, however if you have VSCode installed you already have most of the components.
 
