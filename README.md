@@ -11,6 +11,11 @@ npm start
 ```
 This is tested on a clean windows 10.0.17763 that has node@10.0.16.
 
+# Configuring
+Get an existing config if you can as a base.
+To configure a existing project hover over the project tab.
+
+
 # FAQ
 ## Linking produces an error: `cannot find the 'match' of undefined`
 `rm -rf node_modules package-lock.json` in the package directory
