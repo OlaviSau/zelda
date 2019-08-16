@@ -2,13 +2,22 @@ import { IPty, spawn } from "node-pty-prebuilt-multiarch";
 import { ReplaySubject } from "rxjs";
 import { Process } from "./process";
 import { sync } from "which";
+import { Directory } from "../util/directory";
 
 export class PtyProcess implements Process {
-  constructor(cwd: string, command: string, readonly name?: string) {
+  constructor(private cwd: string, private command: string, public name = "") {}
+
+  private handle: IPty | undefined;
+  readonly buffer$ = new ReplaySubject<string>();
+
+  execute(rows: number, replacements: Directory<string>) {
     let isStringOpen = false;
     let isEscapeOpen = false;
     let currentSegment = "";
     const segments: string[] = [];
+    const command = this.command;
+    const cwd = this.replace(this.cwd, replacements);
+    this.name = this.replace(this.name, replacements);
 
     for (let i = 0; i < command.length; i++) {
       const char = command.charAt(i);
@@ -31,15 +40,15 @@ export class PtyProcess implements Process {
 
     segments.push(currentSegment);
 
-    const [executable, ...args] = segments;
-    this.name = name;
+    const [executable, ...args] = segments.map(segment => this.replace(segment, replacements));
+    console.log(executable, args, rows, cwd);
     this.handle = spawn(
       sync(executable),
       args,
       {
         cwd,
         cols: Math.floor(window.innerWidth / 7) - 1,
-        rows: 30
+        rows
       }
     );
 
@@ -52,10 +61,17 @@ export class PtyProcess implements Process {
     });
   }
 
-  private handle: IPty;
-  readonly buffer$ = new ReplaySubject<string>();
-
   kill() {
-    this.handle.kill();
+    if (this.handle) {
+      this.handle.kill();
+    }
   }
+
+  private replace(segment: string, replacements: Directory<string>) {
+    for (const key in replacements) {
+      segment = segment.replace(key, replacements[key]);
+    }
+    return segment;
+  }
+
 }

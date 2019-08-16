@@ -2,8 +2,8 @@
 <div class="commands">
   <span *ngFor="let command of commands$ | async"
         class="fa {{command.icon}}"
-        [class.queued]="processService.isQueued(command)"
-        (click)="processService.execute(command)"
+        [class.queued]="processService.isQueued(command.process)"
+        (click)="processService.execute(command.process)"
         [matTooltip]="command.segments"
   ></span>
 </div>

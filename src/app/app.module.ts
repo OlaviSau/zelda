@@ -32,7 +32,6 @@ import { IconPickerComponent } from "./icon-picker/icon-picker.component";
 import { AngularProjectSelectorComponent } from "./project/angular/angular-project-selector.component";
 import { Config } from "./config/config";
 import { ProcessService } from "./process/process.service";
-import { GitBranchComponent } from "./project/git/git-branch.component";
 import { TabsComponent } from "./tabs/tabs.component";
 import { TabComponent } from "./tabs/tab.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
@@ -50,7 +49,6 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
     IconPickerDialogComponent,
     IconPickerComponent,
     AngularProjectSelectorComponent,
-    GitBranchComponent,
     TabsComponent,
     TabComponent
   ],

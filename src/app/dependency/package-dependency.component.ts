@@ -11,6 +11,8 @@ import { DependencyState } from "./dependency.state";
 import { Project } from "../project/project";
 import { Dependency } from "./dependency";
 import { ProcessService } from "../process/process.service";
+import { SequentialProcess } from "../process/sequential.process";
+import { PtyProcess } from "../process/pty.process";
 
 @Component({
   selector: "lx-package-dependency",
@@ -24,7 +26,9 @@ export class PackageDependencyComponent {
   constructor(
     private dependencyState: DependencyState,
     public processService: ProcessService
-  ) {}
+  ) {
+  }
+
   @Input() dependency!: Dependency;
   @Input() project!: Project;
 
@@ -39,30 +43,24 @@ export class PackageDependencyComponent {
 
   @HostListener("click") link() {
     this.queued = true;
-    this.processService.execute({
-      commands: [
-        {
-          directory: this.dependency.directory,
-          segments: "npm link"
-        },
-        {
-          directory: this.project.directory,
-          segments: `rm -rf "node_modules/${this.dependency.name}"` // this is really important to trigger the change
-        },
-        {
-          directory: this.project.directory,
-          segments: `npm link "${this.dependency.name}"`
-        }
+    const link = {project: this.project, dependency: this.dependency};
+    const process = new SequentialProcess([
+        new PtyProcess(this.dependency.directory, "npm link"),
+        // this is really important to trigger watcher
+        new PtyProcess(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
+        new PtyProcess(this.project.directory, `npm link "${this.dependency.name}"`)
       ],
-      name: `${this.project.name}: Link ${this.dependency.name}`
-    }).then(process => {
-      this.queued = false;
-      const link = {project: this.project, dependency: this.dependency};
-      this.dependencyState.linking(link);
-      process.buffer$.subscribe({
-        error: () => this.dependencyState.linkingComplete(link),
-        complete: () => this.dependencyState.linkingComplete(link)
-      });
+      `${this.project.name}: Link ${this.dependency.name}`
+    );
+    process.buffer$.subscribe({
+      next: () => {
+        this.dependencyState.linking(link);
+        this.queued = false;
+      },
+      error: () => this.dependencyState.linkingComplete(link),
+      complete: () => this.dependencyState.linkingComplete(link)
     });
+
+    this.processService.execute(process);
   }
 }

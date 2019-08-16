@@ -2,23 +2,8 @@ import { Injectable, OnDestroy } from "@angular/core";
 import { fromEvent } from "rxjs";
 import { SequentialProcess } from "./sequential.process";
 import { ProcessState } from "./process.state";
-import { PtyProcess } from "./pty.process";
 import { ProjectState } from "../project/project.state";
 import { Process } from "./process";
-
-export interface ProcessInstructions {
-  name: string;
-  directory: string;
-  segments: string;
-}
-
-export interface SequentialProcessInstructions {
-  commands: {
-    directory: string;
-    segments: string;
-  }[];
-  name: string;
-}
 
 interface ReplacementDirectory {
   "<project.directory>": string;
@@ -31,37 +16,24 @@ export class ProcessService implements OnDestroy {
   constructor(
     private processState: ProcessState,
     private projectState: ProjectState
-  ) {}
+  ) {
+  }
 
-  private queued?: {
-    instructions: ProcessInstructions | SequentialProcessInstructions,
-    resolve: (process: Process) => void
-  }[];
-  queueCommands$$ = fromEvent(document, "keydown").subscribe((event: MouseEvent) => {
-    if (event.shiftKey && !this.queued) {
-      this.queued = [];
-    }
-  });
+  private queued?: Process[];
+
+  private queueCommands$$ = fromEvent(document, "keydown").subscribe(
+    (event: KeyboardEvent) => event.shiftKey && !this.queued ? this.queued = [] : undefined
+  );
 
   executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
     if (!event.shiftKey) {
       if (this.queued && this.queued.length) {
-        this.processState.add(new SequentialProcess(
-          this.queued.map(
-            que => () => {
-              let process: Process;
-              if (!(que.instructions as SequentialProcessInstructions).commands) {
-                process = this.createProcess(que.instructions as ProcessInstructions);
-              } else {
-                process = this.createSequentialProcess(que.instructions as SequentialProcessInstructions);
-              }
-
-              que.resolve(process);
-              return process;
-            }
-          ),
-          this.queued.map(que => this.replace(que.instructions.name)).join(" && ")
-        ));
+        const sequentialProcess = new SequentialProcess(
+          this.queued,
+          this.queued.map(process => this.replace(process.name || "")).join(" && ")
+        );
+        sequentialProcess.execute(30, this.replacements);
+        this.processState.add(sequentialProcess);
       }
       this.queued = undefined;
     }
@@ -79,51 +51,23 @@ export class ProcessService implements OnDestroy {
     }
   );
 
-  isQueued(command: ProcessInstructions | SequentialProcessInstructions) {
-    return !!this.queued && !!this.queued.find(que => que.instructions === command);
+  isQueued(command: Process) {
+    return !!this.queued && !!this.queued.find(que => que === command);
   }
 
-  execute(command: ProcessInstructions | SequentialProcessInstructions): Promise<Process> {
-    return new Promise<Process>(
-      resolve => {
-        if (this.queued) {
-          this.queued = [...this.queued, {
-            instructions: command,
-            resolve
-          }];
-        } else if (!(command as SequentialProcessInstructions).commands) {
-          const process = this.createProcess(command as ProcessInstructions);
-          this.processState.add(process);
-          resolve(process);
-        } else {
-          const process = this.createSequentialProcess(command as SequentialProcessInstructions);
-          this.processState.add(process);
-          resolve(process);
-        }
-      }
-    );
+  execute(process: Process) {
+    if (!this.queued) {
+      process.execute(30, this.replacements);
+      this.processState.add(process);
+      return;
+    }
+    this.queued = [...this.queued, process];
   }
 
   ngOnDestroy() {
     this.queueCommands$$.unsubscribe();
     this.executeCommands$$.unsubscribe();
     this.project$$.unsubscribe();
-  }
-
-  private createProcess(command: ProcessInstructions): Process {
-    return new PtyProcess(
-      this.replace(command.directory),
-      this.replace(command.segments),
-      this.replace(command.name)
-    );
-  }
-
-
-  private createSequentialProcess(command: SequentialProcessInstructions): Process {
-    return new SequentialProcess(
-      command.commands.map(instructions => () => new PtyProcess(instructions.directory, instructions.segments)),
-      command.name
-    );
   }
 
   private replace(segment: string) {

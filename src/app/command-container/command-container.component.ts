@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
-  OnDestroy, Type,
+  OnDestroy,
+  Type,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation
@@ -11,6 +12,7 @@ import { ProjectState } from "../project/project.state";
 import { map } from "rxjs/operators";
 import { AngularProjectSelectorComponent } from "../project/angular/angular-project-selector.component";
 import { ProcessService } from "../process/process.service";
+import { PtyProcess } from "../process/pty.process";
 
 @Component({
   selector: "lx-command-container",
@@ -28,7 +30,12 @@ export class CommandContainerComponent implements OnDestroy {
 
   @ViewChild("specifics", { read: ViewContainerRef, static: true }) specifics: ViewContainerRef | undefined;
 
-  commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands : []));
+  commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands.map(
+    command => ({
+      ...command,
+      process: new PtyProcess(command.directory, command.segments, command.name)
+    })
+  ) : []));
   project$$ = this.projectState.selected$.subscribe(
     project => {
       if (this.specifics) {
