@@ -4,6 +4,7 @@ import { SequentialCommand } from "./sequential.command";
 import { ProcessState } from "./process.state";
 import { ProjectState } from "../project/project.state";
 import { Command } from "./command";
+import { Process } from "./process";
 
 interface ReplacementDirectory {
   "<project.directory>": string;
@@ -20,20 +21,23 @@ export class ProcessService implements OnDestroy {
   }
 
   private queued?: Command[];
+  private resolveQue?: (process: Process) => void;
 
   private queueCommands$$ = fromEvent(document, "keydown").subscribe(
     (event: KeyboardEvent) => event.shiftKey && !this.queued ? this.queued = [] : undefined
   );
 
-  executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
+  private executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
     if (!event.shiftKey) {
-      if (this.queued && this.queued.length) {
-        const sequentialProcess = new SequentialCommand(
+      if (this.queued && this.queued.length && this.resolveQue) {
+        const process = new SequentialCommand(
           this.queued,
-          this.queued.map(process => this.replace(process.name || "")).join(" && ")
-        );
-        this.processState.add(sequentialProcess.execute(30, this.replacements));
+          this.queued.map(command => this.replace(command.name || "")).join(" && ")
+        ).execute(30, this.replacements);
+        this.processState.add(process);
+        this.resolveQue(process);
       }
+      this.resolveQue = undefined;
       this.queued = undefined;
     }
   });
@@ -54,11 +58,15 @@ export class ProcessService implements OnDestroy {
     return !!this.queued && !!this.queued.find(que => que === command);
   }
 
-  execute(process: Command) {
+  execute(command: Command): Promise<Process> {
     if (!this.queued) {
-      return this.processState.add(process.execute(30, this.replacements));
+      const process = command.execute(30, this.replacements);
+      this.processState.add(process);
+      return Promise.resolve(process);
     }
-    this.queued = [...this.queued, process];
+    this.queued = [...this.queued, command];
+
+    return new Promise<Process>(resolve => this.resolveQue = resolve);
   }
 
   ngOnDestroy() {

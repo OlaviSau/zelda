@@ -12,6 +12,7 @@ import { Project } from "../project/project";
 import { Dependency } from "./dependency";
 import { SequentialCommand } from "../process/sequential.command";
 import { PtyCommand } from "../process/pty.command";
+import { ProcessService } from "../process/process.service";
 
 @Component({
   selector: "lx-package-dependency",
@@ -23,7 +24,8 @@ import { PtyCommand } from "../process/pty.command";
 export class PackageDependencyComponent {
 
   constructor(
-    private dependencyState: DependencyState
+    private dependencyState: DependencyState,
+    private processService: ProcessService
   ) {
   }
 
@@ -42,20 +44,24 @@ export class PackageDependencyComponent {
   @HostListener("click") link() {
     this.queued = true;
     const link = {project: this.project, dependency: this.dependency};
-    new SequentialCommand([
-        new PtyCommand(this.dependency.directory, "npm link"),
-        // this is really important to trigger watcher
-        new PtyCommand(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
-        new PtyCommand(this.project.directory, `npm link "${this.dependency.name}"`)
-      ],
-      `${this.project.name}: Link ${this.dependency.name}`
-    ).execute(30).subscribe({
-      next: () => {
+    this.processService.execute(
+      new SequentialCommand([
+          new PtyCommand(this.dependency.directory, "npm link"),
+          // this is really important to trigger watcher
+          new PtyCommand(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
+          new PtyCommand(this.project.directory, `npm link "${this.dependency.name}"`)
+        ],
+        `${this.project.name}: Link ${this.dependency.name}`
+      )
+    ).then(
+      process => {
         this.dependencyState.linking(link);
         this.queued = false;
-      },
-      error: () => this.dependencyState.linkingComplete(link),
-      complete: () => this.dependencyState.linkingComplete(link)
-    });
+        process.subscribe({
+          error: () => this.dependencyState.linkingComplete(link),
+          complete: () => this.dependencyState.linkingComplete(link)
+        });
+      }
+    );
   }
 }
