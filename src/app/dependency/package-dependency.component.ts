@@ -10,7 +10,6 @@ import { map } from "rxjs/operators";
 import { DependencyState } from "./dependency.state";
 import { Project } from "../project/project";
 import { Dependency } from "./dependency";
-import { ProcessService } from "../process/process.service";
 import { SequentialCommand } from "../process/sequential.command";
 import { PtyCommand } from "../process/pty.command";
 
@@ -24,8 +23,7 @@ import { PtyCommand } from "../process/pty.command";
 export class PackageDependencyComponent {
 
   constructor(
-    private dependencyState: DependencyState,
-    public processService: ProcessService
+    private dependencyState: DependencyState
   ) {
   }
 
