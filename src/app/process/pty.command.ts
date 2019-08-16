@@ -5,7 +5,7 @@ import { Command } from "./command";
 import { PtyProcess } from "./pty.process";
 
 export class PtyCommand implements Command {
-  constructor(private cwd: string, private command: string, private name = "") {}
+  constructor(private cwd: string, private command: string, readonly name = "") {}
 
   execute(rows: number, replacements: Directory<string>) {
     let isStringOpen = false;

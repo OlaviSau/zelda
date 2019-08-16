@@ -44,23 +44,20 @@ export class PackageDependencyComponent {
   @HostListener("click") link() {
     this.queued = true;
     const link = {project: this.project, dependency: this.dependency};
-    const process = new SequentialCommand([
+    new SequentialCommand([
         new PtyCommand(this.dependency.directory, "npm link"),
         // this is really important to trigger watcher
         new PtyCommand(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
         new PtyCommand(this.project.directory, `npm link "${this.dependency.name}"`)
       ],
       `${this.project.name}: Link ${this.dependency.name}`
-    );
-    process.buffer$.subscribe({
+    ).execute(30).subscribe({
       next: () => {
         this.dependencyState.linking(link);
         this.queued = false;
       },
       error: () => this.dependencyState.linkingComplete(link),
       complete: () => this.dependencyState.linkingComplete(link)
-    });
-
-    this.processService.execute(process);
+    })
   }
 }
