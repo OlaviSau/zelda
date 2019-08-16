@@ -44,8 +44,8 @@ export class ProcessService implements OnDestroy {
   });
 
   executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
-    if (!event.shiftKey && this.queued && this.queued.length) {
-      if (this.queued.length) {
+    if (!event.shiftKey) {
+      if (this.queued && this.queued.length) {
         this.processState.add(new SequentialProcess(
           this.queued.map(
             que => () => {

@@ -13,7 +13,8 @@ interface DependencyWithLinkedStatus extends Dependency {
 
 @Injectable({
   providedIn: "root"
-}) export class ProjectWatcher {
+})
+export class ProjectWatcher {
   private watchers = new Map<Project, Observable<string>>();
 
   isLinked$(project: Project, dependency: Dependency): Observable<DependencyWithLinkedStatus> {
@@ -23,7 +24,7 @@ interface DependencyWithLinkedStatus extends Dependency {
       dependencyChange$ = new Observable<string>(self => {
         const watcher = watch(
           project.directory,
-          { recursive: true },
+          {recursive: true},
           (event, filename) => filename ? self.next(filename) : null
         );
         return () => watcher.close();
@@ -37,10 +38,7 @@ interface DependencyWithLinkedStatus extends Dependency {
       startWith(dependencyPath),
       filter(path => path === dependencyPath),
       switchMap(() => isLink(absoluteDependencyPath)),
-      map(linked => ({
-        ...dependency,
-        linked
-      }))
+      map(linked => ({...dependency, linked}))
     );
   }
 }
