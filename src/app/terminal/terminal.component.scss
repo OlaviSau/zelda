@@ -4,16 +4,6 @@ lx-terminal {
   display: flex;
   flex-direction: column;
 
-  .fa-trash-alt {
-    color: #673ab7;
-    padding: 4px;
-    margin-right: 4px;
-    &:hover {
-      color: white;
-      background: #673ab7;
-      border-radius: 50%;
-    }
-  }
   .terminal-window {
     background-color: #1e1e1e;
     text-align: center;

@@ -5,7 +5,6 @@ import { ProjectState } from "../project/project.state";
 import { MatDialogRef } from "@angular/material";
 import { FormControl, FormGroup } from "@angular/forms";
 import { FormGroup as FormGroupType } from "../form/types";
-import { Config } from "./config";
 import { DependencyFormArray } from "./dependency.form-array";
 import { CommandFormArray } from "./command.form-array";
 import { tap } from "rxjs/operators";
@@ -22,8 +21,7 @@ export class ConfigComponent {
   readonly DependencyType = DependencyType;
 
   constructor(
-    private projectState: ProjectState,
-    private config: Config,
+    public projectState: ProjectState,
     public dialog: MatDialogRef<ConfigComponent>
   ) {}
 
@@ -42,14 +40,4 @@ export class ConfigComponent {
       commands: []
     }) => this.form.setValue(project))
   );
-
-  save() {
-    this.projectState.save(this.form.value);
-    this.config.write({projects: this.projectState.value.projects});
-  }
-
-  delete(project: Project) {
-    this.projectState.delete(project);
-    this.config.write({projects: this.projectState.value.projects});
-  }
 }

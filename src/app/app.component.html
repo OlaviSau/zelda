@@ -1,8 +1,9 @@
-<lx-tabs>
+<lx-tabs cdkDropList cdkDropListOrientation="horizontal"  (cdkDropListDropped)="projectState.move($event.previousIndex, $event.currentIndex)" >
   <lx-tab *ngFor="let project of projectState.all$ | async"
        [class.active]="(projectState.selected$ | async) === project"
        (click)="projectState.select(project)"
        longHover
+      cdkDrag
   >
     <span class="fa fa-cog" (click)="openConfig(project)"></span>
     <span class="project-name">{{project.name}}</span>

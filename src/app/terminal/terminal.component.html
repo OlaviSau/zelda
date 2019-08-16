@@ -1,7 +1,9 @@
-<lx-tabs>
+<lx-tabs cdkDropList cdkDropListOrientation="horizontal"  (cdkDropListDropped)="processState.move($event.previousIndex, $event.currentIndex)">
   <lx-tab *ngFor="let process of processState.all$ | async"
        [class.active]="(processState.selected$ | async) === process"
-       (click)="processState.select(process)">
+       (click)="processState.select(process)"
+       cdkDrag
+  >
     <span class="fa fa-trash-alt" (click)="processState.remove(process)"></span>
     {{process.name}}
   </lx-tab>

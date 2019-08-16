@@ -8,26 +8,26 @@ lx-root {
   top: 0;
   overflow: hidden;
 
+
+}
+.fa.fa-cog {
+  display: none;
+}
+
+lx-tab.long-hover {
+
   .fa.fa-cog {
-    display: none;
-  }
-  lx-tab.long-hover {
-    .fa.fa-cog {
-      display: inline;
-      position: absolute;
-      &:hover {
-        background: #673ab7;
-        color: white;
-        padding: 5px;
-        border-radius: 50%;
-      }
-    }
-    .project-name {
-      visibility: hidden;
+    display: inline;
+    position: absolute;
+    &:hover {
+      background: #673ab7;
+      color: white;
+      padding: 5px;
+      border-radius: 50%;
     }
   }
-  .add-project {
-    font-family: "Font Awesome 5 Free";
+  .project-name {
+    visibility: hidden;
   }
 }
 

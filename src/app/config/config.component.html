@@ -47,6 +47,6 @@
 </form>
 <div>
   <button mat-button (click)="dialog.close()">Cancel</button>
-  <button *ngIf="project$ | async as project" mat-button (click)="delete(project); dialog.close()">Delete</button>
-  <button mat-button (click)="save(); dialog.close()">Save</button>
+  <button *ngIf="project$ | async as project" mat-button (click)="projectState.delete(project); dialog.close()">Delete</button>
+  <button mat-button (click)="projectState.save(form.value); dialog.close()">Save</button>
 </div>

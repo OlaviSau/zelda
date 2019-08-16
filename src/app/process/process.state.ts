@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Process } from "./process";
 import { select } from "../state/select";
 import { State } from "../state/state";
+import { move } from "../util/array/move";
 import { exclude } from "../util/array/exclude";
 import { other } from "../util/array/other";
 import { include } from "../util/array/include";
@@ -37,5 +38,9 @@ export class ProcessState extends State<{
       selected: this.value.selected || process,
       processes: include(this.value.processes, process)
     });
+  }
+
+  move(previousIndex: number, currentIndex: number) {
+    this.update({processes: move(this.value.processes, previousIndex, currentIndex)});
   }
 }

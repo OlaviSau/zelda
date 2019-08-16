@@ -35,6 +35,7 @@ import { ProcessService } from "./process/process.service";
 import { GitBranchComponent } from "./project/git/git-branch.component";
 import { TabsComponent } from "./tabs/tabs.component";
 import { TabComponent } from "./tabs/tab.component";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { TabComponent } from "./tabs/tab.component";
     MatInputModule,
     MatDialogModule,
     MatIconModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    DragDropModule
   ],
   providers: [
     ProcessState,
