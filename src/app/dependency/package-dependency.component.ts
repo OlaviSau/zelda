@@ -58,6 +58,6 @@ export class PackageDependencyComponent {
       },
       error: () => this.dependencyState.linkingComplete(link),
       complete: () => this.dependencyState.linkingComplete(link)
-    })
+    });
   }
 }
