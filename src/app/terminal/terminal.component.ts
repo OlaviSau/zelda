@@ -40,7 +40,7 @@ export class TerminalComponent implements OnDestroy {
         this.buffer$$.unsubscribe();
       }
       if (process) {
-        this.buffer$$ = process.buffer$.subscribe({
+        this.buffer$$ = process.subscribe({
           next: chunk => this.terminal.write(chunk),
           complete: () => this.terminal.writeln("The process has exited"),
           error: code => this.terminal.writeln(`The process errored with code: ${code}`)

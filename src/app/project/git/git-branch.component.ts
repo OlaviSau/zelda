@@ -14,7 +14,7 @@ import { ProcessService } from "../../process/process.service";
 import { resolve } from "path";
 import { FormControl } from "@angular/forms";
 import { FSWatcher } from "fs";
-import { PtyProcess } from "../../process/pty.process";
+import { PtyCommand } from "../../process/pty.command";
 
 @Component({
   selector: "lx-git-branch",
@@ -69,7 +69,7 @@ export class GitBranchComponent implements OnDestroy {
 
   checkoutBranch(branch: string) {
     if (this.projectState.value.selected) {
-      this.processService.execute(new PtyProcess(
+      this.processService.execute(new PtyCommand(
         `${this.projectState.value.selected.directory}`,
         `git checkout ${branch}`,
         `${this.projectState.value.selected.name}: Checkout ${branch}`

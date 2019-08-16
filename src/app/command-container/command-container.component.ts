@@ -12,7 +12,7 @@ import { ProjectState } from "../project/project.state";
 import { map } from "rxjs/operators";
 import { AngularProjectSelectorComponent } from "../project/angular/angular-project-selector.component";
 import { ProcessService } from "../process/process.service";
-import { PtyProcess } from "../process/pty.process";
+import { PtyCommand } from "../process/pty.command";
 
 @Component({
   selector: "lx-command-container",
@@ -33,7 +33,7 @@ export class CommandContainerComponent implements OnDestroy {
   commands$ = this.projectState.selected$.pipe(map(project => project ? project.commands.map(
     command => ({
       ...command,
-      process: new PtyProcess(command.directory, command.segments, command.name)
+      process: new PtyCommand(command.directory, command.segments, command.name)
     })
   ) : []));
   project$$ = this.projectState.selected$.subscribe(

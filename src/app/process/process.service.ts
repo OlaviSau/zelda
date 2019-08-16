@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
 import { fromEvent } from "rxjs";
-import { SequentialProcess } from "./sequential.process";
+import { SequentialCommand } from "./sequential.command";
 import { ProcessState } from "./process.state";
 import { ProjectState } from "../project/project.state";
-import { Process } from "./process";
+import { Command } from "./command";
 
 interface ReplacementDirectory {
   "<project.directory>": string;
@@ -19,7 +19,7 @@ export class ProcessService implements OnDestroy {
   ) {
   }
 
-  private queued?: Process[];
+  private queued?: Command[];
 
   private queueCommands$$ = fromEvent(document, "keydown").subscribe(
     (event: KeyboardEvent) => event.shiftKey && !this.queued ? this.queued = [] : undefined
@@ -28,12 +28,11 @@ export class ProcessService implements OnDestroy {
   executeCommands$$ = fromEvent(document, "keyup").subscribe((event: MouseEvent) => {
     if (!event.shiftKey) {
       if (this.queued && this.queued.length) {
-        const sequentialProcess = new SequentialProcess(
+        const sequentialProcess = new SequentialCommand(
           this.queued,
           this.queued.map(process => this.replace(process.name || "")).join(" && ")
         );
-        sequentialProcess.execute(30, this.replacements);
-        this.processState.add(sequentialProcess);
+        this.processState.add(sequentialProcess.execute(30, this.replacements));
       }
       this.queued = undefined;
     }
@@ -51,15 +50,13 @@ export class ProcessService implements OnDestroy {
     }
   );
 
-  isQueued(command: Process) {
+  isQueued(command: Command) {
     return !!this.queued && !!this.queued.find(que => que === command);
   }
 
-  execute(process: Process) {
+  execute(process: Command) {
     if (!this.queued) {
-      process.execute(30, this.replacements);
-      this.processState.add(process);
-      return;
+      return this.processState.add(process.execute(30, this.replacements));
     }
     this.queued = [...this.queued, process];
   }

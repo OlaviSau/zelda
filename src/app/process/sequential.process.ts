@@ -1,37 +1,33 @@
-import { Process } from "./process";
 import { ReplaySubject } from "rxjs";
-import { Directory } from "../util/directory";
+import { Process } from "./process";
 
-export class SequentialProcess implements Process {
-  constructor(private processes: Process[], readonly name?: string) {}
+type ProcessFactory = () => Process;
 
+export class SequentialProcess extends ReplaySubject<string> implements Process {
+  private killed = false;
   private currentHandle: Process | undefined;
-  readonly buffer$ = new ReplaySubject<string>();
 
-  private nextCommand(processes: Process[], rows: number, args: Directory<string>) {
-    const [process, ...nextProcesses] = processes;
-    if (process === undefined) {
-      return this.buffer$.complete();
-    }
-    process.execute(rows, args);
-    this.currentHandle = process;
-    this.currentHandle.buffer$.subscribe({
-      next: () => console.log("next"),
-      error: () => console.log("error"),
-      complete: () => console.log("complete")
-    });
-    this.currentHandle.buffer$.subscribe({
-      next: chunk => this.buffer$.next(chunk),
-      error: err =>  this.buffer$.error(err),
-      complete: () => this.nextCommand(nextProcesses, rows, args)
-    });
+  constructor(factories: ProcessFactory[], readonly name = "") {
+    super();
+    this.execute(factories);
   }
 
-  execute(rows: number, args: Directory<string>) {
-    this.nextCommand(this.processes, rows, args);
+  private execute(factories: ProcessFactory[]) {
+    const [factory, ...nextFactories] = factories;
+    if (factory === undefined) {
+      return this.complete();
+    }
+    this.currentHandle = factory();
+    this.currentHandle.subscribe({
+      next: chunk => this.next(chunk),
+      error: err =>  this.error(err),
+      complete: () => this.killed ? undefined : this.execute(nextFactories)
+    });
   }
 
   kill() {
+    this.killed = true;
+    this.complete();
     if (this.currentHandle) {
       this.currentHandle.kill();
     }

@@ -11,8 +11,8 @@ import { DependencyState } from "./dependency.state";
 import { Project } from "../project/project";
 import { Dependency } from "./dependency";
 import { ProcessService } from "../process/process.service";
-import { SequentialProcess } from "../process/sequential.process";
-import { PtyProcess } from "../process/pty.process";
+import { SequentialCommand } from "../process/sequential.command";
+import { PtyCommand } from "../process/pty.command";
 
 @Component({
   selector: "lx-package-dependency",
@@ -44,11 +44,11 @@ export class PackageDependencyComponent {
   @HostListener("click") link() {
     this.queued = true;
     const link = {project: this.project, dependency: this.dependency};
-    const process = new SequentialProcess([
-        new PtyProcess(this.dependency.directory, "npm link"),
+    const process = new SequentialCommand([
+        new PtyCommand(this.dependency.directory, "npm link"),
         // this is really important to trigger watcher
-        new PtyProcess(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
-        new PtyProcess(this.project.directory, `npm link "${this.dependency.name}"`)
+        new PtyCommand(this.project.directory, `rm -rf "node_modules/${this.dependency.name}"`),
+        new PtyCommand(this.project.directory, `npm link "${this.dependency.name}"`)
       ],
       `${this.project.name}: Link ${this.dependency.name}`
     );
