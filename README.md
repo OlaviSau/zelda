@@ -22,3 +22,6 @@ To configure a existing project hover over the project tab.
 # FAQ
 ## Linking produces an error: `cannot find the 'match' of undefined`
 `rm -rf node_modules package-lock.json` in the package directory
+
+## Electron rebuild fails: `An unhandled error occurred inside electron-rebuild`
+Remove the electron:rebuild from `postinstall` scripts.
