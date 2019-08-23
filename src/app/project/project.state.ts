@@ -37,6 +37,12 @@ export class ProjectState extends State<{
 
   save(project: Project) {
     const { projects, selected } = this.value;
+    project = {
+      ...project,
+      terminal: {
+        rows: +project.terminal.rows
+      }
+    };
 
     this.update({
       projects: include(projects, project, selected),

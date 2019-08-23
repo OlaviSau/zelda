@@ -52,7 +52,7 @@ export class ProcessService implements OnDestroy {
     (project = {name: "", directory: "", commands: [], dependencies: [], terminal: { rows: 30 }}) => {
       this.replacements["<project.directory>"] = project.directory;
       this.replacements["<project.name>"] = project.name;
-      this.rows = project.terminal.rows;
+      this.rows = +project.terminal.rows;
     }
   );
 
