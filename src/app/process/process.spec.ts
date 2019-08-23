@@ -2,10 +2,9 @@ import { async, TestBed } from "@angular/core/testing";
 import { ProcessState } from "./process.state";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Process } from "./process";
-import { ReplaySubject } from "rxjs";
+import { Observable } from "rxjs";
 
-class MockProcess implements Process {
-  buffer$ = new ReplaySubject<string>();
+class MockProcess extends Observable<string> implements Process {
   kill() {}
 }
 

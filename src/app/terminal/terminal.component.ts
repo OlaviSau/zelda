@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
+  ElementRef, HostBinding,
   HostListener,
   OnDestroy,
   ViewChild,
@@ -12,6 +12,7 @@ import { Terminal } from "xterm";
 import { debounce } from "../util/debounce";
 import { ProcessState } from "../process/process.state";
 import { Subscription } from "rxjs";
+import { ProjectState } from "../project/project.state";
 
 @Component({
   selector: "lx-terminal",
@@ -21,7 +22,13 @@ import { Subscription } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TerminalComponent implements OnDestroy {
-  constructor(public processState: ProcessState) {}
+
+  @HostBinding("style.flex-basis") height = "460px";
+
+  constructor(
+    public processState: ProcessState,
+    public projectState: ProjectState
+  ) {}
 
   private terminal = new Terminal({
     cols: Math.floor(window.innerWidth / 7) - 1,
@@ -50,6 +57,16 @@ export class TerminalComponent implements OnDestroy {
   );
 
   private buffer$$: Subscription | undefined;
+  private resizeTerminal$$ = this.projectState.selected$.subscribe(
+    project => {
+      if (project) {
+        this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, project.terminal.rows);
+        this.rows = project.terminal.rows;
+        this.height = `${(project.terminal.rows * 14) + 40}px`;
+      }
+    }
+  );
+  rows = 30;
 
   @ViewChild("container", {
     read: ElementRef, static: true
@@ -61,13 +78,14 @@ export class TerminalComponent implements OnDestroy {
   @HostListener("window:resize")
   @debounce()
   onResize() {
-    this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, 30);
+    this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, this.rows);
   }
 
   ngOnDestroy() {
     if (this.buffer$$) {
       this.buffer$$.unsubscribe();
     }
+    this.resizeTerminal$$.unsubscribe();
     this.selected$$.unsubscribe();
     this.terminal.dispose();
   }

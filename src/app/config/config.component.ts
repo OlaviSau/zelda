@@ -29,7 +29,10 @@ export class ConfigComponent {
     name: new FormControl(""),
     directory: new FormControl(""),
     dependencies: new DependencyFormArray([]),
-    commands: new CommandFormArray([])
+    commands: new CommandFormArray([]),
+    terminal: new FormGroup({
+      rows: new FormControl(30)
+    })
   }) as FormGroupType<Project>;
 
   project$ = this.projectState.selected$.pipe(
@@ -37,7 +40,10 @@ export class ConfigComponent {
       name: "",
       directory: "",
       dependencies: [],
-      commands: []
+      commands: [],
+      terminal: {
+        rows: 30
+      }
     }) => this.form.setValue(project))
   );
 }

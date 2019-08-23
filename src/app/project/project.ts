@@ -12,4 +12,7 @@ export interface Project {
   directory: string;
   dependencies: Dependency[];
   commands: Command[];
+  terminal: {
+    rows: number;
+  };
 }

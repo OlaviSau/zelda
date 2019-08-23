@@ -33,7 +33,7 @@ export class ProcessService implements OnDestroy {
         const process = new SequentialCommand(
           this.queued,
           this.queued.map(command => this.replace(command.name || "")).join(" && ")
-        ).execute(30, this.replacements);
+        ).execute(this.rows, this.replacements);
         this.processState.add(process);
         this.resolveQue(process);
       }
@@ -42,15 +42,17 @@ export class ProcessService implements OnDestroy {
     }
   });
 
+  private rows = 30;
   private replacements = {
     "<project.directory>": "",
     "<project.name>": "",
     "<angular.project>": ""
   };
   private project$$ = this.projectState.selected$.subscribe(
-    (project = {name: "", directory: "", commands: [], dependencies: []}) => {
+    (project = {name: "", directory: "", commands: [], dependencies: [], terminal: { rows: 30 }}) => {
       this.replacements["<project.directory>"] = project.directory;
       this.replacements["<project.name>"] = project.name;
+      this.rows = project.terminal.rows;
     }
   );
 
@@ -60,7 +62,7 @@ export class ProcessService implements OnDestroy {
 
   execute(command: Command): Promise<Process> {
     if (!this.queued) {
-      const process = command.execute(30, this.replacements);
+      const process = command.execute(this.rows, this.replacements);
       this.processState.add(process);
       return Promise.resolve(process);
     }

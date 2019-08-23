@@ -9,6 +9,14 @@
       </mat-form-field>
     </div>
   </div>
+  <h4>Terminal</h4>
+  <div class="flex-container" formGroupName="terminal">
+    <div class="flex-row">
+      <mat-form-field class="directory">
+        <input formControlName="rows" matInput placeholder="Rows in Terminal" type="text" required>
+      </mat-form-field>
+    </div>
+  </div>
   <h4>Dependencies</h4>
   <div class="flex-container" formArrayName="dependencies">
     <div class="flex-row" [formGroupName]="i" *ngFor="let dependency of form.controls.dependencies.controls; let i = index">
