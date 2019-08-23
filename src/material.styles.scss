@@ -34,6 +34,7 @@ $primary-palette: (
 $theme: mat-light-theme($primary-palette, $primary-palette, $primary-palette);
 
 @include mat-core();
+@include mat-core-theme($theme);
 @include mat-snack-bar-theme($theme);
 @include mat-select-theme($theme);
 @include mat-form-field-theme($theme);
