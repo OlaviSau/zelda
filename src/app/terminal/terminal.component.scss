@@ -1,12 +1,8 @@
 lx-terminal {
-  flex: 0 0 460px;
-  position: relative;
   display: flex;
   flex-direction: column;
 
   .terminal-window {
-    background-color: #1e1e1e;
-    text-align: center;
     flex: 0 0 420px;
   }
 

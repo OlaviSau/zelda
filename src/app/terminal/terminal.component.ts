@@ -30,9 +30,10 @@ export class TerminalComponent implements OnDestroy {
     public projectState: ProjectState
   ) {}
 
+  rows = 30;
   private terminal = new Terminal({
     cols: Math.floor(window.innerWidth / 7) - 1,
-    rows: 30,
+    rows: this.rows,
     fontSize: 12,
     theme: {
       background: "#1e1e1e"
@@ -40,6 +41,17 @@ export class TerminalComponent implements OnDestroy {
     windowsMode: true
   });
 
+  private resizeTerminal$$ = this.projectState.selected$.subscribe(
+    project => {
+      if (project) {
+        this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, project.terminal.rows);
+        this.rows = project.terminal.rows;
+        this.height = `${(project.terminal.rows * 14) + 40}px`;
+      }
+    }
+  );
+
+  private buffer$$: Subscription | undefined;
   private selected$$ = this.processState.selected$.subscribe(
     process => {
       this.terminal.reset();
@@ -55,18 +67,6 @@ export class TerminalComponent implements OnDestroy {
       }
     }
   );
-
-  private buffer$$: Subscription | undefined;
-  private resizeTerminal$$ = this.projectState.selected$.subscribe(
-    project => {
-      if (project) {
-        this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, project.terminal.rows);
-        this.rows = project.terminal.rows;
-        this.height = `${(project.terminal.rows * 14) + 40}px`;
-      }
-    }
-  );
-  rows = 30;
 
   @ViewChild("container", {
     read: ElementRef, static: true
