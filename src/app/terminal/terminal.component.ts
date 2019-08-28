@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef, HostBinding,
+  ElementRef,
   HostListener,
   OnDestroy,
   ViewChild,
@@ -22,8 +22,6 @@ import { ProjectState } from "../project/project.state";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TerminalComponent implements OnDestroy {
-
-  @HostBinding("style.flex-basis") height = "460px";
 
   constructor(
     public processState: ProcessState,
@@ -46,7 +44,6 @@ export class TerminalComponent implements OnDestroy {
       if (project) {
         this.terminal.resize(Math.floor(window.innerWidth / 7) - 1, project.terminal.rows);
         this.rows = project.terminal.rows;
-        this.height = `${(project.terminal.rows * 14) + 40}px`;
       }
     }
   );
