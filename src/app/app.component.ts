@@ -17,12 +17,7 @@ export class AppComponent {
     config
       .read()
       .then(state => projectState.next({
-        projects: state.projects.map(project => ({
-          terminal: {
-            rows: 30
-          },
-          ...project
-        })),
+        ...state,
         selected: state.projects[0]
       }))
       .catch(() => projectState.next({projects: []}));

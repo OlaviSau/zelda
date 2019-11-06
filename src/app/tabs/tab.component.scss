@@ -24,13 +24,17 @@ lx-tab {
     transition: background 0s;
   }
 
-  .fa-trash-alt {
+  .fa-times {
     color: #673ab7;
-    padding: 4px;
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    display: inline-flex;
     margin-right: 4px;
+    justify-content: center;
+    align-items: center;
     &:hover {
-      color: white;
-      background: #673ab7;
+      background: white;
       border-radius: 50%;
     }
   }

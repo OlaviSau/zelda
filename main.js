@@ -31,7 +31,7 @@ function createWindow () {
   } else {
     // and load the projectIndex.html of the app.
     mainWindow.loadURL(format({
-      pathname: join(__dirname, 'dist/zelda/projectIndex.html'),
+      pathname: join(__dirname, 'dist/zelda/index.html'),
       protocol: 'file:',
       slashes: true
     }));
