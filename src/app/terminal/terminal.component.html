@@ -8,4 +8,4 @@
     {{process.name}}
   </lx-tab>
 </lx-tabs>
-<div class="terminal-window" [style.flex-basis]="rows * 14" #container></div>
+<div class="terminal-window" [terminal]="processState.selected$ | async" [rows]="rows$ | async"></div>

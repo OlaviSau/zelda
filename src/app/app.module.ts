@@ -35,6 +35,7 @@ import { ProcessService } from "./process/process.service";
 import { TabsComponent } from "./tabs/tabs.component";
 import { TabComponent } from "./tabs/tab.component";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { TerminalDirective } from "./terminal/terminal.directive";
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
     IconPickerComponent,
     AngularProjectSelectorComponent,
     TabsComponent,
-    TabComponent
+    TabComponent,
+    TerminalDirective
   ],
   imports: [
     BrowserModule,
