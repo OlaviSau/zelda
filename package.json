@@ -30,7 +30,7 @@
     "core-js": "^2.6.9",
     "electron": "5.0.7",
     "glob": "^7.1.4",
-    "node-pty-prebuilt-multiarch": "0.9.0-beta2",
+    "node-pty-prebuilt-multiarch": "0.9.0",
     "rxjs": "~6.5.2",
     "strip-json-comments": "^2.0.1",
     "tslib": "^1.10.0",
